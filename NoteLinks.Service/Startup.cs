@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoteLinks.Data.Extentions;
 using NoteLinks.Service.Extensions;
+using NJsonSchema;
+using NSwag.AspNetCore;
+using System.Reflection;
 
 namespace NoteLinks.Service
 {
@@ -27,6 +30,8 @@ namespace NoteLinks.Service
 
             services.AddDataServices();
             services.AddCors();
+
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +51,32 @@ namespace NoteLinks.Service
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200")
                 .AllowAnyHeader()
                 .AllowAnyMethod());
+
+            app.UseSwaggerUi3WithApiExplorer(settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling =
+                    PropertyNameHandling.CamelCase;
+
+                settings.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "NoteLinks API";
+                    document.Info.Description = "ASP.NET Core web API for simple online calendar";
+                    document.Info.TermsOfService = "None";
+                    document.Info.Contact = new NSwag.SwaggerContact
+                    {
+                        Name = "Alexander Pashkov",
+                        Email = string.Empty,
+                        Url = "https://github.com/esquerte/note-links"
+                    };
+                    document.Info.License = new NSwag.SwaggerLicense
+                    {
+                        Name = "Use under LICX",
+                        Url = "https://example.com/license"
+                    };
+                };
+
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();

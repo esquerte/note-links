@@ -147,7 +147,7 @@ namespace NoteLinks.Service.Controllers
                 _repository.Remove(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(entity);
+                return Ok();
             }
             catch (Exception exception)
             {
