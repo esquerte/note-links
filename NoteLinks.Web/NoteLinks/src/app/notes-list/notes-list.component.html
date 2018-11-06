@@ -1,0 +1,46 @@
+<div *ngIf="selectedNote && !editingNote">
+  <button (click)="editNote(selectedNote)">Edit</button>
+</div>
+
+<div *ngIf="editingNote">
+  <button (click)="saveNote()">Save</button>
+  <button (click)="cancelChanges()">Cancel</button>
+</div>
+
+<div>
+  <app-note-info *ngIf="!editingNote" [note]="selectedNote"></app-note-info>
+</div>
+
+<div>
+  <app-note-edit [note]="editingNote"></app-note-edit>
+</div>
+
+<div>
+  <button *ngIf="!editingNote" (click)="addNote()">Create</button>
+</div>
+
+<div *ngIf="calendarCode">
+
+  <h3>All notes</h3>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Text</th>
+    </tr>
+    <tr *ngFor="let note of notes" id={{note.id}}
+        [class.selected]="note === selectedNote"
+        (click)="selectNote(note)">
+      <td>{{note.name}}</td>
+      <td>{{note.fromDate}}</td>
+      <td>{{note.toDate}}</td>
+      <td>{{note.text}}</td>
+      <td> 
+        <button (click)="deleteNote(note)">Delete</button>
+      </td>
+    </tr>
+  </table>
+  
+</div>

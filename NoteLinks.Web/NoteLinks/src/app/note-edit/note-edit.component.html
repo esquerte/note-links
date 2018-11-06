@@ -1,0 +1,28 @@
+<div *ngIf="note">
+
+{{diagnostic}}
+
+<form #noteEditForm="ngForm">
+
+  <div>
+      <label for="name">Name: </label>
+      <input type="text" id="name" required [(ngModel)]="note.name" name="name">
+  </div>
+
+  <div>
+      <label for="from">From: </label>
+      <input type="datetime" id="from" required [(ngModel)]="note.fromDate" name="from">
+
+      <label for="to">To: </label>
+      <input type="datetime" id="to" [(ngModel)]="note.toDate" name="to">
+  </div>
+
+  <div>
+      <label for="text">Text: </label>
+      <input type="text" id="text" [(ngModel)]="note.text" name="text">
+  </div>
+
+</form>
+
+</div>
+

@@ -1,0 +1,23 @@
+<div *ngIf="note">
+
+  <label>Name: </label>
+  <label>{{note.name}}</label>
+
+  <div>
+
+    <label>From: </label>
+    <label>{{note.fromDate}}</label>
+
+    <span *ngIf="note.toDate">
+      <label>To: </label>
+      <label>{{note.toDate}}</label>
+    </span>
+
+  </div>
+
+  <div>
+    <label>Text: </label>
+    <label>{{note.text}}</label>
+  </div>
+
+</div>

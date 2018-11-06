@@ -1,0 +1,7 @@
+<div *ngIf="calendar">
+  <h3>{{calendar.name}}</h3>
+  <div>
+    <app-notes-list [calendarCode]="calendar.code"></app-notes-list>
+  </div>
+</div>
+
