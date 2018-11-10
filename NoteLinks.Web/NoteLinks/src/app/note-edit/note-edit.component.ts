@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Note } from '../note';
+import { Note } from '../models/note';
 
 @Component({
   selector: 'app-note-edit',
@@ -9,8 +9,6 @@ import { Note } from '../note';
 export class NoteEditComponent implements OnInit {
 
   @Input() note: Note;
-
-  get diagnostic() { return JSON.stringify(this.note); }
 
   constructor() {}
 

@@ -1,0 +1,17 @@
+<div *ngIf="calendar">
+
+  <form #calendarEditForm="ngForm">
+
+    <div>
+      <label for="name">Name: </label>
+      <input type="text" id="name" required [(ngModel)]="calendar.name" name="name">
+    </div> 
+
+    <div>
+      <button (click)="saveCalendar()">Save</button>
+      <button (click)="goBack()">Back</button>
+    </div>
+
+  </form>
+
+</div>

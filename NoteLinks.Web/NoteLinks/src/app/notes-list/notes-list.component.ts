@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Note } from '../note';
-import { CalendarService } from '../calendar.service';
+import { Note } from '../models/note';
+import { CalendarService } from '../services/calendar.service';
 
 @Component({
   selector: 'app-notes-list',

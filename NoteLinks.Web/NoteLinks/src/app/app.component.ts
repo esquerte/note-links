@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router"
+import { ActivatedRoute, Router } from "@angular/router"
 
-import { Calendar } from './calendar';
+import { Calendar } from './models/calendar';
+import { CalendarCookieService } from './services/calendar-cookie.service'
 
 @Component({
   selector: 'app-root',
@@ -11,22 +12,24 @@ import { Calendar } from './calendar';
 export class AppComponent implements OnInit {
 
   title = 'NoteLinks';
-  calendars: Calendar[] = [
-    {name: "test1", code: "asdf"},
-    {name: "test2", code: "qwer"},
-    {name: "test3", code: "zxcv"}
-  ];
+  calendars: Calendar[];
 
-  constructor(private router: Router) { }
-
-  ngOnInit() {
-    if (this.calendars.length > 0) {
-      this.router.navigate(['/calendars', this.calendars[0].code]);
-    }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private cookieService: CalendarCookieService
+  ) { 
+    cookieService.calendars.subscribe(calendars => this.calendars = calendars);
   }
+
+  ngOnInit() {}
 
   selectCalendar(code: string): void {
     this.router.navigate(['/calendars', code])
+  }
+
+  addCalendar(): void {
+    this.router.navigate(['/edit'])
   }
 
 }

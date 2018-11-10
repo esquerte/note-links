@@ -1,7 +1,20 @@
 <div *ngIf="calendar">
-  <h3>{{calendar.name}}</h3>
+
+  <div>
+    <app-calendar-info [calendar]="calendar"></app-calendar-info>
+  </div>
+
+  <div>
+    <a routerLink="/edit/{{calendar.code}}">Edit calendar</a>
+  </div>
+
+  <div>
+    <button (click)="deleteCalendar()">Delete calendar</button>
+  </div>
+
   <div>
     <app-notes-list [calendarCode]="calendar.code"></app-notes-list>
   </div>
+
 </div>
 
