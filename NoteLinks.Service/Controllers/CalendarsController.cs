@@ -39,11 +39,7 @@ namespace NoteLinks.Service.Controllers
                     return NotFound();
                 }
 
-                return new ObjectResult(new CalendarModel() {
-                    Code = entity.Code,
-                    Name = entity.Name
-                });
-
+                return new ObjectResult(new CalendarModel(entity));
             }
             catch(Exception exception)
             {
@@ -68,7 +64,7 @@ namespace NoteLinks.Service.Controllers
                 _repository.Add(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(entity);
+                return Ok(new CalendarModel(entity));
             }
             catch (Exception exception)
             {
@@ -98,7 +94,7 @@ namespace NoteLinks.Service.Controllers
                 _repository.Update(calendar);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(model);
+                return Ok();
             }
             catch (Exception exception)
             {
@@ -123,7 +119,7 @@ namespace NoteLinks.Service.Controllers
                 _repository.Remove(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(entity);
+                return Ok();
             }
             catch (Exception exception)
             {

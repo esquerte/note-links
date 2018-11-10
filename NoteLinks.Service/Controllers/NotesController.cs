@@ -38,15 +38,8 @@ namespace NoteLinks.Service.Controllers
                     return NotFound();
                 }
 
-                var list = await _repository.FindAsync(x => x.Calendar.Code == code);
-                return new ObjectResult(list.Select(x => new NoteModel() {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Text = x.Text,
-                    FromDate = x.FromDate,
-                    ToDate = x.ToDate
-                }));
-
+                var list = await _repository.FindAsync(note => note.Calendar.Code == code);
+                return new ObjectResult(list.Select(note => new NoteModel(note)));
             }
             catch (Exception exception)
             {
@@ -82,14 +75,7 @@ namespace NoteLinks.Service.Controllers
                 _repository.Add(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(new NoteModel()
-                {
-                    Id = entity.Id,
-                    Name = entity.Name,
-                    Text = entity.Text,
-                    FromDate = entity.FromDate,
-                    ToDate = entity.ToDate
-                });
+                return Ok(new NoteModel(entity));
             }
             catch (Exception exception)
             {
