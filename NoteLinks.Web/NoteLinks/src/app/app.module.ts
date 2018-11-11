@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule }   from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
+import { MaterialModule } from './app-material/app-material.module';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -29,6 +30,7 @@ import { CalendarCookieService } from './services/calendar-cookie.service';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    MaterialModule
   ],
   providers: [
     CookieService, 

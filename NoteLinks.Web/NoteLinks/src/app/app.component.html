@@ -1,15 +1,17 @@
 <div *ngIf="calendars.length > 0">
 
-  <select (click)="selectCalendar($event.target.value)">
-    <option *ngFor="let calendar of calendars" [value]="calendar.code">
-      {{calendar.name}}
-    </option>
-  </select>
+  <mat-form-field>
+    <mat-select (selectionChange)="selectCalendar($event.value)" placeholder="Visited calendars">
+      <mat-option *ngFor="let calendar of calendars" [value]="calendar.code">
+        {{calendar.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
 </div>
 
 <div>
-  <button (click)="addCalendar()">Create calendar</button>
+  <button mat-raised-button (click)="addCalendar()">Create calendar</button>
 </div>
 
 <router-outlet></router-outlet>

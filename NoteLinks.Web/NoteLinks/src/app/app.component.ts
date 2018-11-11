@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router"
+import 'hammerjs';
 
 import { Calendar } from './models/calendar';
 import { CalendarCookieService } from './services/calendar-cookie.service'

@@ -16,6 +16,8 @@ export class NotesListComponent implements OnInit {
   editingNote: Note;
   originalNote: Note;
 
+  displayedColumns: string[] = ['name', 'fromDate', 'toDate', 'text', 'action'];
+
   constructor(private calendarService: CalendarService) { }
 
   ngOnInit() {
@@ -78,9 +80,10 @@ export class NotesListComponent implements OnInit {
     );
   }
 
-  cancelChanges(): void {    
-    this.editingNote = null;  
-    Object.assign(this.selectedNote, this.originalNote);
+  cancelChanges(): void {   
+    this.editingNote = null; 
+    if (this.selectedNote != null)       
+      Object.assign(this.selectedNote, this.originalNote);    
   }
 
 }

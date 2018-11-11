@@ -1,17 +1,13 @@
 <div *ngIf="calendar">
 
-  <form #calendarEditForm="ngForm">
+  <mat-form-field>
+    <input matInput #name maxlength="128" placeholder="Name" required [(ngModel)]="calendar.name">
+    <mat-hint align="end">{{name.value?.length || 0}}/128</mat-hint>
+  </mat-form-field> 
 
-    <div>
-      <label for="name">Name: </label>
-      <input type="text" id="name" required [(ngModel)]="calendar.name" name="name">
-    </div> 
-
-    <div>
-      <button (click)="saveCalendar()">Save</button>
-      <button (click)="goBack()">Back</button>
-    </div>
-
-  </form>
+  <div>
+    <button mat-raised-button (click)="saveCalendar()">Save</button>
+    <button mat-raised-button (click)="goBack()">Back</button>
+  </div>
 
 </div>

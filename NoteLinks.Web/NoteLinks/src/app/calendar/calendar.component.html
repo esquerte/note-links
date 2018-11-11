@@ -5,11 +5,12 @@
   </div>
 
   <div>
-    <a routerLink="/edit/{{calendar.code}}">Edit calendar</a>
+    <!-- [disableRipple]="true" -->
+    <a mat-raised-button routerLink="/edit/{{calendar.code}}">Edit calendar</a>
   </div>
 
   <div>
-    <button (click)="deleteCalendar()">Delete calendar</button>
+    <button mat-raised-button (click)="deleteCalendar()">Delete calendar</button>
   </div>
 
   <div>
