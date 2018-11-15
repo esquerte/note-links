@@ -81,20 +81,20 @@ namespace NoteLinks.Service.Controllers
 
             try
             {
-                var calendar = await _repository.SingleOrDefaultAsync(x => x.Code == model.Code);
+                var entity = await _repository.SingleOrDefaultAsync(x => x.Code == model.Code);
 
-                if (calendar is null)
+                if (entity is null)
                 {
                     _logger.LogWarning(LoggingEvents.UpdateItemNotFound, $"Put({JsonConvert.SerializeObject(model)}) NOT FOUND");
                     return NotFound();
                 }
 
-                calendar.Name = model.Name;
+                entity.Name = model.Name;
 
-                _repository.Update(calendar);
+                _repository.Update(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok();
+                return Ok(new CalendarModel(entity));
             }
             catch (Exception exception)
             {

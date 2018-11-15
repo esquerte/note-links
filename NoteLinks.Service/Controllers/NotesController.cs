@@ -92,23 +92,23 @@ namespace NoteLinks.Service.Controllers
 
             try
             {
-                var note = await _repository.GetAsync(model.Id);
+                var entity = await _repository.GetAsync(model.Id);
 
-                if (note is null)
+                if (entity is null)
                 {
                     _logger.LogWarning(LoggingEvents.UpdateItemNotFound, $"Put({JsonConvert.SerializeObject(model)}) NOT FOUND");
                     return NotFound();
                 }
 
-                note.Name = model.Name;
-                note.FromDate = model.FromDate;
-                note.ToDate = model.ToDate;
-                note.Text = model.Text;
+                entity.Name = model.Name;
+                entity.FromDate = model.FromDate;
+                entity.ToDate = model.ToDate;
+                entity.Text = model.Text;
 
-                _repository.Update(note);
+                _repository.Update(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok();
+                return Ok(new NoteModel(entity));
             }
             catch (Exception exception)
             {
