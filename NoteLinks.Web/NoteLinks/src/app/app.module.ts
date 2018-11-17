@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule }   from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { MaterialModule } from './app-material/app-material.module';
+import { MaterialModule } from './app-material.module';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -14,6 +14,7 @@ import { NoteEditComponent } from './note-edit/note-edit.component';
 import { CalendarInfoComponent } from './calendar-info/calendar-info.component';
 import { CalendarEditComponent } from './calendar-edit/calendar-edit.component';
 import { CalendarCookieService } from './services/calendar-cookie.service';
+import { NoteComponent } from './note/note.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { CalendarCookieService } from './services/calendar-cookie.service';
     NoteInfoComponent,
     NoteEditComponent,
     CalendarInfoComponent,
-    CalendarEditComponent
+    CalendarEditComponent,
+    NoteComponent
   ],
   imports: [
     BrowserModule,

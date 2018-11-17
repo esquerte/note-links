@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
+
 import { Note } from '../models/note';
+import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service';
+import { MatTableDataSource } from '@angular/material'
 
 @Component({
   selector: 'app-notes-list',
@@ -11,79 +14,52 @@ export class NotesListComponent implements OnInit {
 
   @Input() calendarCode: string;
 
-  notes: Note[];
-  selectedNote: Note;
-  editingNote: Note;
-  originalNote: Note;
+  notes = new MatTableDataSource<Note>();
+  selectedNoteId: number;
 
   displayedColumns: string[] = ['name', 'fromDate', 'toDate', 'text', 'action'];
 
-  constructor(private calendarService: CalendarService) { }
+  constructor(
+    private apiService: ApiService,
+    private calendarService: CalendarService,
+  ) { }
 
   ngOnInit() {
     this.getNotes();
-  }
-
-  getNotes(): void {
-    this.calendarService.getCalendarNotes(this.calendarCode).subscribe(notes => this.notes = notes);
-  }
-
-  selectNote(note: Note): void {
-    if (this.editingNote == null) {
-      this.selectedNote = note;
-    }
-  }
-
-  editNote(note: Note): void {
-    this.originalNote = Object.assign({}, note);
-    this.editingNote = note;
-  }
-
-  addNote(): void {
-    this.selectedNote = null;
-    this.editingNote = new Note();
-  }
-
-  saveNote(): void {
-    if (this.editingNote.id != null) {
-      this.updateNote();
-    } else {
-      this.createNote();
-    } 
-  }
-
-  private updateNote(): void {
-    this.calendarService.updateNote(this.editingNote).subscribe(
-      () => this.editingNote = null, 
-      () => this.cancelChanges()
-    );  
-  }
-
-  private createNote(): void {
-    this.calendarService.createNote(this.calendarCode, this.editingNote).subscribe(
-      note => {
-        this.notes.push(note);     
-        this.editingNote = null; 
-        this.selectedNote = note;      
-      },
-      () => this.editingNote = null
+    this.calendarService.onNoteFinishEditing.subscribe(
+      note => this.onFinishEditing(note)
     );
   }
 
+  getNotes(): void {
+    this.apiService.getCalendarNotes(this.calendarCode).subscribe(
+      notes => {
+        this.notes.data = notes;
+    });    
+  }
+
+  selectNote(note: Note): void {
+    this.calendarService.selectNote(this.calendarCode, note);
+    this.selectedNoteId = note.id;
+  }
+
   deleteNote(note: Note): void {
-    this.calendarService.deleteNote(note.id).subscribe(
+    this.apiService.deleteNote(note.id).subscribe(
       () => {
-        this.notes = this.notes.filter(n => n !== note); 
-        this.editingNote = null;  
-        this.selectedNote = null;  
+        this.notes.data = this.notes.data.filter(x => x.id !== note.id);
+        this.calendarService.deleteNote(note); 
       }
     );
   }
 
-  cancelChanges(): void {   
-    this.editingNote = null; 
-    if (this.selectedNote != null)       
-      Object.assign(this.selectedNote, this.originalNote);    
+  private onFinishEditing(note: Note): void {
+    if (note) {
+      if (!this.notes.data.find(x => x.id == note.id)) {
+        this.notes.data.push(note);
+        // table updates only when overwrite the whole array
+        this.notes.data = this.notes.data.slice();
+      }
+    }
   }
 
 }

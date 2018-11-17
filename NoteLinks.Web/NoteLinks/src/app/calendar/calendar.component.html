@@ -1,20 +1,40 @@
 <div *ngIf="calendar">
 
-  <div>
-    <app-calendar-info [calendar]="calendar"></app-calendar-info>
+  <div *ngIf="calendarIsOnEditing">
+    <app-calendar-edit></app-calendar-edit>
   </div>
 
-  <div>
-    <!-- [disableRipple]="true" -->
-    <a mat-raised-button routerLink="/edit/{{calendar.code}}">Edit calendar</a>
-  </div>
+  <div *ngIf="!calendarIsOnEditing">
 
-  <div>
-    <button mat-raised-button (click)="deleteCalendar()">Delete calendar</button>
-  </div>
+    <div>
+      <!-- [disableRipple]="true" -->
+      <button mat-raised-button (click)="editCalendar()">Edit calendar</button>
+    </div>
+  
+    <div>
+      <button mat-raised-button (click)="deleteCalendar()">Delete calendar</button>
+    </div>
 
-  <div>
-    <app-notes-list [calendarCode]="calendar.code"></app-notes-list>
+    <div>
+      <app-calendar-info [calendar]="calendar"></app-calendar-info>
+    </div>
+
+    <div>
+      Date picker
+    </div>
+
+    <div>
+      <button mat-raised-button (click)="createNote()">Create note</button>
+    </div>
+
+    <div>
+      <app-note></app-note>
+    </div>
+
+    <div>
+      <app-notes-list [calendarCode]="calendar.code"></app-notes-list>
+    </div>
+
   </div>
 
 </div>

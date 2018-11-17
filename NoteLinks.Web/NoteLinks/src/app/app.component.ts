@@ -20,7 +20,9 @@ export class AppComponent implements OnInit {
     private router: Router,
     private cookieService: CalendarCookieService
   ) { 
-    cookieService.calendars.subscribe(calendars => this.calendars = calendars);
+    cookieService.calendars.subscribe(
+      calendars => this.calendars = calendars
+    );
   }
 
   ngOnInit() {}
@@ -29,8 +31,8 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/calendars', code])
   }
 
-  addCalendar(): void {
-    this.router.navigate(['/edit'])
+  createCalendar(): void {
+    this.router.navigate(['/calendars'])
   }
 
 }

@@ -1,84 +1,60 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 import { Calendar } from '../models/calendar';
 import { Note } from '../models/note';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarService {
 
-  private serviceUrl = 'http://localhost/api';
+  constructor() { }
 
-  constructor(private http: HttpClient) { }
+  // Calendar
 
-  getCalendar(code: string): Observable<Calendar> {
-    const url = `${this.serviceUrl}/calendars/${code}`;
-    return this.http.get<Calendar>(url)
-    .pipe<Calendar>(
-      catchError(this.handleError<Calendar>(`getCalendar code=${code}`))
-    );
+  private startEditingSubject = new BehaviorSubject<Calendar>(undefined);
+  onStartEditing = this.startEditingSubject.asObservable();
+
+  private finishEditingSubject = new BehaviorSubject<Calendar>(undefined);
+  onFinishEditing = this.finishEditingSubject.asObservable();
+
+  startEditing(calendar: Calendar): void {
+    this.startEditingSubject.next(calendar);
   }
 
-  updateCalendar(calendar: Calendar): Observable<any> {
-    const url = `${this.serviceUrl}/calendars`;
-    return this.http.put<Calendar>(url, calendar, httpOptions);
+  finishEditing(calendar: Calendar): void {
+    this.finishEditingSubject.next(calendar);
   }
 
-  createCalendar(calendar: Calendar): Observable<any> {
-    const url = `${this.serviceUrl}/calendars`;
-    var createModel:any = {
-      name: calendar.name
-    };
-    return this.http.post(url, createModel, httpOptions);
+  // Note
+
+  private noteSelectedSubject = new BehaviorSubject<[string, Note]>(["", undefined]);
+  onNoteSelected = this.noteSelectedSubject.asObservable();
+
+  private noteStartEditingSubject = new BehaviorSubject<[string, Note]>(["", undefined]);
+  onNoteStartEditing = this.noteStartEditingSubject.asObservable();
+
+  private noteFinishEditingSubject = new BehaviorSubject<Note>(undefined);
+  onNoteFinishEditing = this.noteFinishEditingSubject.asObservable();
+
+  private noteDeletedSubject = new BehaviorSubject<Note>(undefined);
+  onNoteDeleted = this.noteDeletedSubject.asObservable();
+
+  selectNote(calendarCode: string, note: Note): void {
+    this.noteSelectedSubject.next([calendarCode, note]);
   }
 
-  deleteCalendar(code: string): Observable<any> {
-    const url = `${this.serviceUrl}/calendars/${code}`;
-    return this.http.delete(url, httpOptions);
+  noteStartEditing(calendarCode: string, note: Note): void {
+    this.noteStartEditingSubject.next([calendarCode, note]);
   }
 
-  getCalendarNotes(code: string): Observable<Note[]> {
-    const url = `${this.serviceUrl}/notes/${code}`;
-    return this.http.get<Note[]>(url)
-    .pipe<Note[]>(
-      catchError(this.handleError<Note[]>(`getCalendarNotes code=${code}`, []))
-    );
+  noteFinishEditing(note: Note): void {
+    this.noteFinishEditingSubject.next(note);
   }
 
-  updateNote(note: Note): Observable<any> {
-    const url = `${this.serviceUrl}/notes`;
-    return this.http.put<Note>(url, note, httpOptions);
+  deleteNote(note: Note): void {
+    this.noteDeletedSubject.next(note);
   }
 
-  createNote(calendarCode: string, note: Note): Observable<any> {
-    const url = `${this.serviceUrl}/notes`;
-    var createModel: any = {
-      calendarCode: calendarCode, 
-      name: note.name, 
-      text: note.text, 
-      fromDate: note.fromDate, 
-      toDate: note.toDate
-    };
-    return this.http.post(url, createModel, httpOptions);
-  }
-
-  deleteNote(id: number): Observable<any> {
-    const url = `${this.serviceUrl}/notes/${id}`;
-    return this.http.delete(url, httpOptions);
-  }
-
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
-      return of(result as T);
-    };
-  }
 }

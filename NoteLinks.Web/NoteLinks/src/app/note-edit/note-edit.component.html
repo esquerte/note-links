@@ -21,5 +21,10 @@
         <textarea matInput placeholder="Text" type="text"[(ngModel)]="note.text"></textarea>
     </mat-form-field>
 
+    <div>
+        <button mat-raised-button (click)="saveNote()">Save</button>
+        <button mat-raised-button (click)="cancelEditing()">Back</button>
+    </div>
+
 </div>
 
