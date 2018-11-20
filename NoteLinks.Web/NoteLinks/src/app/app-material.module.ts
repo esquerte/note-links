@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import {ScrollingModule} from '@angular/cdk/scrolling';
-import {CdkTableModule} from '@angular/cdk/table';
-import {CdkTreeModule} from '@angular/cdk/tree';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkTableModule } from '@angular/cdk/table';
+import { CdkTreeModule } from '@angular/cdk/tree';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -85,7 +86,8 @@ import {
     MatTooltipModule,
     MatTreeModule,
     ScrollingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatMomentDateModule,
   ],
   exports: [
     CdkTableModule,
@@ -127,7 +129,8 @@ import {
     MatTooltipModule,
     MatTreeModule,
     ScrollingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatMomentDateModule,
   ]
 })
 export class MaterialModule { }

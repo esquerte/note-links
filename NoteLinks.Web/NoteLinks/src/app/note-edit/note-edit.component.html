@@ -6,15 +6,25 @@
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput [matDatepicker]="fromDatePicker" placeholder="From" required [(ngModel)]="note.fromDate">
+        <input matInput [matDatepicker]="fromDatePicker" placeholder="From date" required [(ngModel)]="timeRange.fromDate" (dateChange)="dateChanged(event$)">
         <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #fromDatePicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput [matDatepicker]="toDatePicker" placeholder="To" [(ngModel)]="note.toDate">
+        <input matInput [ngxTimepicker]="fromTimePicker" [format]="24" [(ngModel)]="timeRange.fromTime" (timeSet)="fromTimeChanged(event$)" >
+        <ngx-material-timepicker #fromTimePicker></ngx-material-timepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput [matDatepicker]="toDatePicker" placeholder="To date" [(ngModel)]="timeRange.toDate" (dateChange)="dateChanged(event$)">
         <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #toDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput [ngxTimepicker]="toTimePicker" [format]="24" [min]="toTimeMinValue" [(ngModel)]="timeRange.toTime">
+        <ngx-material-timepicker #toTimePicker></ngx-material-timepicker>
     </mat-form-field>
 
     <mat-form-field> 

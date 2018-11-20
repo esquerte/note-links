@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule }   from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { MaterialModule } from './app-material.module';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -32,7 +33,8 @@ import { NoteComponent } from './note/note.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    MaterialModule
+    MaterialModule,
+    NgxMaterialTimepickerModule.forRoot(),
   ],
   providers: [
     CookieService, 

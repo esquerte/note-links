@@ -26,7 +26,7 @@ export class NotesListComponent implements OnInit {
 
   ngOnInit() {
     this.getNotes();
-    this.calendarService.onNoteFinishEditing.subscribe(
+    this.calendarService.onNoteFinishEditing$.subscribe(
       note => this.onFinishEditing(note)
     );
   }

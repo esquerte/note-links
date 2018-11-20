@@ -14,10 +14,10 @@ export class CalendarService {
   // Calendar
 
   private startEditingSubject = new BehaviorSubject<Calendar>(undefined);
-  onStartEditing = this.startEditingSubject.asObservable();
+  onStartEditing$ = this.startEditingSubject.asObservable();
 
   private finishEditingSubject = new BehaviorSubject<Calendar>(undefined);
-  onFinishEditing = this.finishEditingSubject.asObservable();
+  onFinishEditing$ = this.finishEditingSubject.asObservable();
 
   startEditing(calendar: Calendar): void {
     this.startEditingSubject.next(calendar);
@@ -30,16 +30,16 @@ export class CalendarService {
   // Note
 
   private noteSelectedSubject = new BehaviorSubject<[string, Note]>(["", undefined]);
-  onNoteSelected = this.noteSelectedSubject.asObservable();
+  onNoteSelected$ = this.noteSelectedSubject.asObservable();
 
   private noteStartEditingSubject = new BehaviorSubject<[string, Note]>(["", undefined]);
-  onNoteStartEditing = this.noteStartEditingSubject.asObservable();
+  onNoteStartEditing$ = this.noteStartEditingSubject.asObservable();
 
   private noteFinishEditingSubject = new BehaviorSubject<Note>(undefined);
-  onNoteFinishEditing = this.noteFinishEditingSubject.asObservable();
+  onNoteFinishEditing$ = this.noteFinishEditingSubject.asObservable();
 
   private noteDeletedSubject = new BehaviorSubject<Note>(undefined);
-  onNoteDeleted = this.noteDeletedSubject.asObservable();
+  onNoteDeleted$ = this.noteDeletedSubject.asObservable();
 
   selectNote(calendarCode: string, note: Note): void {
     this.noteSelectedSubject.next([calendarCode, note]);

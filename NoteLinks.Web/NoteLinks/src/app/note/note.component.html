@@ -1,16 +1,19 @@
+<div *ngIf="note">
 
-<div *ngIf="noteIsOnEditing">
-  <app-note-edit></app-note-edit>
-</div>
-
-<div *ngIf="!noteIsOnEditing">
-
-  <div>
-    <button mat-raised-button (click)="editNote()">Edit note</button>
+  <div *ngIf="noteIsOnEditing">
+    <app-note-edit></app-note-edit>
   </div>
 
-  <div>
-    <app-note-info [note]="note"></app-note-info>
+  <div *ngIf="!noteIsOnEditing">
+
+    <div>
+      <button mat-raised-button (click)="editNote()">Edit note</button>
+    </div>
+
+    <div>
+      <app-note-info [note]="note"></app-note-info>
+    </div>
+
   </div>
 
 </div>

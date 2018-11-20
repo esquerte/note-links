@@ -24,7 +24,7 @@ export class CalendarEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.calendarService.onStartEditing.subscribe(
+    this.calendarService.onStartEditing$.subscribe(
       calendar =>  { 
         if (calendar) {
           this.calendar = calendar;

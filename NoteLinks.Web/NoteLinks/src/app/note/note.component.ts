@@ -20,13 +20,13 @@ export class NoteComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.calendarService.onNoteSelected.subscribe(
+    this.calendarService.onNoteSelected$.subscribe(
       ([calendarCode, note]) => this.onSelected([calendarCode, note])
     );
-    this.calendarService.onNoteFinishEditing.subscribe(
+    this.calendarService.onNoteFinishEditing$.subscribe(
       note => this.onFinishEditing(note)
     );
-    this.calendarService.onNoteDeleted.subscribe(
+    this.calendarService.onNoteDeleted$.subscribe(
       note => this.onDeleted(note)
     ); 
   }

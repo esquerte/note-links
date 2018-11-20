@@ -32,7 +32,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.calendarService.onFinishEditing.subscribe(
+    this.calendarService.onFinishEditing$.subscribe(
       calendar =>  { 
         if (calendar) {
           Object.assign(this.calendar, calendar);
