@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Note } from '../models/note';
 
@@ -11,7 +12,8 @@ export class NoteInfoComponent implements OnInit {
 
   @Input() note: Note;
 
-  constructor() { }
+  constructor(public translate: TranslateService) { 
+  }
 
   ngOnInit() {   
   }

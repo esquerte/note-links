@@ -1,22 +1,22 @@
 <div *ngIf="note">
 
-  <label>Name: </label>
+  <label>{{ 'note.info.noteNameLabel' | translate }}</label>
   <label>{{note.name}}</label>
 
   <div>
 
-    <label>From: </label>
-    <label>{{note.fromDate}}</label>
+    <label>{{ 'note.info.noteFromLabel' | translate }}</label>
+    <label>{{note.fromDate | customDate:this.translate.currentLang }}</label>
 
     <span *ngIf="note.toDate">
-      <label>To: </label>
-      <label>{{note.toDate}}</label>
+      <label>{{ 'note.info.noteToLabel' | translate }}</label>
+      <label>{{note.toDate | customDate:this.translate.currentLang }}</label>
     </span>
 
   </div>
 
   <div>
-    <label>Text: </label>
+    <label>{{ 'note.info.noteTextLabel' | translate }}</label>
     <label>{{note.text}}</label>
   </div>
 

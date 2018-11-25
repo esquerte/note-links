@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 import { Calendar } from '../models/calendar';
 import { Note } from '../models/note';
@@ -13,10 +13,10 @@ export class CalendarService {
 
   // Calendar
 
-  private startEditingSubject = new BehaviorSubject<Calendar>(undefined);
+  private startEditingSubject = new BehaviorSubject<Calendar>(null);
   onStartEditing$ = this.startEditingSubject.asObservable();
 
-  private finishEditingSubject = new BehaviorSubject<Calendar>(undefined);
+  private finishEditingSubject = new Subject<Calendar>();
   onFinishEditing$ = this.finishEditingSubject.asObservable();
 
   startEditing(calendar: Calendar): void {
@@ -29,16 +29,16 @@ export class CalendarService {
 
   // Note
 
-  private noteSelectedSubject = new BehaviorSubject<[string, Note]>(["", undefined]);
+  private noteSelectedSubject = new Subject<[string, Note]>();
   onNoteSelected$ = this.noteSelectedSubject.asObservable();
 
-  private noteStartEditingSubject = new BehaviorSubject<[string, Note]>(["", undefined]);
+  private noteStartEditingSubject = new BehaviorSubject<[string, Note]>(["", null]);
   onNoteStartEditing$ = this.noteStartEditingSubject.asObservable();
 
-  private noteFinishEditingSubject = new BehaviorSubject<Note>(undefined);
+  private noteFinishEditingSubject = new Subject<Note>();
   onNoteFinishEditing$ = this.noteFinishEditingSubject.asObservable();
 
-  private noteDeletedSubject = new BehaviorSubject<Note>(undefined);
+  private noteDeletedSubject = new Subject<Note>();
   onNoteDeleted$ = this.noteDeletedSubject.asObservable();
 
   selectNote(calendarCode: string, note: Note): void {

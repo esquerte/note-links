@@ -1,5 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Calendar } from '../models/calendar';
 import { ApiService } from '../services/api.service';
@@ -11,29 +14,30 @@ import { CalendarCookieService } from '../services/calendar-cookie.service'
   templateUrl: './calendar-edit.component.html',
   styleUrls: ['./calendar-edit.component.css']
 })
-export class CalendarEditComponent implements OnInit {
+export class CalendarEditComponent implements OnInit, OnDestroy {
 
   calendar: Calendar;
-  originalCalendar: Calendar;
+  private originalCalendar: Calendar;
+
+  private unsubscribe: Subject<void> = new Subject();
 
   constructor(
     private router: Router,
     private apiService: ApiService,
     private calendarService: CalendarService,
     private cookieService: CalendarCookieService,
-  ) {}
-
-  ngOnInit() {
-    this.calendarService.onStartEditing$.subscribe(
-      calendar =>  { 
-        if (calendar) {
-          this.calendar = calendar;
-          this.originalCalendar = Object.assign({}, calendar);
-        }
-    });    
+    private location: Location,
+  ) {
+    this.calendarService.onStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      calendar =>  {
+        this.calendar = calendar;
+        this.originalCalendar = Object.assign({}, calendar);
+    });
   }
 
-  saveCalendar(): void {
+  ngOnInit() {}
+
+  saveCalendar() {
     if (this.calendar.code) {
       this.updateCalendar();
     } else {
@@ -41,7 +45,7 @@ export class CalendarEditComponent implements OnInit {
     } 
   }
 
-  private updateCalendar(): void {
+  private updateCalendar() {
     this.apiService.updateCalendar(this.calendar).subscribe(
       calendar => {
         this.cookieService.updateCalendarsCookie(calendar);
@@ -49,15 +53,24 @@ export class CalendarEditComponent implements OnInit {
     });     
   }
 
-  private createCalendar(): void {
+  private createCalendar() {
     this.apiService.createCalendar(this.calendar).subscribe(
       calendar => {           
         this.router.navigate(['/calendars', calendar.code]);      
     });  
   }
 
-  cancelEditing(): void {
-    this.calendarService.finishEditing(this.originalCalendar);
+  cancelEditing() {
+    if (this.calendar.code) {
+      this.calendarService.finishEditing(this.originalCalendar);
+    } else {
+      this.location.back();
+    }     
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
 }

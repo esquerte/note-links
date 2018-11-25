@@ -1,39 +1,39 @@
 <div *ngIf="note">
 
     <mat-form-field>
-        <input matInput #name maxlength="128" placeholder="Name" required [(ngModel)]="note.name">
+        <input matInput #name maxlength="128" [placeholder]="'note.edit.noteNamePlaceholder' | translate" required [(ngModel)]="note.name">
         <mat-hint align="end">{{name.value?.length || 0}}/128</mat-hint>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput [matDatepicker]="fromDatePicker" placeholder="From date" required [(ngModel)]="timeRange.fromDate" (dateChange)="dateChanged(event$)">
+        <input matInput [matDatepicker]="fromDatePicker" [placeholder]="'note.edit.noteFromDatePlaceholder' | translate" required [(ngModel)]="timeRange.fromDate" (dateChange)="onDateChanged(event$)">
         <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #fromDatePicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput [ngxTimepicker]="fromTimePicker" [format]="24" [(ngModel)]="timeRange.fromTime" (timeSet)="fromTimeChanged(event$)" >
-        <ngx-material-timepicker #fromTimePicker></ngx-material-timepicker>
+        <input matInput [ngxTimepicker]="fromTimePicker" [placeholder]="'note.edit.noteFromTimePlaceholder' | translate" [format]="timePickerFormat" [(ngModel)]="timeRange.fromTime"  >
+        <ngx-material-timepicker #fromTimePicker (closed)="onFromTimeChanged(event$)"></ngx-material-timepicker>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput [matDatepicker]="toDatePicker" placeholder="To date" [(ngModel)]="timeRange.toDate" (dateChange)="dateChanged(event$)">
+        <input matInput [matDatepicker]="toDatePicker" [placeholder]="'note.edit.noteToDatePlaceholder' | translate" [min]="timeRange.fromDate" [(ngModel)]="timeRange.toDate" (dateChange)="onDateChanged(event$)">
         <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #toDatePicker></mat-datepicker>
+        <mat-datepicker #toDatePicker (dateChange)="onDateChanged(event$)"></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput [ngxTimepicker]="toTimePicker" [format]="24" [min]="toTimeMinValue" [(ngModel)]="timeRange.toTime">
+        <input matInput [ngxTimepicker]="toTimePicker" [placeholder]="'note.edit.noteToTimePlaceholder' | translate" [format]="timePickerFormat" [min]="toTimeMinValue" [(ngModel)]="timeRange.toTime">
         <ngx-material-timepicker #toTimePicker></ngx-material-timepicker>
     </mat-form-field>
 
     <mat-form-field> 
-        <textarea matInput placeholder="Text" type="text"[(ngModel)]="note.text"></textarea>
+        <textarea matInput [placeholder]="'note.edit.noteTextPlaceholder' | translate" type="text"[(ngModel)]="note.text"></textarea>
     </mat-form-field>
 
     <div>
-        <button mat-raised-button (click)="saveNote()">Save</button>
-        <button mat-raised-button (click)="cancelEditing()">Back</button>
+        <button mat-raised-button (click)="saveNote()">{{ 'note.edit.noteSaveButton' | translate }}</button>
+        <button mat-raised-button (click)="cancelEditing()">{{ 'note.edit.cancelEditingButton' | translate }}</button>
     </div>
 
 </div>

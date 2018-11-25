@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as moment from 'moment';
+import {DateAdapter } from '@angular/material/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Note } from '../models/note';
 import { ApiService } from '../services/api.service';
@@ -19,27 +22,46 @@ interface TimeRange {
   templateUrl: './note-edit.component.html',
   styleUrls: ['./note-edit.component.css']
 })
-export class NoteEditComponent implements OnInit {
+export class NoteEditComponent implements OnInit, OnDestroy {
 
   note: Note;
-  originalNote: Note;
-  calendarCode: string;
+  private originalNote: Note;
+  private calendarCode: string;
 
   timeRange: TimeRange = {} as TimeRange;
   toTimeMinValue: moment.Moment;
+  timePickerFormat: number;
+
+  private unsubscribe: Subject<void> = new Subject();
+
+  private get timeFormat(): string {
+    switch (this.timePickerFormat) {
+      case 12: return "hh:mm a"
+      case 24: return "HH:mm"
+      default: return "hh:mm a"
+    }
+  }
 
   constructor(
     private apiService: ApiService,
     private calendarService: CalendarService,
+    private translate: TranslateService,
+    private dateAdapter: DateAdapter<any>,
   ) {}
 
   ngOnInit() {
-    this.calendarService.onNoteStartEditing$.subscribe(
-      ([calendarCode, note]) => this.onStartEditing([calendarCode, note])
-    );
+    this.calendarService.onNoteStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(      
+      ([calendarCode, note]) => {
+        this.setLocalization();
+        this.onStartEditing([calendarCode, note])
+    });
+    this.translate.onLangChange.pipe(takeUntil(this.unsubscribe)).subscribe(
+      (event: LangChangeEvent) => {
+        this.changeLocalization();
+    });
   }
 
-  saveNote(): void {
+  saveNote() {
     if (this.note.id) {
       this.updateNote();
     } else {
@@ -47,11 +69,11 @@ export class NoteEditComponent implements OnInit {
     } 
   }
 
-  cancelEditing(): void {
+  cancelEditing() {    
     this.calendarService.noteFinishEditing(this.originalNote);
   }
 
-  private updateNote(): void {
+  private updateNote() {
     this.makeDates();
     this.apiService.updateNote(this.note).subscribe(
       note => {
@@ -59,54 +81,85 @@ export class NoteEditComponent implements OnInit {
     });     
   }
 
-  private createNote(): void {
+  private createNote() {
+    this.makeDates();
     this.apiService.createNote(this.calendarCode, this.note).subscribe(
       note => {           
         this.calendarService.noteFinishEditing(note);   
     });  
   }
 
-  private onStartEditing([calendarCode, note]: [string, Note]): void {
-    if (note) {          
-      this.note = note;
-      this.originalNote = Object.assign({}, note);
-      this.calendarCode = calendarCode;
-      this.setTimeRange();
-    }    
+  private onStartEditing([calendarCode, note]: [string, Note]) {        
+    this.note = note;
+    this.originalNote = Object.assign({}, note);
+    this.calendarCode = calendarCode;
+    if (note.id) 
+      this.setTimeRange();   
   }
 
-  private makeDates(): void {
-    let fromTime = moment(this.timeRange.fromTime, "HH:mm");
-    let toTime = moment(this.timeRange.toTime, "HH:mm");
-    this.timeRange.fromDate.hour(fromTime.hour()).minute(fromTime.minute());
-    this.timeRange.toDate.hour(toTime.hour()).minute(toTime.minute());
+  private makeDates() {
+    if (this.timeRange.fromTime) {
+      let fromTime = moment(this.timeRange.fromTime, this.timeFormat);
+      this.timeRange.fromDate.hour(fromTime.hour()).minute(fromTime.minute());
+    }
     this.note.fromDate = this.timeRange.fromDate.format();
-    this.note.toDate = this.timeRange.toDate.format();
+    if (this.timeRange.toDate) {
+      if (this.timeRange.toTime) {
+        let toTime = moment(this.timeRange.toTime, this.timeFormat);    
+        this.timeRange.toDate.hour(toTime.hour()).minute(toTime.minute()); 
+      }   
+      this.note.toDate = this.timeRange.toDate.format();
+    }
   }
 
-  dateChanged(event: MatDatepickerInputEvent<Date>): void {
+  onDateChanged(event: MatDatepickerInputEvent<Date>) {
     this.toTimeMinValue = this.getToTimeMinValue();
   }
 
-  fromTimeChanged(event): void {
+  onFromTimeChanged(event) {
     this.toTimeMinValue = this.getToTimeMinValue();
   }
 
   private getToTimeMinValue(): moment.Moment {
     if (moment(this.timeRange.fromDate).isSame(this.timeRange.toDate)) {
-      return moment(this.timeRange.fromTime, "HH:mm");
+      return moment(this.timeRange.fromTime, this.timeFormat);
     } else {
       return moment().hour(0).minute(0);
     }
   }
 
-  private setTimeRange(): void {
-    let fromDate = moment(this.note.fromDate).local();
-    let toDate = moment(this.note.toDate).local();
+  private setTimeRange() {
+    let fromDate = moment(this.note.fromDate);
+    let toDate = moment(this.note.toDate);
     this.timeRange.fromDate = moment([fromDate.year(), fromDate.month(), fromDate.date()]);
     this.timeRange.toDate = moment([toDate.year(), toDate.month(), toDate.date()]);
-    this.timeRange.fromTime = fromDate.format("HH:mm");
-    this.timeRange.toTime = toDate.format("HH:mm");
+    this.timeRange.fromTime = fromDate.format(this.timeFormat);
+    this.timeRange.toTime = toDate.format(this.timeFormat);
+  }
+
+  private setLocalization() {
+    this.dateAdapter.setLocale(this.translate.currentLang);
+    this.timePickerFormat = this.translate.currentLang == "en" ? 12 : 24;        
+  }
+
+  private changeLocalization() {
+    
+    this.dateAdapter.setLocale(this.translate.currentLang);
+
+    let oldFormat: string = this.timeFormat
+    this.timePickerFormat = this.translate.currentLang == "en" ? 12 : 24;    
+
+    if (this.timeRange.fromTime)
+      this.timeRange.fromTime = moment(this.timeRange.fromTime, oldFormat).format(this.timeFormat);
+
+    if (this.timeRange.toTime)
+      this.timeRange.toTime = moment(this.timeRange.toTime, oldFormat).format(this.timeFormat);
+    
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
 }

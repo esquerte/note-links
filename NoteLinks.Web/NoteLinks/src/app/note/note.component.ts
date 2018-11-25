@@ -1,32 +1,35 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Note } from '../models/note';
 import { CalendarService } from '../services/calendar.service'
-import { Calendar } from '../models/calendar';
 
 @Component({
   selector: 'app-note',
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.css']
 })
-export class NoteComponent implements OnInit {
+export class NoteComponent implements OnInit, OnDestroy {
 
   note: Note;
   noteIsOnEditing: boolean;
-  calendarCode: string;
+  private calendarCode: string;
+
+  private unsubscribe: Subject<void> = new Subject();
 
   constructor(
     private calendarService: CalendarService,
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.calendarService.onNoteSelected$.subscribe(
+    this.calendarService.onNoteSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
       ([calendarCode, note]) => this.onSelected([calendarCode, note])
     );
-    this.calendarService.onNoteFinishEditing$.subscribe(
+    this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onFinishEditing(note)
     );
-    this.calendarService.onNoteDeleted$.subscribe(
+    this.calendarService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onDeleted(note)
     ); 
   }
@@ -37,27 +40,33 @@ export class NoteComponent implements OnInit {
   }
 
   private onSelected([calendarCode, note]): void {
-    if (!this.noteIsOnEditing && note) {
-      this.note = note;
-      this.calendarCode = calendarCode;
-      if (!note.id) {
-        this.editNote();
-      }
+    this.noteIsOnEditing = false; 
+    this.note = note;
+    this.calendarCode = calendarCode;
+    if (!note.id) {
+      this.editNote();
     }
   }
 
   private onFinishEditing(note: Note): void {
-    if (note) {
+    if (note.id) {
       Object.assign(this.note, note);
+    } else {
+      this.note = null;
+    }
+    this.noteIsOnEditing = false;
+  }
+
+  private onDeleted(note: Note): void {
+    if (note.id == this.note.id) {
+      this.note = null;
       this.noteIsOnEditing = false;
     }
   }
 
-  private onDeleted(note: Note): void {
-    if (note && note.id == this.note.id) {
-      this.note = null;
-      this.noteIsOnEditing = false;
-    }
+  ngOnDestroy() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
 }

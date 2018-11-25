@@ -1,0 +1,52 @@
+{
+    "home": {
+        "selectCalendarPlaceholder": "Просмотренные календари",
+        "selectLanguagePlaceholder": "Выбрать язык",
+        "createCalendarButton": "Создать календарь",
+        "en": "Английский",
+        "ru": "Русский"
+    },
+
+    "calendar": {
+        "editCalendarButton": "Редактировать календарь",
+        "deleteCalendarButton": "Удалить календарь",
+        "createNoteButton": "Новая заметка",
+        "info": {
+
+        },
+        "edit": {
+            "editCalendarNamePlaceholder": "Название",
+            "saveCalendarButton": "Сохранить",
+            "cancelEditingButton": "Назад"
+        }
+    },
+
+    "note": {
+        "editNoteButton": "Редактировать заметку",
+        "info": {
+            "noteNameLabel": "Название: ",
+            "noteFromLabel": "Дата начала: ",
+            "noteToLabel": "Дата окончания: ",
+            "noteTextLabel": "Текст: "
+        },
+        "edit": {
+            "noteNamePlaceholder": "Название",
+            "noteFromDatePlaceholder": "Дата начала",
+            "noteFromTimePlaceholder": "Время начала",
+            "noteToDatePlaceholder": "Дата окончания",
+            "noteToTimePlaceholder": "Время окончания",
+            "noteTextPlaceholder": "Текст",
+            "noteSaveButton": "Сохранить",
+            "cancelEditingButton": "Назад"
+        }        
+    },
+
+    "noteList": {
+        "header": "Все заметки",
+        "noteNameHeader": " Название ",
+        "noteFromDateHeader": " Дата начала ",
+        "noteToDateHeader": " Дата окончания ",
+        "noteTextHeader": " Текст ",
+        "noteDeleteButton": "Удалить"
+    }
+}

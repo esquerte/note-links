@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Calendar } from '../models/calendar';
 import { ApiService } from '../services/api.service'
@@ -7,15 +9,18 @@ import { CalendarCookieService } from '../services/calendar-cookie.service'
 import { CalendarService } from '../services/calendar.service'
 import { Note } from '../models/note';
 
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
 
   calendar: Calendar;
   calendarIsOnEditing: boolean;
+
+  private unsubscribe: Subject<void> = new Subject();
 
   constructor(
     private route: ActivatedRoute,
@@ -23,23 +28,20 @@ export class CalendarComponent implements OnInit {
     private apiService: ApiService,
     private cookieService: CalendarCookieService,
     private calendarService: CalendarService,
-  ) { 
+  ) {     
     // https://stackoverflow.com/questions/41678356/router-navigate-does-not-call-ngoninit-when-same-page
     route.params.subscribe(() => {    
       this.calendar = null;  
       this.getCalendar()
     });
-  }
-
-  ngOnInit() {
-    this.calendarService.onFinishEditing$.subscribe(
-      calendar =>  { 
-        if (calendar) {
-          Object.assign(this.calendar, calendar);
-          this.calendarIsOnEditing = false;
-        }
+    this.calendarService.onFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      (calendar: Calendar) =>  { 
+        Object.assign(this.calendar, calendar);
+        this.calendarIsOnEditing = false;        
     });
   }
+
+  ngOnInit() {}
 
   getCalendar(): void {
     const code = this.route.snapshot.paramMap.get('code');
@@ -70,6 +72,11 @@ export class CalendarComponent implements OnInit {
 
   createNote(): void {
     this.calendarService.selectNote(this.calendar.code, new Note());
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
   
 }

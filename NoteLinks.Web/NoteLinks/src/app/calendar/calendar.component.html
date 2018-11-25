@@ -8,11 +8,11 @@
 
     <div>
       <!-- [disableRipple]="true" -->
-      <button mat-raised-button (click)="editCalendar()">Edit calendar</button>
+      <button mat-raised-button (click)="editCalendar()">{{ 'calendar.editCalendarButton' | translate }}</button>
     </div>
   
     <div>
-      <button mat-raised-button (click)="deleteCalendar()">Delete calendar</button>
+      <button mat-raised-button (click)="deleteCalendar()">{{ 'calendar.deleteCalendarButton' | translate }}</button>
     </div>
 
     <div>
@@ -24,7 +24,7 @@
     </div>
 
     <div>
-      <button mat-raised-button (click)="createNote()">Create note</button>
+      <button mat-raised-button (click)="createNote()">{{ 'calendar.createNoteButton' | translate }}</button>
     </div>
 
     <div>

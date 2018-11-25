@@ -1,0 +1,53 @@
+{
+    "home": {
+        "selectCalendarPlaceholder": "Visited calendars",
+        "selectLanguagePlaceholder": "Select language",
+        "createCalendarButton": "Create calendar",
+        "en": "English",
+        "ru": "Russian"
+    },
+
+    "calendar": {
+        "editCalendarButton": "Edit calendar",
+        "deleteCalendarButton": "Delete calendar",
+        "createNoteButton": "Create note",
+        "info": {
+
+        },
+        "edit": {
+            "editCalendarNamePlaceholder": "Name",
+            "saveCalendarButton": "Save",
+            "cancelEditingButton": "Back"
+        }
+    },
+
+    "note": {
+        "editNoteButton": "Edit note",
+        "info": {
+            "noteNameLabel": "Name: ",
+            "noteFromLabel": "From: ",
+            "noteToLabel": "To: ",
+            "noteTextLabel": "Text: "
+        },
+        "edit": {
+            "noteNamePlaceholder": "Name",
+            "noteFromDatePlaceholder": "From date",
+            "noteFromTimePlaceholder": "From time",
+            "noteToDatePlaceholder": "To date",
+            "noteToTimePlaceholder": "To time",
+            "noteTextPlaceholder": "Text",
+            "noteSaveButton": "Save",
+            "cancelEditingButton": "Back"
+        }        
+    },
+
+    "noteList": {
+        "header": "All notes",
+        "noteNameHeader": " Name ",
+        "noteFromDateHeader": " From ",
+        "noteToDateHeader": " To ",
+        "noteTextHeader": " Text ",
+        "noteDeleteButton": "Delete"
+    }
+    
+}

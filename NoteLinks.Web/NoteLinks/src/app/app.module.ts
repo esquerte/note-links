@@ -1,10 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule }   from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { MaterialModule } from './app-material.module';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { DatePipe } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -16,6 +19,11 @@ import { CalendarInfoComponent } from './calendar-info/calendar-info.component';
 import { CalendarEditComponent } from './calendar-edit/calendar-edit.component';
 import { CalendarCookieService } from './services/calendar-cookie.service';
 import { NoteComponent } from './note/note.component';
+import { CustomDatePipe } from './pipes/custom-date.pipe';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -26,7 +34,8 @@ import { NoteComponent } from './note/note.component';
     NoteEditComponent,
     CalendarInfoComponent,
     CalendarEditComponent,
-    NoteComponent
+    NoteComponent,
+    CustomDatePipe
   ],
   imports: [
     BrowserModule,
@@ -35,10 +44,19 @@ import { NoteComponent } from './note/note.component';
     FormsModule,
     MaterialModule,
     NgxMaterialTimepickerModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: (createTranslateLoader),
+          deps: [HttpClient]
+      }
+  }),
   ],
   providers: [
     CookieService, 
-    CalendarCookieService
+    CalendarCookieService,
+    DatePipe,
+    CustomDatePipe,
   ],
   bootstrap: [AppComponent]
 })
