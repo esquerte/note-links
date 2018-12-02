@@ -50,7 +50,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
         calendar => {
           this.cookieService.updateCalendarsCookie(calendar);
           this.calendar = calendar;        
-      }); 
+        },
+        () => this.router.navigate(["/"])
+      ); 
     } else {
       this.calendar = new Calendar();
       this.editCalendar();

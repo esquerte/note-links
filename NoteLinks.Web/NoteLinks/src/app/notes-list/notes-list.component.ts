@@ -1,12 +1,15 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { PageEvent } from '@angular/material';
+import { Sort } from '@angular/material';
 
 import { Note } from '../models/note';
+import { PageInfo } from '../models/page-info';
 import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service';
 import { MatTableDataSource } from '@angular/material'
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-notes-list',
@@ -22,7 +25,18 @@ export class NotesListComponent implements OnInit, OnDestroy {
 
   private unsubscribe: Subject<void> = new Subject();
 
-  displayedColumns: string[] = ['name', 'fromDate', 'toDate', 'text', 'action'];
+  displayedColumns: string[] = ['Name', 'FromDate', 'ToDate', 'Text', 'Action'];
+
+  pageSizeOptions: number[] = [2, 5, 10, 25];
+  isLoading = true;
+
+  pageInfo: PageInfo = {
+    pageIndex: 1,
+    pageSize: 2,
+    totalCount: 0,
+    orderBy: "Name",
+    desc: false
+  }
 
   constructor(
     private apiService: ApiService,
@@ -33,39 +47,54 @@ export class NotesListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getNotes();
     this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
-      note => this.onFinishEditing(note)
+      note => this.onFinishEditing()
     );
   }
 
-  getNotes(): void {
-    this.apiService.getCalendarNotes(this.calendarCode).subscribe(
-      notes => {
-        this.notes.data = notes;
+  getNotes() {
+    this.isLoading = true;
+    this.apiService.getCalendarNotes(this.calendarCode, this.pageInfo).subscribe(
+      result => {
+        setTimeout(() => { 
+          this.notes.data = result.notes;
+          this.pageInfo.totalCount = result.totalCount;
+          this.isLoading = false; 
+        }, 500)
+        // this.notes.data = result.notes;
+        // this.pageInfo.totalCount = result.totalCount;
+        // this.isLoading = false;        
     });    
   }
 
-  selectNote(note: Note): void {
+  selectNote(note: Note) {
     this.calendarService.selectNote(this.calendarCode, note);
     this.selectedNoteId = note.id;
   }
 
-  deleteNote(note: Note): void {
+  deleteNote(note: Note) {
     this.apiService.deleteNote(note.id).subscribe(
-      () => {
-        this.notes.data = this.notes.data.filter(x => x.id !== note.id);
+      () => {        
         this.calendarService.deleteNote(note); 
+        this.getNotes();
       }
     );
   }
 
-  private onFinishEditing(note: Note): void {
-    if (note && note.id) {
-      if (!this.notes.data.find(x => x.id == note.id)) {
-        this.notes.data.push(note);
-        // table updates only when overwrite the whole array
-        this.notes.data = this.notes.data.slice();
-      }
-    }
+  private onFinishEditing() {
+    this.getNotes();
+  }
+
+  pageChanged(pageEvent: PageEvent) {
+    this.pageInfo.pageIndex = pageEvent.pageIndex + 1;
+    this.pageInfo.pageSize = pageEvent.pageSize;
+    this.getNotes();
+  }
+
+  sortNotes(sort: Sort) {
+    this.pageInfo.pageIndex = 1;
+    this.pageInfo.orderBy = sort.active;
+    this.pageInfo.desc = sort.direction == "desc";
+    this.getNotes();
   }
 
   ngOnDestroy() {

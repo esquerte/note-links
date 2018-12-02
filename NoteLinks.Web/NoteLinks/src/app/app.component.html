@@ -8,15 +8,15 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-select [value]="translate.currentLang" (selectionChange)="translate.use($event.value)" [placeholder]="'home.selectLanguagePlaceholder' | translate">
-      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
-          {{ 'home.' + lang | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
 </div>
+
+<mat-form-field>
+  <mat-select [value]="translate.currentLang" (selectionChange)="translate.use($event.value)" [placeholder]="'home.selectLanguagePlaceholder' | translate">
+    <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+        {{ 'home.' + lang | translate }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
 <div>
   <button mat-raised-button (click)="createCalendar()">{{ 'home.createCalendarButton' | translate }}</button>

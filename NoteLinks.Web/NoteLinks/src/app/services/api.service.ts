@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 import { Calendar } from '../models/calendar';
 import { Note } from '../models/note';
-import { environment } from '../../environments/environment';
+import { PageInfo } from '../models/page-info';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,10 +23,7 @@ export class ApiService {
 
   getCalendar(code: string): Observable<Calendar> {
     const url = `${this.serviceUrl}/calendars/${code}`;
-    return this.http.get<Calendar>(url)
-    .pipe<Calendar>(
-      catchError(this.handleError<Calendar>(`getCalendar code=${code}`))
-    );
+    return this.http.get<Calendar>(url);
   }
 
   updateCalendar(calendar: Calendar): Observable<any> {
@@ -46,12 +44,16 @@ export class ApiService {
     return this.http.delete(url, httpOptions);
   }
 
-  getCalendarNotes(code: string): Observable<Note[]> {
-    const url = `${this.serviceUrl}/notes/${code}`;
-    return this.http.get<Note[]>(url)
-    .pipe<Note[]>(
-      catchError(this.handleError<Note[]>(`getCalendarNotes code=${code}`, []))
-    );
+  getCalendarNotes(calendarCode: string, pageInfo: PageInfo): Observable<any> {
+    const url = `${this.serviceUrl}/notes/${calendarCode}`;
+    return this.http.get<Note[]>(url, { 
+      params: {
+        pageIndex: pageInfo.pageIndex.toString(),
+        pageSize: pageInfo.pageSize.toString(),
+        orderBy: pageInfo.orderBy,
+        desc: pageInfo.desc.toString()
+      }
+    })
   }
 
   updateNote(note: Note): Observable<any> {

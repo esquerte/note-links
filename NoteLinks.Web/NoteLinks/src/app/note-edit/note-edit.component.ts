@@ -130,11 +130,13 @@ export class NoteEditComponent implements OnInit, OnDestroy {
 
   private setTimeRange() {
     let fromDate = moment(this.note.fromDate);
-    let toDate = moment(this.note.toDate);
     this.timeRange.fromDate = moment([fromDate.year(), fromDate.month(), fromDate.date()]);
-    this.timeRange.toDate = moment([toDate.year(), toDate.month(), toDate.date()]);
     this.timeRange.fromTime = fromDate.format(this.timeFormat);
-    this.timeRange.toTime = toDate.format(this.timeFormat);
+    if (this.note.toDate) {
+      let toDate = moment(this.note.toDate);    
+      this.timeRange.toDate = moment([toDate.year(), toDate.month(), toDate.date()]);    
+      this.timeRange.toTime = toDate.format(this.timeFormat);
+    }
   }
 
   private setLocalization() {
