@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NoteLinks.Data.Entities;
 using NoteLinks.Data.Repository.Interfaces;
+using NoteLinks.Data.Models;
 using NoteLinks.Service.Logging;
 using NoteLinks.Service.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NoteLinks.Service.Controllers
 {
@@ -20,30 +20,40 @@ namespace NoteLinks.Service.Controllers
         private IUnitOfWork _unitOfWork;
         private INoteRepository _repository;
         private ILogger _logger;
+        private IMapper _mapper;
 
-        public NotesController(IUnitOfWork unitOfWork, ILogger<CalendarsController> logger)
+        public NotesController(IUnitOfWork unitOfWork, ILogger<CalendarsController> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _repository = _unitOfWork.Notes;
             _logger = logger;
+            _mapper = mapper;
         }
 
-        [HttpGet("{code}")]
-        public async Task<IActionResult> Get(string code)
+        [HttpGet("{calendarCode}")]
+        public async Task<IActionResult> Get(string calendarCode, [FromQuery] PageInfoModel pageModel)
         {
             try
             {
-                if (String.IsNullOrEmpty(code)) {
-                    _logger.LogWarning(LoggingEvents.GetItemNotFound, $"Get({code}) NOT FOUND");
+                if (String.IsNullOrEmpty(calendarCode)) {
+                    _logger.LogWarning(LoggingEvents.GetItemNotFound, $"Get({calendarCode}) NOT FOUND");
                     return NotFound();
                 }
 
-                var list = await _repository.FindAsync(note => note.Calendar.Code == code);
-                return new ObjectResult(list.Select(note => new NoteModel(note)));
+                var totalCount = await _repository.GetNotesCountAsync(x => x.Calendar.Code == calendarCode);
+
+                var pageInfo = _mapper.Map<PageInfoModel, PageInfo>(pageModel);
+                var list = await _repository.GetNotesAsync(x => x.Calendar.Code == calendarCode, pageInfo);
+
+                return new ObjectResult(new
+                {                    
+                    notes = _mapper.Map<List<Note>, List<NoteModel>>(list),
+                    totalCount
+                });
             }
             catch (Exception exception)
             {
-                _logger.LogError(LoggingEvents.GetItemError, exception, $"Get({code})");
+                _logger.LogError(LoggingEvents.GetItemError, exception, $"Get({calendarCode})");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -64,18 +74,13 @@ namespace NoteLinks.Service.Controllers
                     return BadRequest();
                 }
 
-                var entity = new Note() {
-                    Name = model.Name,
-                    Text = model.Text,
-                    FromDate = model.FromDate,
-                    ToDate = model.ToDate,
-                    CalendarId = calendar.Id
-                };
+                var entity = _mapper.Map<CreateNoteModel, Note>(model);
+                entity.CalendarId = calendar.Id;
 
                 _repository.Add(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(new NoteModel(entity));
+                return Ok(_mapper.Map<Note, NoteModel>(entity));
             }
             catch (Exception exception)
             {
@@ -100,15 +105,12 @@ namespace NoteLinks.Service.Controllers
                     return NotFound();
                 }
 
-                entity.Name = model.Name;
-                entity.FromDate = model.FromDate;
-                entity.ToDate = model.ToDate;
-                entity.Text = model.Text;
+                _mapper.Map(model, entity);
 
                 _repository.Update(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(new NoteModel(entity));
+                return Ok(_mapper.Map<Note, NoteModel>(entity));
             }
             catch (Exception exception)
             {

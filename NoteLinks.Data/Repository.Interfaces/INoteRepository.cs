@@ -1,14 +1,16 @@
 ﻿using NoteLinks.Data.Entities;
+using NoteLinks.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace NoteLinks.Data.Repository.Interfaces
 {
     public interface INoteRepository : IRepository<Note>
     {
-        //IEnumerable<Course> GetTopSellingCourses(int count);
-        //IEnumerable<Course> GetCoursesWithAuthors(int pageIndex, int pageSize);
+        Task<List<Note>> GetNotesAsync(Expression<Func<Note, bool>> predicate, PageInfo pageInfo);
+        Task<int> GetNotesCountAsync(Expression<Func<Note, bool>> predicate);
     }
 }

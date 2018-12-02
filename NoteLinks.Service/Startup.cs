@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NJsonSchema;
 using NoteLinks.Data.Extentions;
 using NoteLinks.Service.Extensions;
-using NJsonSchema;
 using NSwag.AspNetCore;
-using System.Reflection;
 
 namespace NoteLinks.Service
 {
@@ -27,6 +27,8 @@ namespace NoteLinks.Service
                 .AddJsonOptions(
                     options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
+
+            services.AddAutoMapper();
 
             services.AddDataServices();
             services.AddCors();

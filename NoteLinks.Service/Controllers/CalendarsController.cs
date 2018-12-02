@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NoteLinks.Data.Entities;
@@ -18,12 +19,14 @@ namespace NoteLinks.Service.Controllers
         private IUnitOfWork _unitOfWork;
         private ICalendarRepository _repository;
         private ILogger _logger;
+        private IMapper _mapper;
 
-        public CalendarsController(IUnitOfWork unitOfWork, ILogger<CalendarsController> logger)
+        public CalendarsController(IUnitOfWork unitOfWork, ILogger<CalendarsController> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _repository = _unitOfWork.Calendars;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("{code}")]
@@ -39,7 +42,7 @@ namespace NoteLinks.Service.Controllers
                     return NotFound();
                 }
 
-                return new ObjectResult(new CalendarModel(entity));
+                return new ObjectResult(_mapper.Map<Calendar, CalendarModel>(entity));
             }
             catch(Exception exception)
             {
@@ -56,15 +59,13 @@ namespace NoteLinks.Service.Controllers
 
             try
             {
-                var entity = new Calendar() {
-                    Code = CodeHelper.GetCode(),
-                    Name = model.Name
-                };
+                var entity = _mapper.Map<CreateCalendarModel, Calendar>(model);
+                entity.Code = CodeHelper.GetCode();
 
                 _repository.Add(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(new CalendarModel(entity));
+                return Ok(_mapper.Map<Calendar, CalendarModel>(entity));
             }
             catch (Exception exception)
             {
@@ -89,12 +90,12 @@ namespace NoteLinks.Service.Controllers
                     return NotFound();
                 }
 
-                entity.Name = model.Name;
+                _mapper.Map(model, entity);
 
                 _repository.Update(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(new CalendarModel(entity));
+                return Ok(_mapper.Map<Calendar, CalendarModel>(entity));
             }
             catch (Exception exception)
             {
