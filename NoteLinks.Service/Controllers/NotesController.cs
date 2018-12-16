@@ -10,6 +10,8 @@ using NoteLinks.Service.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace NoteLinks.Service.Controllers
 {
@@ -22,7 +24,7 @@ namespace NoteLinks.Service.Controllers
         private ILogger _logger;
         private IMapper _mapper;
 
-        public NotesController(IUnitOfWork unitOfWork, ILogger<CalendarsController> logger, IMapper mapper)
+        public NotesController(IUnitOfWork unitOfWork, ILogger<NotesController> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _repository = _unitOfWork.Notes;
@@ -45,10 +47,10 @@ namespace NoteLinks.Service.Controllers
                 var pageInfo = _mapper.Map<PageInfoModel, PageInfo>(pageModel);
                 var list = await _repository.GetNotesAsync(x => x.Calendar.Code == calendarCode, pageInfo);
 
-                return new ObjectResult(new
+                return new ObjectResult(new ResultNoteModel()
                 {                    
-                    notes = _mapper.Map<List<Note>, List<NoteModel>>(list),
-                    totalCount
+                    Notes = _mapper.Map<List<Note>, List<NoteModel>>(list),
+                    TotalCount = totalCount
                 });
             }
             catch (Exception exception)
@@ -71,7 +73,7 @@ namespace NoteLinks.Service.Controllers
                 if (calendar is null)
                 {
                     _logger.LogWarning(LoggingEvents.GetItemNotFound, $"Post({JsonConvert.SerializeObject(model)}) NOT FOUND");
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 var entity = _mapper.Map<CreateNoteModel, Note>(model);

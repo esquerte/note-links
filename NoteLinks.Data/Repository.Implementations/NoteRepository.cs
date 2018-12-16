@@ -13,10 +13,9 @@ namespace NoteLinks.Data.Repository.Implementations
 {
     public class NoteRepository : Repository<Note>, INoteRepository
     {
-        MainDbContext MainContext => Context as MainDbContext;
+        MainDataContext MainContext => Context as MainDataContext;
 
-        public NoteRepository(MainDbContext context)
-            : base(context)
+        public NoteRepository(DbContext context) : base(context)
         {
         }
 

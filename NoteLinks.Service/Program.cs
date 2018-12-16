@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
 namespace NoteLinks.Service
 {

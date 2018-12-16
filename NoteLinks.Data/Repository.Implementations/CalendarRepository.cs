@@ -1,4 +1,5 @@
-﻿using NoteLinks.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using NoteLinks.Data.Context;
 using NoteLinks.Data.Entities;
 using NoteLinks.Data.Repository.Interfaces;
 using System;
@@ -10,9 +11,9 @@ namespace NoteLinks.Data.Repository.Implementations
 {
     public class CalendarRepository : Repository<Calendar>, ICalendarRepository
     {
-        MainDbContext MainContext => Context as MainDbContext;
+        MainDataContext MainContext => Context as MainDataContext;
 
-        public CalendarRepository(MainDbContext context) : base(context)
+        public CalendarRepository(DbContext context) : base(context)
         {
         }        
     }

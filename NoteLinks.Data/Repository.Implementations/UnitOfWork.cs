@@ -10,9 +10,9 @@ namespace NoteLinks.Data.Repository.Implementations
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly MainDbContext _context;
+        private readonly MainDataContext _context;
 
-        public UnitOfWork(MainDbContext context)
+        public UnitOfWork(MainDataContext context)
         {
             _context = context;
             Calendars = new CalendarRepository(_context);

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NJsonSchema;
-using NoteLinks.Data.Extentions;
+using NoteLinks.Data.Context;
+using NoteLinks.Data.Repository.Implementations;
+using NoteLinks.Data.Repository.Interfaces;
 using NoteLinks.Service.Extensions;
 using NSwag.AspNetCore;
 
@@ -28,11 +31,12 @@ namespace NoteLinks.Service
                     options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            services.AddAutoMapper();
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<MainDataContext>(options => options.UseSqlServer(connection));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddDataServices();
+            services.AddAutoMapper();            
             services.AddCors();
-
             services.AddSwagger();
         }
 

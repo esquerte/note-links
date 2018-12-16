@@ -4,9 +4,9 @@ using System;
 
 namespace NoteLinks.Data.Context
 {
-    public class MainDbContext : DbContext
+    public class MainDataContext : DbContext
     {
-        public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
+        public MainDataContext(DbContextOptions<MainDataContext> options) : base(options)
         {
             Database.EnsureCreated();
         }

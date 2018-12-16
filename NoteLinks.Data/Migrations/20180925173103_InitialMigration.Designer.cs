@@ -9,7 +9,7 @@ using NoteLinks.Data.Context;
 
 namespace NoteLinks.Data.Migrations
 {
-    [DbContext(typeof(Context.MainDbContext))]
+    [DbContext(typeof(Context.MainDataContext))]
     [Migration("20180925173103_InitialMigration")]
     partial class InitialMigration
     {

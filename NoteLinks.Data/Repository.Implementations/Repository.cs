@@ -15,8 +15,8 @@ namespace NoteLinks.Data.Repository.Implementations
 
         public Repository(DbContext context)
         {
-            Context = context;
-            _entity = Context.Set<TEntity>();
+            this.Context = context;
+            _entity = this.Context.Set<TEntity>();
         }
 
         public Task<TEntity> GetAsync(int id)
