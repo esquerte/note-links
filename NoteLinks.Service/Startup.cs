@@ -54,7 +54,7 @@ namespace NoteLinks.Service
 
             loggerFactory.AddFileLogger();
 
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200")
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200", "http://localhost:64467")
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 

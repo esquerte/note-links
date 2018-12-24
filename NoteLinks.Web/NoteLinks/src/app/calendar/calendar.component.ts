@@ -8,6 +8,7 @@ import { ApiService } from '../services/api.service'
 import { CalendarCookieService } from '../services/calendar-cookie.service'
 import { CalendarService } from '../services/calendar.service'
 import { Note } from '../models/note';
+import { SignalRService } from '../services/signal-r.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private cookieService: CalendarCookieService,
     private calendarService: CalendarService,
+    private signalRService: SignalRService,
   ) {     
     // https://stackoverflow.com/questions/41678356/router-navigate-does-not-call-ngoninit-when-same-page
     route.params.subscribe(() => {    
@@ -41,7 +43,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      calendaCode => {
+        if (this.calendar.code == calendaCode) {
+          this.getCalendar();   
+        }
+    });
+  }
 
   getCalendar(): void {
     const code = this.route.snapshot.paramMap.get('code');
@@ -49,7 +58,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.apiService.getCalendar(code).subscribe(
         calendar => {
           this.cookieService.updateCalendarsCookie(calendar);
-          this.calendar = calendar;        
+          this.calendar = calendar;  
         },
         () => this.router.navigate(["/"])
       ); 
@@ -68,7 +77,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.apiService.deleteCalendar(this.calendar.code).subscribe(
       () => {
         this.cookieService.deleteCalendarFromCookie(this.calendar.code);
-        this.router.navigate(["/"]);    
+        this.router.navigate(["/"]);  
     });
   } 
 

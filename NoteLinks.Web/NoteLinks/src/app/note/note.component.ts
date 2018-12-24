@@ -19,7 +19,7 @@ export class NoteComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject();
 
   constructor(
-    private calendarService: CalendarService,
+    private calendarService: CalendarService
   ) {}
 
   ngOnInit() {
@@ -31,7 +31,7 @@ export class NoteComponent implements OnInit, OnDestroy {
     );
     this.calendarService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onDeleted(note)
-    ); 
+    );  
   }
 
   editNote(): void {
@@ -50,7 +50,7 @@ export class NoteComponent implements OnInit, OnDestroy {
 
   private onFinishEditing(note: Note): void {
     if (note.id) {
-      Object.assign(this.note, note);
+      Object.assign(this.note, note);      
     } else {
       this.note = null;
     }

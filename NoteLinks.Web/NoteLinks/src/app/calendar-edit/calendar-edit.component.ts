@@ -8,6 +8,7 @@ import { Calendar } from '../models/calendar';
 import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service'
 import { CalendarCookieService } from '../services/calendar-cookie.service'
+import { SignalRService } from '../services/signal-r.service';
 
 @Component({
   selector: 'app-calendar-edit',
@@ -27,6 +28,7 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
     private calendarService: CalendarService,
     private cookieService: CalendarCookieService,
     private location: Location,
+    private signalRService: SignalRService,
   ) {
     this.calendarService.onStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       calendar =>  {
@@ -50,6 +52,7 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
       calendar => {
         this.cookieService.updateCalendarsCookie(calendar);
         this.calendarService.finishEditing(calendar);
+        this.signalRService.change(calendar.code);
     });     
   }
 

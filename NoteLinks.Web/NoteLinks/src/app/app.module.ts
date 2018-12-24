@@ -20,6 +20,7 @@ import { CalendarEditComponent } from './calendar-edit/calendar-edit.component';
 import { CalendarCookieService } from './services/calendar-cookie.service';
 import { NoteComponent } from './note/note.component';
 import { CustomDatePipe } from './pipes/custom-date.pipe';
+import { SignalRService } from './services/signal-r.service'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -57,6 +58,7 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarCookieService,
     DatePipe,
     CustomDatePipe,
+    SignalRService,
   ],
   bootstrap: [AppComponent]
 })

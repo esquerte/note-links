@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Note } from '../models/note';
 import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service'
+import { SignalRService } from '../services/signal-r.service';
 
 interface TimeRange {
   fromDate: moment.Moment;
@@ -47,6 +48,7 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     private calendarService: CalendarService,
     private translate: TranslateService,
     private dateAdapter: DateAdapter<any>,
+    private signalRService: SignalRService,
   ) {}
 
   ngOnInit() {
@@ -78,6 +80,7 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     this.apiService.updateNote(this.note).subscribe(
       note => {
         this.calendarService.noteFinishEditing(note);
+        this.signalRService.change(this.calendarCode);
     });     
   }
 
@@ -85,7 +88,8 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     this.makeDates();
     this.apiService.createNote(this.calendarCode, this.note).subscribe(
       note => {           
-        this.calendarService.noteFinishEditing(note);   
+        this.calendarService.noteFinishEditing(note); 
+        this.signalRService.change(this.calendarCode);  
     });  
   }
 

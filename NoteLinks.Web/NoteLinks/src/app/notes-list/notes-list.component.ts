@@ -10,6 +10,7 @@ import { PageInfo } from '../models/page-info';
 import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service';
 import { MatTableDataSource } from '@angular/material'
+import { SignalRService } from '../services/signal-r.service';
 
 @Component({
   selector: 'app-notes-list',
@@ -42,6 +43,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private calendarService: CalendarService,
     public translate: TranslateService,
+    private signalRService: SignalRService,
   ) { }
 
   ngOnInit() {
@@ -49,20 +51,21 @@ export class NotesListComponent implements OnInit, OnDestroy {
     this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onFinishEditing()
     );
+    this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      calendaCode => {
+        if (this.calendarCode == calendaCode) {
+          this.getNotes();           
+        }
+    });
   }
 
   getNotes() {
     this.isLoading = true;
     this.apiService.getCalendarNotes(this.calendarCode, this.pageInfo).subscribe(
       result => {
-        setTimeout(() => { 
-          this.notes.data = result.notes;
-          this.pageInfo.totalCount = result.totalCount;
-          this.isLoading = false; 
-        }, 500)
-        // this.notes.data = result.notes;
-        // this.pageInfo.totalCount = result.totalCount;
-        // this.isLoading = false;        
+        this.notes.data = result.notes;
+        this.pageInfo.totalCount = result.totalCount;
+        this.isLoading = false;        
     });    
   }
 
@@ -76,6 +79,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
       () => {        
         this.calendarService.deleteNote(note); 
         this.getNotes();
+        this.signalRService.change(this.calendarCode);
       }
     );
   }
