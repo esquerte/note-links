@@ -8,6 +8,9 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { DatePipe } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -20,7 +23,8 @@ import { CalendarEditComponent } from './calendar-edit/calendar-edit.component';
 import { CalendarCookieService } from './services/calendar-cookie.service';
 import { NoteComponent } from './note/note.component';
 import { CustomDatePipe } from './pipes/custom-date.pipe';
-import { SignalRService } from './services/signal-r.service'
+import { SignalRService } from './services/signal-r.service';
+import { DatePickerComponent } from './date-picker/date-picker.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -36,7 +40,8 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarInfoComponent,
     CalendarEditComponent,
     NoteComponent,
-    CustomDatePipe
+    CustomDatePipe,
+    DatePickerComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +56,12 @@ export function createTranslateLoader(http: HttpClient) {
           useFactory: (createTranslateLoader),
           deps: [HttpClient]
       }
-  }),
+    }),
+    BrowserAnimationsModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    })
   ],
   providers: [
     CookieService, 

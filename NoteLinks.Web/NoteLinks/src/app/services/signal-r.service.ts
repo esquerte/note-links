@@ -22,7 +22,7 @@ export class SignalRService {
   
   private createConnection() {  
     this.hubConnection = new HubConnectionBuilder()  
-      .withUrl(window.location.origin+'/calendarhub')  
+      .withUrl(window.location.origin + '/calendarhub')  
       .build();  
   } 
   
