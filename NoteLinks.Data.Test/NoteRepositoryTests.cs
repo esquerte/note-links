@@ -41,7 +41,7 @@ namespace NoteLinks.Data.Test
         public async void GetNotesAsyncShouldReturnNotesOfSpecificCalendar()
         {
             // act
-            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 1, _pageInfo);
+            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 1, null, _pageInfo);
 
             // assert
             Assert.NotEmpty(result);
@@ -56,7 +56,7 @@ namespace NoteLinks.Data.Test
             _pageInfo.Desc = true;
 
             // act
-            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 2, _pageInfo);
+            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 2, null, _pageInfo);
 
             // assert
             Assert.NotEmpty(result);
@@ -72,7 +72,7 @@ namespace NoteLinks.Data.Test
             _pageInfo.OrderBy = "FromDate";
 
             // act
-            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 1, _pageInfo);
+            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 1, null, _pageInfo);
 
             // assert
             Assert.NotEmpty(result);
@@ -91,7 +91,7 @@ namespace NoteLinks.Data.Test
             _pageInfo.PageSize = 2;
 
             // act
-            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 2, _pageInfo);
+            List<Note> result = await _noteRepository.GetNotesAsync(x => x.CalendarId == 2, null, _pageInfo);
 
             // assert
             Assert.NotEmpty(result);

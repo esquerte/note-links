@@ -33,7 +33,7 @@ namespace NoteLinks.Service.Controllers
         }
 
         [HttpGet("{calendarCode}")]
-        public async Task<IActionResult> Get(string calendarCode, [FromQuery] PageInfoModel pageModel)
+        public async Task<IActionResult> Get(string calendarCode, [FromQuery] Filter[] filters, [FromQuery] PageInfoModel pageModel)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace NoteLinks.Service.Controllers
                 var totalCount = await _repository.GetNotesCountAsync(x => x.Calendar.Code == calendarCode);
 
                 var pageInfo = _mapper.Map<PageInfoModel, PageInfo>(pageModel);
-                var list = await _repository.GetNotesAsync(x => x.Calendar.Code == calendarCode, pageInfo);
+                var list = await _repository.GetNotesAsync(x => x.Calendar.Code == calendarCode, filters, pageInfo);
 
                 return new ObjectResult(new ResultNoteModel()
                 {                    

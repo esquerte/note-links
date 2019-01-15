@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using NoteLinks.Data.Helpers;
 
 namespace NoteLinks.Data.Repository.Implementations
 {
@@ -19,39 +20,22 @@ namespace NoteLinks.Data.Repository.Implementations
         {
         }
 
-        public Task<List<Note>> GetNotesAsync(Expression<Func<Note, bool>> predicate, PageInfo pageInfo)
+        public Task<List<Note>> GetNotesAsync(Expression<Func<Note, bool>> predicate, Filter[] filters, PageInfo pageInfo)
         {
             var query = MainContext.Notes.Where(predicate);
 
-            switch (pageInfo.OrderBy) 
-            {
-                case "Name":
-                    query = pageInfo.Desc ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name);
-                    break;
-                case "FromDate":
-                    query = pageInfo.Desc ? query.OrderByDescending(x => x.FromDate) : query.OrderBy(x => x.FromDate);
-                    break;
-                case "ToDate":
-                    query = pageInfo.Desc ? query.OrderByDescending(x => x.ToDate) : query.OrderBy(x => x.ToDate);
-                    break;
-                case "Text":
-                    query = pageInfo.Desc ? query.OrderByDescending(x => x.Text) : query.OrderBy(x => x.Text);
-                    break;
-                default:
-                    query = pageInfo.Desc ? query.OrderByDescending(x => x.FromDate) : query.OrderBy(x => x.FromDate);
-                    break;
-            }
+            FilterHelper.FilterNotes(ref query, filters);
+            PagingHelper.PagingNotes(ref query, pageInfo);
 
-            return query
-                .Skip((pageInfo.PageIndex - 1) * pageInfo.PageSize)
-                .Take(pageInfo.PageSize)
-                .ToListAsync();
+            return query.ToListAsync();
         }
 
         public Task<int> GetNotesCountAsync(Expression<Func<Note, bool>> predicate)
         {
             return MainContext.Notes.Where(predicate).CountAsync();
         }
+
+
 
     }
 }

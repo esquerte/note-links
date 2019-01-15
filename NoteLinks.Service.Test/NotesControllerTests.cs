@@ -49,7 +49,7 @@ namespace NoteLinks.Service.Test
             var noteRepositoryMock = new Mock<INoteRepository>();
             var pageInfo = Mock.Of<PageInfoModel>();
             
-            noteRepositoryMock.Setup(x => x.GetNotesAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<PageInfo>()))
+            noteRepositoryMock.Setup(x => x.GetNotesAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<Filter[]>(), It.IsAny<PageInfo>()))
                 .ReturnsAsync(_noteList);
 
             noteRepositoryMock.Setup(x => x.GetNotesCountAsync(It.IsAny<Expression<Func<Note, bool>>>()))
@@ -61,7 +61,7 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Get("calendarCode", pageInfo) as ObjectResult;
+            var result = await controller.Get("calendarCode", null, pageInfo) as ObjectResult;
 
             // assert
 
@@ -78,7 +78,7 @@ namespace NoteLinks.Service.Test
             var noteRepositoryMock = new Mock<INoteRepository>();
             var pageInfo = Mock.Of<PageInfoModel>();
 
-            noteRepositoryMock.Setup(x => x.GetNotesAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<PageInfo>()))
+            noteRepositoryMock.Setup(x => x.GetNotesAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<Filter[]>(), It.IsAny<PageInfo>()))
                 .ReturnsAsync(_noteList);
 
             noteRepositoryMock.Setup(x => x.GetNotesCountAsync(It.IsAny<Expression<Func<Note, bool>>>()))
@@ -90,7 +90,7 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Get("", pageInfo);
+            var result = await controller.Get("", null, pageInfo);
 
             // assert
 
