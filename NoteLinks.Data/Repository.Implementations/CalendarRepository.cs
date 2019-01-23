@@ -11,7 +11,7 @@ namespace NoteLinks.Data.Repository.Implementations
 {
     public class CalendarRepository : Repository<Calendar>, ICalendarRepository
     {
-        MainDataContext MainContext => Context as MainDataContext;
+        MainContext db => Context as MainContext;
 
         public CalendarRepository(DbContext context) : base(context)
         {

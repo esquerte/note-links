@@ -7,19 +7,8 @@ namespace NoteLinks.Data.Models
 {
     public class PageInfo
     {
-        private int _maxSize = 50; 
-        private int _pageSize = 10;
-
-        public int PageIndex { get; set; } = 1;
-        public int PageSize
-        {
-            get { return _pageSize; }
-            set
-            {
-                _pageSize = value > _maxSize ? _maxSize : value;
-            }
-        }
-
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
         public string OrderBy { get; set; }
         public bool Desc { get; set; }
     }

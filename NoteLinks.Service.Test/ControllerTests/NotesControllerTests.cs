@@ -47,12 +47,13 @@ namespace NoteLinks.Service.Test
 
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var noteRepositoryMock = new Mock<INoteRepository>();
-            var pageInfo = Mock.Of<PageInfoModel>();
-            
+            var pageInfo = Mock.Of<PageInfo>();
+            var filters = new Filter[2];
+
             noteRepositoryMock.Setup(x => x.GetNotesAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<Filter[]>(), It.IsAny<PageInfo>()))
                 .ReturnsAsync(_noteList);
 
-            noteRepositoryMock.Setup(x => x.GetNotesCountAsync(It.IsAny<Expression<Func<Note, bool>>>()))
+            noteRepositoryMock.Setup(x => x.GetNotesCountAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<Filter[]>()))
                 .ReturnsAsync(_noteList.Count);
             
             unitOfWorkMock.Setup(x => x.Notes).Returns(noteRepositoryMock.Object);
@@ -61,7 +62,7 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Get("calendarCode", null, pageInfo) as ObjectResult;
+            var result = await controller.Get("calendarCode", filters, pageInfo) as ObjectResult;
 
             // assert
 
@@ -76,12 +77,13 @@ namespace NoteLinks.Service.Test
 
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var noteRepositoryMock = new Mock<INoteRepository>();
-            var pageInfo = Mock.Of<PageInfoModel>();
+            var pageInfo = Mock.Of<PageInfo>();
+            var filters = new Filter[2];
 
             noteRepositoryMock.Setup(x => x.GetNotesAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<Filter[]>(), It.IsAny<PageInfo>()))
                 .ReturnsAsync(_noteList);
 
-            noteRepositoryMock.Setup(x => x.GetNotesCountAsync(It.IsAny<Expression<Func<Note, bool>>>()))
+            noteRepositoryMock.Setup(x => x.GetNotesCountAsync(It.IsAny<Expression<Func<Note, bool>>>(), It.IsAny<Filter[]>()))
                 .ReturnsAsync(_noteList.Count);
 
             unitOfWorkMock.Setup(x => x.Notes).Returns(noteRepositoryMock.Object);
@@ -90,7 +92,7 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Get("", null, pageInfo);
+            var result = await controller.Get("", filters, pageInfo);
 
             // assert
 

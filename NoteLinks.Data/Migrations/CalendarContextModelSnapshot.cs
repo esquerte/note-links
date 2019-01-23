@@ -8,7 +8,7 @@ using NoteLinks.Data.Context;
 
 namespace NoteLinks.Data.Migrations
 {
-    [DbContext(typeof(Context.MainDataContext))]
+    [DbContext(typeof(Context.MainContext))]
     partial class CalendarContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

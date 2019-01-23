@@ -11,6 +11,6 @@ namespace NoteLinks.Data.Repository.Interfaces
     public interface INoteRepository : IRepository<Note>
     {
         Task<List<Note>> GetNotesAsync(Expression<Func<Note, bool>> predicate, Filter[] filters, PageInfo pageInfo);
-        Task<int> GetNotesCountAsync(Expression<Func<Note, bool>> predicate);
+        Task<int> GetNotesCountAsync(Expression<Func<Note, bool>> predicate, Filter[] filters);
     }
 }

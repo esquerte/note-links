@@ -1,16 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NoteLinks.Data.Entities;
+﻿using NoteLinks.Data.Entities;
 using NoteLinks.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NoteLinks.Data.Helpers
+namespace NoteLinks.Data.Extensions
 {
-    public static class FilterHelper
+    public static class NoteQueryableExtensions
     {
-        public static IQueryable<Note> FilterNotes(ref IQueryable<Note> query, Filter[] filters)
+        public static IQueryable<Note> Filter(this IQueryable<Note> query, Filter[] filters)
         {
             if (filters != null)
             {
@@ -25,7 +24,7 @@ namespace NoteLinks.Data.Helpers
                                 case "eq":
                                     query = query.Where(x => x.Name == filter.Value);
                                     break;
-                                case "cts":
+                                case "ct":
                                     query = query.Where(x => x.Name.Contains(filter.Value));
                                     break;
                             }
@@ -46,13 +45,13 @@ namespace NoteLinks.Data.Helpers
                                     case "lt":
                                         query = query.Where(x => x.FromDate < fromDate);
                                         break;
-                                    case "lte":
+                                    case "le":
                                         query = query.Where(x => x.FromDate <= fromDate);
                                         break;
                                     case "gt":
                                         query = query.Where(x => x.FromDate > fromDate);
                                         break;
-                                    case "gte":
+                                    case "ge":
                                         query = query.Where(x => x.FromDate >= fromDate);
                                         break;
                                 }
@@ -74,13 +73,13 @@ namespace NoteLinks.Data.Helpers
                                     case "lt":
                                         query = query.Where(x => x.ToDate < toDate);
                                         break;
-                                    case "lte":
+                                    case "le":
                                         query = query.Where(x => x.ToDate <= toDate);
                                         break;
                                     case "gt":
                                         query = query.Where(x => x.ToDate > toDate);
                                         break;
-                                    case "gte":
+                                    case "ge":
                                         query = query.Where(x => x.ToDate >= toDate);
                                         break;
                                 }
@@ -95,7 +94,7 @@ namespace NoteLinks.Data.Helpers
                                 case "eq":
                                     query = query.Where(x => x.Text == filter.Value);
                                     break;
-                                case "cts":
+                                case "ct":
                                     query = query.Where(x => x.Text.Contains(filter.Value));
                                     break;
                             }
@@ -103,6 +102,36 @@ namespace NoteLinks.Data.Helpers
                             break;
                     }
                 }
+            }
+
+            return query;
+        }
+
+        public static IQueryable<Note> Paginate(this IQueryable<Note> query, PageInfo pageInfo)
+        {
+            if (pageInfo != null)
+            {
+                switch (pageInfo.OrderBy)
+                {
+                    case "Name":
+                        query = pageInfo.Desc ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name);
+                        break;
+                    case "FromDate":
+                        query = pageInfo.Desc ? query.OrderByDescending(x => x.FromDate) : query.OrderBy(x => x.FromDate);
+                        break;
+                    case "ToDate":
+                        query = pageInfo.Desc ? query.OrderByDescending(x => x.ToDate) : query.OrderBy(x => x.ToDate);
+                        break;
+                    case "Text":
+                        query = pageInfo.Desc ? query.OrderByDescending(x => x.Text) : query.OrderBy(x => x.Text);
+                        break;
+                    default:
+                        query = pageInfo.Desc ? query.OrderByDescending(x => x.FromDate) : query.OrderBy(x => x.FromDate);
+                        break;
+                }
+
+                query = query.Skip((pageInfo.PageIndex - 1) * pageInfo.PageSize).Take(pageInfo.PageSize);
+                
             }
 
             return query;

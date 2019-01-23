@@ -32,7 +32,7 @@ namespace NoteLinks.Service
                 );
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<MainDataContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<MainContext>(options => options.UseSqlServer(connection));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper();            

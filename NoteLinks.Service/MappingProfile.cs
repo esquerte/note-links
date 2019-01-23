@@ -17,9 +17,6 @@ namespace NoteLinks.Service
             CreateMap<CreateCalendarModel, Calendar>();
             CreateMap<Note, NoteModel>().ReverseMap();
             CreateMap<CreateNoteModel, Note>();
-            CreateMap<PageInfoModel, PageInfo>()
-                .ForMember(dest => dest.PageIndex, opt => opt.Condition(src => src.PageIndex > 0))
-                .ForMember(dest => dest.PageSize, opt => opt.Condition(src => src.PageSize > 0));
         }
     }
 }
