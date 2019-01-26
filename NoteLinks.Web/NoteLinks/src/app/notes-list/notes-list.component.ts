@@ -61,7 +61,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
 
   getNotes() {
     this.isLoading = true;
-    this.apiService.getCalendarNotes(this.calendarCode, this.pageInfo).subscribe(
+    this.apiService.getCalendarNotes(this.calendarCode, null, this.pageInfo).subscribe(
       result => {
         this.notes.data = result.notes;
         this.pageInfo.totalCount = result.totalCount;

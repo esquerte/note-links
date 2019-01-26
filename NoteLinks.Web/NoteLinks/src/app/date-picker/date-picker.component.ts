@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { Note } from '../models/note';
 import { ApiService } from '../services/api.service';
 import { PageInfo } from '../models/page-info';
+import { Filter } from '../models/filter';
 
 // weekStartsOn option is ignored when using moment, as it needs to be configured globally for the moment locale
 moment.updateLocale('en', {
@@ -49,14 +50,6 @@ export class DatePickerComponent implements OnInit {
 
   activeDayIsOpen: boolean = false;
 
-  pageInfo: PageInfo = {
-    pageIndex: 1,
-    pageSize: 20,
-    totalCount: 0,
-    orderBy: "Name",
-    desc: false
-  }
-
   constructor(
     private apiService: ApiService,
   ) {}
@@ -67,13 +60,27 @@ export class DatePickerComponent implements OnInit {
 
   fetchEvents(): void {
 
-    let fromDate: string;
-    let toDate: string;
+    let monthStart: string;
+    let monthEnd: string;
 
-    fromDate = moment(this.viewDate).startOf('month').format();
-    toDate = moment(this.viewDate).endOf('month').format();
+    monthStart = moment(this.viewDate).startOf('month').format("YYYY-MM-DD HH:mm");
+    monthEnd = moment(this.viewDate).endOf('month').format("YYYY-MM-DD HH:mm");
+
+    let filters: Filter[] = [ 
+      { field: "FromDate", operator: "ge", value: monthStart },
+      { field: "FromDate", operator: "le", value: monthEnd }
+    ];
+
+    let pageInfo: PageInfo = {
+      pageIndex: 1,
+      pageSize: 5,   
+      totalCount: 0,
+      orderBy: "",
+      desc: false   
+    }
     
-    this.events$ = this.apiService.getCalendarNotes(this.calendarCode, this.pageInfo)
+    // http://localhost/api/Notes/asdf?filters[0].Field=Name&filters[0].Operator=eq&filters[0].Value=%D0%9C%D0%B0%D1%80%D0%B8%D0%BD%D0%B0&pageSize=5&pageIndex=1
+    this.events$ = this.apiService.getCalendarNotes(this.calendarCode, filters, null)
     .pipe(
       map(({ notes }: { notes: Note[] }) => {
         return notes.map((note: Note) => {

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Calendar } from '../models/calendar';
 import { Note } from '../models/note';
 import { PageInfo } from '../models/page-info';
+import { Filter } from '../models/filter';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -44,16 +45,10 @@ export class ApiService {
     return this.http.delete(url, httpOptions);
   }
 
-  getCalendarNotes(calendarCode: string, pageInfo: PageInfo): Observable<any> {
+  getCalendarNotes(calendarCode: string, filters: Filter[], pageInfo: PageInfo): Observable<any> {
     const url = `${this.serviceUrl}/notes/${calendarCode}`;
-    return this.http.get<Note[]>(url, { 
-      params: {
-        pageIndex: pageInfo.pageIndex.toString(),
-        pageSize: pageInfo.pageSize.toString(),
-        orderBy: pageInfo.orderBy,
-        desc: pageInfo.desc.toString()
-      }
-    })
+    let httpParams = this.buildParamsForGetNotes(filters, pageInfo);
+    return this.http.get(url, { params: httpParams })
   }
 
   updateNote(note: Note): Observable<any> {
@@ -76,6 +71,30 @@ export class ApiService {
   deleteNote(id: number): Observable<any> {
     const url = `${this.serviceUrl}/notes/${id}`;
     return this.http.delete(url, httpOptions);
+  }
+
+  private buildParamsForGetNotes(filters: Filter[], pageInfo: PageInfo): HttpParams {
+
+    let httpParams = new HttpParams();
+
+    if (filters) {
+      filters.forEach((filter, index) => {
+        httpParams = httpParams
+          .append("filters[" + index + "].Field", filter.field)
+          .append("filters[" + index + "].Operator", filter.operator)
+          .append("filters[" + index + "].Value", filter.value);
+      });      
+    }
+
+    if (pageInfo) {
+      httpParams = httpParams
+        .set("pageIndex", pageInfo.pageIndex.toString())
+        .set("pageSize", pageInfo.pageSize.toString())
+        .set("orderBy", pageInfo.orderBy)
+        .set("desc", pageInfo.desc.toString());      
+    }
+
+    return httpParams;
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
