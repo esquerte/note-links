@@ -42,6 +42,9 @@ namespace NoteLinks.Service.Controllers
                     return NotFound();
                 }
 
+                filters = filters.Length == 0 ? null : filters;
+                pageInfo = pageInfo.PageIndex is null ? null : pageInfo;
+
                 var totalCount = await _repository.GetNotesCountAsync(x => x.Calendar.Code == calendarCode, filters);
 
                 var list = await _repository.GetNotesAsync(x => x.Calendar.Code == calendarCode, filters, pageInfo);
