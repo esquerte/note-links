@@ -3,17 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NoteLinks.Data.Entities;
-using NoteLinks.Data.Repository.Interfaces;
 using NoteLinks.Data.Models;
+using NoteLinks.Data.Repository.Interfaces;
 using NoteLinks.Service.Logging;
 using NoteLinks.Service.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using NoteLinks.Service.Validators;
-using FluentValidation.Results;
 
 namespace NoteLinks.Service.Controllers
 {

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,6 +38,7 @@ namespace NoteLinks.Service
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<MainContext>(options => options.UseSqlServer(connection));
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper();            
