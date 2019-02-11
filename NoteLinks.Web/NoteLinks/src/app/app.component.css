@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  /* background-color: gray; */
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header{
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  margin-bottom: 10px;
+  /* justify-content: flex-end; */
+  /* position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2; */
+}
+
+.header__select-calendar{
+  width: 230px;
+}
+
+.header__select-language{
+  width: 80px;
+}
+
+mat-form-field {
+  font-size: 14px;
+  margin-right: 15px;
+}
+
+.header__title {
+  margin-right: auto;
+  font-size: 30px;
+}
+
+.mat-icon {
+  font-size: 26px;
+  height: 26px;
+  width: 26px;
+}

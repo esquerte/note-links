@@ -1,3 +1,7 @@
-.highlight{
-    background: rgb(27, 163, 231);
-  }
+.highlight {
+  background: rgb(27, 163, 231);
+}
+
+table {
+  width: 100%;
+}

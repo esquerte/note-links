@@ -1,20 +1,9 @@
-<div *ngIf="note">
+<div class="note__edit-container" *ngIf="noteIsOnEditing">
+  <app-note-edit></app-note-edit>
+</div>
 
-  <div *ngIf="noteIsOnEditing">
-    <app-note-edit></app-note-edit>
-  </div>
-
-  <div *ngIf="!noteIsOnEditing">
-
-    <div>
-      <button mat-raised-button (click)="editNote()">{{ 'note.editNoteButton' | translate }}</button>
-    </div>
-
-    <div>
-      <app-note-info [note]="note"></app-note-info>
-    </div>
-
-  </div>
-
+<div class="note__info-container" *ngIf="note && !noteIsOnEditing">
+  <button class="note__edit-button" mat-raised-button (click)="editNote()">{{ 'note.editNoteButton' | translate }}</button>
+  <app-note-info [note]="note"></app-note-info>
 </div>
 

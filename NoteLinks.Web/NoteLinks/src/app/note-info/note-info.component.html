@@ -1,23 +1,42 @@
-<div *ngIf="note">
+<div class="note-info" *ngIf="note">
 
-  <label>{{ 'note.info.noteNameLabel' | translate }}</label>
-  <label>{{note.name}}</label>
+  <!-- <label>{{ 'note.info.noteNameLabel' | translate }}</label> -->
+  <div class="note-info__name">
+    {{ note.name }}
+  </div>  
 
-  <div>
+  <div class="note-info__date-block">
 
-    <label>{{ 'note.info.noteFromLabel' | translate }}</label>
-    <label>{{note.fromDate | customDate:this.translate.currentLang }}</label>
+    <!-- <label>{{ 'note.info.noteFromLabel' | translate }}</label>
+    <label>{{ note.fromDate | customDate:this.translate.currentLang }}</label>
 
     <span *ngIf="note.toDate">
       <label>{{ 'note.info.noteToLabel' | translate }}</label>
-      <label>{{note.toDate | customDate:this.translate.currentLang }}</label>
-    </span>
+      <label>{{ note.toDate | customDate:this.translate.currentLang }}</label>
+    </span> -->
+
+    {{ note.fromDate | customDate:this.translate.currentLang }}
+    <span *ngIf="note.toDate"> - {{ note.toDate | customDate:this.translate.currentLang }}</span>
 
   </div>
 
-  <div>
-    <label>{{ 'note.info.noteTextLabel' | translate }}</label>
-    <label>{{note.text}}</label>
+  <div class="note-info__text">
+    <!-- <label>{{ 'note.info.noteTextLabel' | translate }}</label> -->
+    <label>{{ note.text }}</label>
   </div>
 
 </div>
+
+<!-- <mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ note.name }}</mat-card-title>
+    <mat-card-subtitle>
+      {{ note.fromDate | customDate:this.translate.currentLang }}
+      <span *ngIf="note.toDate"> - {{ note.toDate | customDate:this.translate.currentLang }}</span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+      {{ note.text }}
+  </mat-card-content>
+</mat-card> -->
+  

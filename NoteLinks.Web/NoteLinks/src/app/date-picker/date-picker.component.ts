@@ -1,12 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CalendarEvent, CalendarView, DAYS_OF_WEEK, CalendarMonthViewDay } from 'angular-calendar';
+import {
+  CalendarEvent, CalendarView, DAYS_OF_WEEK, CalendarDateFormatter,
+  CalendarMomentDateFormatter, MOMENT
+} from 'angular-calendar';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { Note } from '../models/note';
 import { ApiService } from '../services/api.service';
-import { PageInfo } from '../models/page-info';
 import { Filter } from '../models/filter';
 import { CalendarService } from '../services/calendar.service';
 import { SignalRService } from '../services/signal-r.service';
@@ -22,7 +24,15 @@ moment.updateLocale('en', {
 @Component({
   selector: 'app-date-picker',
   templateUrl: './date-picker.component.html',
-  styleUrls: ['./date-picker.component.css']
+  styleUrls: [
+    // '../../../node_modules/angular-calendar/css/angular-calendar.css',
+    './date-picker.component.css'
+  ],
+  providers: [{
+    provide: MOMENT, useValue: moment
+  }, {
+    provide: CalendarDateFormatter, useClass: CalendarMomentDateFormatter
+  }]
 })
 export class DatePickerComponent implements OnInit {
 
@@ -30,25 +40,14 @@ export class DatePickerComponent implements OnInit {
 
   private unsubscribe: Subject<void> = new Subject();
 
-  colors: any = {
-    red: {
-      primary: '#ad2121',
-      secondary: '#FAE3E3'
-    },
-    blue: {
-      primary: '#1e90ff',
-      secondary: '#D1E8FF'
-    },
-    yellow: {
-      primary: '#e3bc08',
-      secondary: '#FDF1BA'
-    }
-  }
-
   view: CalendarView = CalendarView.Month;
-  viewDate: Date = new Date();
+  viewDate: moment.Moment = moment();
   events: CalendarEvent[] = [];
-  clickedDate: Date;
+  fromDate: moment.Moment;
+
+  years: Array<number> = new Array<number>();
+  selectedMonth: number = moment().month() + 1;
+  selectedYear: number = moment().year();
 
   events$: Observable<Array<CalendarEvent<{ note: Note }>>>;
 
@@ -58,19 +57,28 @@ export class DatePickerComponent implements OnInit {
     private apiService: ApiService,
     private calendarService: CalendarService,
     private signalRService: SignalRService,
-  ) {}
+  ) {
+    for (var i = 1900; i <= 2100; i++)
+      this.years.push(i);
+  }
 
   ngOnInit(): void {
     this.fetchEvents();
     this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
-      note => this.onFinishEditing()
+      note => this.onNoteFinishEditing()
+    );
+    this.calendarService.onNoteSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      ([calendarCode, note]) => this.onNoteSelected(note)
+    );
+    this.calendarService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      note => this.onNoteDeleted(note)
     );
     this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
       calendaCode => {
         if (this.calendarCode == calendaCode) {
-          this.fetchEvents();           
+          this.fetchEvents();
         }
-    });
+      });
   }
 
   fetchEvents(): void {
@@ -81,29 +89,58 @@ export class DatePickerComponent implements OnInit {
     monthStart = moment(this.viewDate).startOf('month').format("YYYY-MM-DD HH:mm");
     monthEnd = moment(this.viewDate).endOf('month').format("YYYY-MM-DD HH:mm");
 
-    let filters: Filter[] = [ 
+    let filters: Filter[] = [
       { field: "FromDate", operator: "ge", value: monthStart },
       { field: "FromDate", operator: "le", value: monthEnd }
     ];
 
     this.events$ = this.apiService.getCalendarNotes(this.calendarCode, filters, null)
-    .pipe(
-      map(({ notes }: { notes: Note[] }) => {
-        return notes.map((note: Note) => {
-          return {
-            title: note.name,
-            start: new Date(note.fromDate),
-            end: new Date(note.toDate),
-            color: this.colors.red,
-            allDay: true,
-            meta: { note }
-          };
-        });
-      })        
-    );
+      .pipe(
+        map(({ notes }: { notes: Note[] }) => {
+          return notes.map((note: Note) => {
+            return {
+              title: note.name,
+              start: new Date(note.fromDate),
+              end: new Date(note.toDate),
+              allDay: true,
+              meta: { note }
+            }
+          })
+        })
+      );
+
   }
 
-  private onFinishEditing() {
+  private onNoteFinishEditing() {
+    this.fetchEvents();
+  }
+
+  private onNoteSelected(note: Note) {
+    if (!moment(this.viewDate).isSame(note.fromDate, 'month')) {
+      this.viewDate = moment(note.fromDate);
+      this.changeSelectedMonth()
+      this.fetchEvents();
+    }
+  }
+
+  private onNoteDeleted(note: Note) {
+    if (moment(this.viewDate).isSame(note.fromDate, 'month')) {
+      this.fetchEvents();
+    }
+  }
+
+  private changeSelectedMonth() {
+    this.selectedMonth = moment(this.viewDate).month() + 1;
+    this.selectedYear = moment(this.viewDate).year();
+  }
+
+  monthSelected() {
+    this.viewDate = moment().year(this.selectedYear).month(this.selectedMonth - 1);
+    this.fetchEvents();
+  }
+
+  viewDateChanged() {
+    this.changeSelectedMonth()
     this.fetchEvents();
   }
 
@@ -111,9 +148,16 @@ export class DatePickerComponent implements OnInit {
     date,
     events
   }: {
-    date: Date;
+    date: moment.Moment;
     events: Array<CalendarEvent<{ note: Note }>>;
   }): void {
+    if (this.fromDate && date > this.fromDate) {
+      this.calendarService.selectToDate(date);
+    } else {
+      this.fromDate = date;
+      this.calendarService.selectFromDate(date);
+      this.calendarService.selectToDate(null);
+    }
     if (
       (moment(this.viewDate).isSame(date) && this.activeDayIsOpen === true) ||
       events.length === 0

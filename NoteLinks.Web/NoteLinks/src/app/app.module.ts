@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { MaterialModule } from './app-material.module';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
@@ -9,8 +9,17 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { DatePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import * as moment from 'moment';
+
+import { DateAdapter } from '@angular/material';
+
+import { adapterFactory } from 'angular-calendar/date-adapters/moment';
+import {
+  CalendarDateFormatter,
+  CalendarModule,
+  CalendarMomentDateFormatter,
+  DateAdapter as CalendarDateAdapter,
+} from 'angular-calendar';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -25,9 +34,15 @@ import { NoteComponent } from './note/note.component';
 import { CustomDatePipe } from './pipes/custom-date.pipe';
 import { SignalRService } from './services/signal-r.service';
 import { DatePickerComponent } from './date-picker/date-picker.component'
+import { AppDateAdapter } from './app-date-adapter';
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
+export function momentAdapterFactory() {
+  return adapterFactory(moment);
 }
 
 @NgModule({
@@ -52,23 +67,34 @@ export function createTranslateLoader(http: HttpClient) {
     NgxMaterialTimepickerModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
-          provide: TranslateLoader,
-          useFactory: (createTranslateLoader),
-          deps: [HttpClient]
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
       }
     }),
     BrowserAnimationsModule,
     CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory
-    })
+      provide: CalendarDateAdapter,
+      useFactory: momentAdapterFactory
+    },
+      {
+        dateFormatter: {
+          provide: CalendarDateFormatter,
+          useClass: CalendarMomentDateFormatter
+        }
+      }
+    )
   ],
   providers: [
-    CookieService, 
+    CookieService,
     CalendarCookieService,
     DatePipe,
     CustomDatePipe,
     SignalRService,
+    {
+      provide: DateAdapter,
+      useClass: AppDateAdapter
+    }
   ],
   bootstrap: [AppComponent]
 })

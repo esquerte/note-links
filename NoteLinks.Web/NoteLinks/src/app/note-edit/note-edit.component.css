@@ -1,0 +1,36 @@
+  .note-edit {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .note-edit__date-block{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+
+  .note-edit__date-picker{
+    flex: 1 70%;
+  }
+
+  .note-edit__time-picker{
+    flex: 1 30%;
+    width: 100px;
+    margin-left: 20px;
+  }
+
+  .note-edit__buttons{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+
+  .note-edit__save-button{
+    flex: 1 50%;
+  }
+
+  .note-edit__cancel-button{
+    flex: 1 50%;
+    margin-left: 20px;
+  }

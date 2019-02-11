@@ -1,25 +1,79 @@
-<button
-  mwlCalendarPreviousView
-  [(viewDate)]="viewDate"
-  [view]="view"
-  (viewDateChange)="fetchEvents()">
-Previous
-</button>
+<!-- <div>
+    <button mat-raised-button (click)="editNote()">{{ 'note.editNoteButton' | translate }}</button>
+  </div> -->
 
-<button
-  mwlCalendarToday
-  [(viewDate)]="viewDate"
-  (viewDateChange)="fetchEvents()">
-Today
-</button>
+<div class="date-picker__header">
 
-<button
-  mwlCalendarNextView
-  [(viewDate)]="viewDate"
-  [view]="view"
-  (viewDateChange)="fetchEvents($event)">
-Next
-</button>
+  <!-- <button
+    mat-raised-button
+    mwlCalendarPreviousView
+    [(viewDate)]="viewDate"
+    [view]="view"
+    (viewDateChange)="fetchEvents()">
+  {{ 'datePicker.previousButton' | translate }}
+  </button> -->
+
+  <button 
+          mat-icon-button
+          [disableRipple]="true" 
+          [matTooltip]="'datePicker.previousButton' | translate"
+          mwlCalendarPreviousView                    
+          [(viewDate)]="viewDate"
+          [view]="view"
+          (viewDateChange)="viewDateChanged()">
+    <mat-icon>arrow_back_ios</mat-icon>
+  </button>  
+
+  <!-- <button
+    mat-raised-button
+    mwlCalendarToday
+    [(viewDate)]="viewDate"
+    (viewDateChange)="fetchEvents()">
+  {{ 'datePicker.todayButton' | translate }}
+  </button> -->
+
+  <mat-form-field class="date-picker__select-month">
+    <mat-select [(ngModel)]="selectedMonth"
+                (selectionChange)="monthSelected($event.value)"
+                [matTooltip]="'datePicker.selectMonthPlaceholder' | translate">
+      <mat-option *ngFor="let month of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="month">
+        {{ 'months.' + month | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="date-picker__select-year">
+    <mat-select [(ngModel)]="selectedYear"
+                (selectionChange)="monthSelected($event.value)"
+                [matTooltip]="'datePicker.selectYearPlaceholder' | translate">
+      <mat-option *ngFor="let year of years" [value]="year">
+        {{year}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- <button
+    mat-raised-button
+    mwlCalendarNextView
+    [(viewDate)]="viewDate"
+    [view]="view"
+    (viewDateChange)="fetchEvents()">
+  {{ 'datePicker.nextButton' | translate }}
+  </button> -->
+
+  <button  
+          mat-icon-button
+          [disableRipple]="true" 
+          [matTooltip]="'datePicker.nextButton' | translate"
+          mwlCalendarNextView                  
+          [(viewDate)]="viewDate"
+          [view]="view"
+          (viewDateChange)="viewDateChanged()">
+  <mat-icon>arrow_forward_ios</mat-icon>
+  </button> 
+
+</div>
+
 
 <ng-template #loading>
   <div class="text-center">
@@ -31,6 +85,7 @@ Next
 
 <div *ngIf="events$ | async; else loading; let events">
   <mwl-calendar-month-view
+    [cellTemplate]="customCellTemplate"
     [viewDate]="viewDate"
     [events]="events"
     [activeDayIsOpen]="activeDayIsOpen"
@@ -38,3 +93,41 @@ Next
     (eventClicked)="eventClicked($event.event)">
   </mwl-calendar-month-view>
 </div>
+
+<ng-template
+  #customCellTemplate
+  let-day="day"
+  let-openDay="openDay"
+  let-locale="locale"
+  let-tooltipPlacement="tooltipPlacement"
+  let-highlightDay="highlightDay"
+  let-unhighlightDay="unhighlightDay"
+  let-eventClicked="eventClicked"
+  let-tooltipTemplate="tooltipTemplate"
+  let-tooltipAppendToBody="tooltipAppendToBody">
+  <div class="cal-cell-top">
+    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+  </div>
+  <!-- <div class="cal-events" *ngIf="day.events.length > 0">
+    <div
+      class="cal-event"
+      *ngFor="let event of day.events; trackBy:trackByEventId"
+      [style.backgroundColor]="event.color?.primary"
+      [ngClass]="event?.cssClass"
+      (mouseenter)="highlightDay.emit({event: event})"
+      (mouseleave)="unhighlightDay.emit({event: event})"
+      [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
+      [tooltipPlacement]="tooltipPlacement"
+      [tooltipEvent]="event"
+      [tooltipTemplate]="tooltipTemplate"
+      [tooltipAppendToBody]="tooltipAppendToBody"
+      mwlDraggable
+      [class.cal-draggable]="event.draggable"
+      dragActiveClass="cal-drag-active"
+      [dropData]="{event: event, draggedFrom: day}"
+      [dragAxis]="{x: event.draggable, y: event.draggable}"
+      (mwlClick)="eventClicked.emit({ event: event })">
+    </div>
+  </div> -->
+</ng-template>

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as moment from 'moment';
-import {DateAdapter } from '@angular/material/core';
+import { DateAdapter } from '@angular/material/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -49,18 +49,24 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private dateAdapter: DateAdapter<any>,
     private signalRService: SignalRService,
-  ) {}
+  ) { }
 
   ngOnInit() {
-    this.calendarService.onNoteStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(      
+    this.calendarService.onNoteStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       ([calendarCode, note]) => {
         this.setLocalization();
-        this.onStartEditing([calendarCode, note])
-    });
+        this.onStartEditing([calendarCode, note]);
+      });
+    this.calendarService.onFromDateSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      fromDate => this.timeRange.fromDate = moment(fromDate)
+    );
+    this.calendarService.onToDateSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      toDate => this.timeRange.toDate = moment(toDate)
+    );
     this.translate.onLangChange.pipe(takeUntil(this.unsubscribe)).subscribe(
       (event: LangChangeEvent) => {
         this.changeLocalization();
-    });
+      });
   }
 
   saveNote() {
@@ -68,10 +74,10 @@ export class NoteEditComponent implements OnInit, OnDestroy {
       this.updateNote();
     } else {
       this.createNote();
-    } 
+    }
   }
 
-  cancelEditing() {    
+  cancelEditing() {
     this.calendarService.noteFinishEditing(this.originalNote);
   }
 
@@ -81,24 +87,24 @@ export class NoteEditComponent implements OnInit, OnDestroy {
       note => {
         this.calendarService.noteFinishEditing(note);
         this.signalRService.change(this.calendarCode);
-    });     
+      });
   }
 
   private createNote() {
     this.makeDates();
     this.apiService.createNote(this.calendarCode, this.note).subscribe(
-      note => {           
-        this.calendarService.noteFinishEditing(note); 
-        this.signalRService.change(this.calendarCode);  
-    });  
+      note => {
+        this.calendarService.noteFinishEditing(note);
+        this.signalRService.change(this.calendarCode);
+      });
   }
 
-  private onStartEditing([calendarCode, note]: [string, Note]) {        
+  private onStartEditing([calendarCode, note]: [string, Note]) {
     this.note = note;
     this.originalNote = Object.assign({}, note);
     this.calendarCode = calendarCode;
-    if (note.id) 
-      this.setTimeRange();   
+    if (note.id)
+      this.setTimeRange();
   }
 
   private makeDates() {
@@ -109,9 +115,9 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     this.note.fromDate = this.timeRange.fromDate.format();
     if (this.timeRange.toDate) {
       if (this.timeRange.toTime) {
-        let toTime = moment(this.timeRange.toTime, this.timeFormat);    
-        this.timeRange.toDate.hour(toTime.hour()).minute(toTime.minute()); 
-      }   
+        let toTime = moment(this.timeRange.toTime, this.timeFormat);
+        this.timeRange.toDate.hour(toTime.hour()).minute(toTime.minute());
+      }
       this.note.toDate = this.timeRange.toDate.format();
     }
   }
@@ -137,30 +143,30 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     this.timeRange.fromDate = moment([fromDate.year(), fromDate.month(), fromDate.date()]);
     this.timeRange.fromTime = fromDate.format(this.timeFormat);
     if (this.note.toDate) {
-      let toDate = moment(this.note.toDate);    
-      this.timeRange.toDate = moment([toDate.year(), toDate.month(), toDate.date()]);    
+      let toDate = moment(this.note.toDate);
+      this.timeRange.toDate = moment([toDate.year(), toDate.month(), toDate.date()]);
       this.timeRange.toTime = toDate.format(this.timeFormat);
     }
   }
 
   private setLocalization() {
     this.dateAdapter.setLocale(this.translate.currentLang);
-    this.timePickerFormat = this.translate.currentLang == "en" ? 12 : 24;        
+    this.timePickerFormat = this.translate.currentLang == "en" ? 12 : 24;
   }
 
   private changeLocalization() {
-    
+
     this.dateAdapter.setLocale(this.translate.currentLang);
 
     let oldFormat: string = this.timeFormat
-    this.timePickerFormat = this.translate.currentLang == "en" ? 12 : 24;    
+    this.timePickerFormat = this.translate.currentLang == "en" ? 12 : 24;
 
     if (this.timeRange.fromTime)
       this.timeRange.fromTime = moment(this.timeRange.fromTime, oldFormat).format(this.timeFormat);
 
     if (this.timeRange.toTime)
       this.timeRange.toTime = moment(this.timeRange.toTime, oldFormat).format(this.timeFormat);
-    
+
   }
 
   ngOnDestroy() {

@@ -1,26 +1,38 @@
-<div *ngIf="calendars.length > 0">
+<!-- <div > -->
 
-  <mat-form-field>
-    <mat-select (selectionChange)="selectCalendar($event.value)" [placeholder]="'home.selectCalendarPlaceholder' | translate">
-      <mat-option *ngFor="let calendar of calendars" [value]="calendar.code">
-        {{calendar.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <mat-toolbar class="header">
+   
+    <span class="header__title">NoteLinks</span>
+    
+    <mat-form-field class="header__select-calendar" *ngIf="calendars.length > 0">
+      <mat-select (selectionChange)="selectCalendar($event.value)" 
+                  [matTooltip]="'home.selectCalendarPlaceholder' | translate">
+        <mat-option *ngFor="let calendar of calendars" [value]="calendar.code">
+          {{calendar.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-</div>
+    <mat-form-field class="header__select-language">
+      <mat-select [value]="translate.currentLang" 
+                  (selectionChange)="translate.use($event.value)"
+                  [matTooltip]="'home.selectLanguagePlaceholder' | translate">
+        <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+          {{ 'home.' + lang | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-<mat-form-field>
-  <mat-select [value]="translate.currentLang" (selectionChange)="translate.use($event.value)" [placeholder]="'home.selectLanguagePlaceholder' | translate">
-    <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
-        {{ 'home.' + lang | translate }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+    <button mat-icon-button
+            [disableRipple]="true"
+            [matTooltip]="'home.createCalendarButton' | translate" 
+            (click)="createCalendar()">
+      <mat-icon>add_circle_outline</mat-icon>
+    </button>
 
-<div>
-  <button mat-raised-button (click)="createCalendar()">{{ 'home.createCalendarButton' | translate }}</button>
-</div>
+  </mat-toolbar>
+
+<!-- </div> -->
 
 <router-outlet></router-outlet>
 

@@ -33,11 +33,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {}
 
-  selectCalendar(code: string): void {
+  selectCalendar(code: string) {
     this.router.navigate(['/calendars', code])
   }
 
-  createCalendar(): void {
+  createCalendar() {
     this.router.navigate(['/calendars'])
   }
 

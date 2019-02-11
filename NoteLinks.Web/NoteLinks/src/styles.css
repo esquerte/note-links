@@ -1,3 +1,87 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+/* Customizing mwl-calendar-month-view */
+
+.cal-month-view .cal-day-cell:not(:last-child) {
+  border-right: none;
+  border-radius: 50%;
+}
+
+.cal-month-view .cal-day-cell {
+  border-radius: 50%;
+  min-height: 0;
+  width: 70px;
+  height: 70px;
+  max-width: 70px;
+}
+
+.cal-month-view .cal-cell-top {
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.cal-month-view .cal-header .cal-cell {
+  max-width: 70px;
+}
+
+.cal-month-view .cal-day-cell.cal-today .cal-day-number {
+  font-size: 1.0em;
+}
+
+.cal-month-view .cal-day-cell.cal-weekend .cal-day-number {
+  color: inherit;
+}
+
+.cal-month-view .cal-day-number {
+  font-size: 1.1em;
+  /* margin-top: auto; */
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+.cal-month-view .cal-day-badge {
+  margin-top: 0;
+  margin-bottom: auto;
+  margin-left: 0;
+
+  background-color: #b94a48;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 0;
+  padding: 0;
+  font-size: 0.7em;
+  /* font-weight: 700; */
+  /* line-height: 1; */
+  color: white;
+  /* text-align: center;
+  white-space: nowrap;
+  vertical-align: middle; */
+  border-radius: 50%;
+  width: 23px;
+  height: 23px;
+  /* align-self: center; */
+}
+
+.cal-month-view .cal-days .cal-cell-row {
+  border-bottom: none;
+}
+
+.cal-month-view .cal-cell-row:hover {
+  background-color: inherit; 
+}
+
+.cal-month-view .cal-days {
+  border: none;
+}
+
+.cal-month-view .cal-event {
+  visibility: hidden;
+}

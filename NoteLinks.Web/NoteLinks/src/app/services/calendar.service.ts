@@ -3,6 +3,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
 
 import { Calendar } from '../models/calendar';
 import { Note } from '../models/note';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,12 @@ export class CalendarService {
   private noteDeletedSubject = new Subject<Note>();
   onNoteDeleted$ = this.noteDeletedSubject.asObservable();
 
+  private fromDateSelectedSubject = new Subject<moment.Moment>();
+  onFromDateSelected$ = this.fromDateSelectedSubject.asObservable();
+
+  private toDateSelectedSubject = new Subject<moment.Moment>();
+  onToDateSelected$ = this.toDateSelectedSubject.asObservable();
+
   selectNote(calendarCode: string, note: Note): void {
     this.noteSelectedSubject.next([calendarCode, note]);
   }
@@ -55,6 +62,14 @@ export class CalendarService {
 
   deleteNote(note: Note): void {
     this.noteDeletedSubject.next(note);
+  }
+
+  selectFromDate(fromDate: moment.Moment): void {
+    this.fromDateSelectedSubject.next(fromDate);
+  }
+
+  selectToDate(toDate: moment.Moment): void {
+    this.toDateSelectedSubject.next(toDate);
   }
 
 }

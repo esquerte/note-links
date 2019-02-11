@@ -1,37 +1,53 @@
-<div *ngIf="calendar">
+<app-calendar-edit *ngIf="calendarIsOnEditing"></app-calendar-edit>
 
-  <div *ngIf="calendarIsOnEditing">
-    <app-calendar-edit></app-calendar-edit>
+<div class="calendar" *ngIf="calendar && !calendarIsOnEditing">
+
+  <div class="calendar__header">
+
+    <app-calendar-info [calendar]="calendar"></app-calendar-info>
+
+    <button class="calendar__create-note-button" mat-icon-button
+            [disableRipple]="true"
+            [matTooltip]="'calendar.createNoteButton' | translate" 
+            (click)="createNote()">
+      <mat-icon>note_add</mat-icon>
+    </button>    
+
+    <button mat-icon-button
+            [disableRipple]="true"
+            [matTooltip]="'calendar.editCalendarButton' | translate" 
+            (click)="editCalendar()">
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <button mat-icon-button
+            [disableRipple]="true"
+            [matTooltip]="'calendar.deleteCalendarButton' | translate" 
+            (click)="deleteCalendar()">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+
   </div>
 
-  <div *ngIf="!calendarIsOnEditing">
+  <div class="calendar__content">
 
-    <div>
-      <!-- [disableRipple]="true" -->
-      <button mat-raised-button (click)="editCalendar()">{{ 'calendar.editCalendarButton' | translate }}</button>
-    </div>
-  
-    <div>
-      <button mat-raised-button (click)="deleteCalendar()">{{ 'calendar.deleteCalendarButton' | translate }}</button>
-    </div>
+    <div class="calendar__note-block">
 
-    <div>
-      <app-calendar-info [calendar]="calendar"></app-calendar-info>
-    </div>
+      <div class="calendar__date-picker">
+        <app-date-picker [calendarCode]="calendar.code"></app-date-picker>
+      </div>
 
-    <div>
-      <app-date-picker [calendarCode]="calendar.code"></app-date-picker>
+      <div class="calendar__note">
+        <app-note></app-note>
+      </div>
+
     </div>
 
-    <div>
-      <button mat-raised-button (click)="createNote()">{{ 'calendar.createNoteButton' | translate }}</button>
+    <div class="calendar__notes-list-title">
+      {{ 'noteList.header' | translate }}
     </div>
 
-    <div>
-      <app-note></app-note>
-    </div>
-
-    <div>
+    <div class="calendar__notes-list">
       <app-notes-list [calendarCode]="calendar.code"></app-notes-list>
     </div>
 

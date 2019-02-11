@@ -1,0 +1,93 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  /* background-color: yellowgreen; */
+  flex-direction: column;
+}
+
+.calendar {
+  display: flex;
+  flex-wrap: wrap;
+  /* background-color: magenta; */
+  flex-direction: column;
+  width: 80%;
+  margin: auto;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  border: 1px solid rgba(0,0,0,.03);
+  box-shadow: 0 2px 2px rgba(0,0,0,.24),0 0 2px rgba(0,0,0,.12);  
+}
+
+@media only screen and (max-width: 600px) {
+  .calendar {
+    width: 100%;
+  }
+}
+
+.calendar__header{
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 8px 20px;
+  background-color: rgba(0,0,0,.03);
+}
+
+.calendar__content{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  padding: 8px 20px;
+}
+
+.calendar__create-note-button{
+  margin-right: 30px;
+}
+
+app-calendar-info{
+  margin-right: auto;
+}
+
+.mat-icon {
+  font-size: 26px;
+  height: 26px;
+  width: 26px;
+}
+
+.calendar__note-block {
+  display: flex;
+  flex-wrap: nowrap;
+  /* background-color: orangered; */
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.calendar__date-picker {
+  flex: 1 50%;
+  /* background-color: aqua; */
+  /* padding: 8px 8px; */
+  margin-right: 10px;
+  min-height: 500px;
+}
+
+.calendar__note {
+  flex: 1 50%;
+  width: 50%;
+  /* background-color: darkblue; */
+  /* padding: 8px 8px; */
+  margin-left: 10px;
+}
+
+.calendar__notes-list-title{
+  color: rgba(0,0,0,.54);
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+  
+.calendar__notes-list {
+  display: flex;
+  flex-wrap: wrap;
+  /* background-color: violet; */
+  flex-direction: column;
+  margin-bottom: 20px;
+}
