@@ -4,11 +4,11 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 10px;
+    margin-bottom: 10px;    
 }
 
 .date-picker__select-month{
-    width: 100px;
+    width: 150px;
 }
 
 .date-picker__select-year{

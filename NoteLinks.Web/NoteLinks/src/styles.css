@@ -2,6 +2,12 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 
+
+body{
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
 /* Customizing mwl-calendar-month-view */
 
 .cal-month-view .cal-day-cell:not(:last-child) {
@@ -39,14 +45,19 @@
 
 .cal-month-view .cal-day-number {
   font-size: 1.1em;
-  /* margin-top: auto; */
+  margin-top: 0;
   margin-right: 0;
   margin-bottom: 0;
 }
 
+.cal-day-badge-wrapper{
+  margin-left: auto;
+  width: 23px;
+  height: 23px;
+}
+
 .cal-month-view .cal-day-badge {
   margin-top: 0;
-  margin-bottom: auto;
   margin-left: 0;
 
   background-color: #b94a48;
@@ -58,16 +69,11 @@
   min-width: 0;
   padding: 0;
   font-size: 0.7em;
-  /* font-weight: 700; */
-  /* line-height: 1; */
+
   color: white;
-  /* text-align: center;
-  white-space: nowrap;
-  vertical-align: middle; */
   border-radius: 50%;
   width: 23px;
   height: 23px;
-  /* align-self: center; */
 }
 
 .cal-month-view .cal-days .cal-cell-row {

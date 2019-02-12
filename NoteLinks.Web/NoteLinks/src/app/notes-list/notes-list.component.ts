@@ -65,7 +65,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
       result => {
         this.notes.data = result.notes;
         this.pageInfo.totalCount = result.totalCount;
-        this.isLoading = false;        
+        this.isLoading = false;                
     });    
   }
 

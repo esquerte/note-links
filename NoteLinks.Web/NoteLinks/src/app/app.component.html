@@ -1,6 +1,6 @@
 <!-- <div > -->
 
-  <mat-toolbar class="header">
+  <div class="header">
    
     <span class="header__title">NoteLinks</span>
     
@@ -23,14 +23,26 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-icon-button
-            [disableRipple]="true"
-            [matTooltip]="'home.createCalendarButton' | translate" 
-            (click)="createCalendar()">
-      <mat-icon>add_circle_outline</mat-icon>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
     </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="createCalendar()">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ 'home.createCalendarButton' | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="editCalendar()">
+        <mat-icon>edit</mat-icon>
+        <span>{{ 'calendar.editCalendarButton' | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="deleteCalendar()">
+        <mat-icon>delete_outline</mat-icon>
+        <span>{{ 'calendar.deleteCalendarButton' | translate }}</span>
+      </button>
+    </mat-menu>
 
-  </mat-toolbar>
+
+  </div>
 
 <!-- </div> -->
 

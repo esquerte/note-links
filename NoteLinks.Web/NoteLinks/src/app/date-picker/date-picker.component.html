@@ -106,28 +106,9 @@
   let-tooltipTemplate="tooltipTemplate"
   let-tooltipAppendToBody="tooltipAppendToBody">
   <div class="cal-cell-top">
-    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
-    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
-  </div>
-  <!-- <div class="cal-events" *ngIf="day.events.length > 0">
-    <div
-      class="cal-event"
-      *ngFor="let event of day.events; trackBy:trackByEventId"
-      [style.backgroundColor]="event.color?.primary"
-      [ngClass]="event?.cssClass"
-      (mouseenter)="highlightDay.emit({event: event})"
-      (mouseleave)="unhighlightDay.emit({event: event})"
-      [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
-      [tooltipPlacement]="tooltipPlacement"
-      [tooltipEvent]="event"
-      [tooltipTemplate]="tooltipTemplate"
-      [tooltipAppendToBody]="tooltipAppendToBody"
-      mwlDraggable
-      [class.cal-draggable]="event.draggable"
-      dragActiveClass="cal-drag-active"
-      [dropData]="{event: event, draggedFrom: day}"
-      [dragAxis]="{x: event.draggable, y: event.draggable}"
-      (mwlClick)="eventClicked.emit({ event: event })">
+    <div class="cal-day-badge-wrapper">
+      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
     </div>
-  </div> -->
+    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span> 
+  </div>
 </ng-template>

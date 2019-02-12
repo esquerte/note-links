@@ -5,6 +5,7 @@ import  {TranslateService } from '@ngx-translate/core';
 
 import { Calendar } from './models/calendar';
 import { CalendarCookieService } from './services/calendar-cookie.service'
+import { CalendarService } from './services/calendar.service';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private cookieService: CalendarCookieService,
     public translate: TranslateService,
+    private calendarService: CalendarService,
   ) { 
     cookieService.calendars.subscribe(
       calendars => this.calendars = calendars
@@ -39,6 +41,14 @@ export class AppComponent implements OnInit {
 
   createCalendar() {
     this.router.navigate(['/calendars'])
+  }
+
+  editCalendar(): void {    
+    this.calendarService.editCalendar();
+  }
+
+  deleteCalendar(): void {
+    this.calendarService.deleteCalendar();
   }
 
 }

@@ -1,49 +1,57 @@
-<div class="mat-elevation-z8" *ngIf="calendarCode">
+<div class="notes-list"  *ngIf="notes.data.length > 0">
 
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <div class="notes-list__title">
+    {{ 'noteList.header' | translate }}
+  </div>
 
-  <table mat-table [dataSource]="notes" (matSortChange)="sortNotes($event)" matSort matSortDisableClear class="mat-elevation-z8">
+  <div class="mat-elevation-z8">
 
-    <ng-container matColumnDef="Name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteNameHeader' | translate }}</th>
-      <td mat-cell *matCellDef="let note"> {{ note.name }} </td>
-    </ng-container>
+    <!-- <mat-spinner *ngIf="isLoading"></mat-spinner> -->
 
-    <ng-container matColumnDef="FromDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteFromDateHeader' | translate }}</th>
-      <td mat-cell *matCellDef="let note"> {{ note.fromDate | customDate:this.translate.currentLang }} </td>
-    </ng-container>
+    <table mat-table [dataSource]="notes" (matSortChange)="sortNotes($event)" matSort matSortDisableClear class="mat-elevation-z8">
 
-    <ng-container matColumnDef="ToDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteToDateHeader' | translate }}</th>
-      <td mat-cell *matCellDef="let note"> {{ note.toDate | customDate:this.translate.currentLang }} </td>
-    </ng-container>
+      <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteNameHeader' | translate }}</th>
+        <td mat-cell *matCellDef="let note"> {{ note.name }} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="Text">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteTextHeader' | translate }}</th>
-      <td mat-cell *matCellDef="let note"> {{ note.text}} </td>
-    </ng-container>
+      <ng-container matColumnDef="FromDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteFromDateHeader' | translate }}</th>
+        <td mat-cell *matCellDef="let note"> {{ note.fromDate | customDate:this.translate.currentLang }} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="Action">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let note">
-        <!-- <button mat-raised-button (click)="deleteNote(note)">{{ 'noteList.noteDeleteButton' | translate }}</button> -->
-        <button mat-icon-button
-                [disableRipple]="true"
-                [matTooltip]="'noteList.noteDeleteButton' | translate" 
-                (click)="deleteNote(note)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="ToDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteToDateHeader' | translate }}</th>
+        <td mat-cell *matCellDef="let note"> {{ note.toDate | customDate:this.translate.currentLang }} </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let note; columns: displayedColumns;" (click)="selectNote(note)" [ngClass]="{'highlight': selectedNoteId == note.id}">
-    </tr>
-  </table>
+      <ng-container matColumnDef="Text">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'noteList.noteTextHeader' | translate }}</th>
+        <td mat-cell *matCellDef="let note"> {{ note.text}} </td>
+      </ng-container>
 
-  <mat-paginator [length]="pageInfo.totalCount" [pageIndex]="pageInfo.pageIndex - 1" [pageSize]="pageInfo.pageSize"
-    [pageSizeOptions]="pageSizeOptions" (page)="pageChanged($event)">
-  </mat-paginator>
+      <ng-container matColumnDef="Action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let note">
+          <!-- <button mat-raised-button (click)="deleteNote(note)">{{ 'noteList.noteDeleteButton' | translate }}</button> -->
+          <button mat-icon-button
+                  [disableRipple]="true"
+                  [matTooltip]="'noteList.noteDeleteButton' | translate" 
+                  (click)="deleteNote(note)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let note; columns: displayedColumns;" (click)="selectNote(note)" [ngClass]="{'highlight': selectedNoteId == note.id}">
+      </tr>
+    </table>
+
+    <mat-paginator [length]="pageInfo.totalCount" [pageIndex]="pageInfo.pageIndex - 1" [pageSize]="pageInfo.pageSize"
+      [pageSizeOptions]="pageSizeOptions" (page)="pageChanged($event)">
+    </mat-paginator>
+
+  </div>
 
 </div>

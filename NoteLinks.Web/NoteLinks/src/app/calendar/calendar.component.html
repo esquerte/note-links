@@ -10,22 +10,8 @@
             [disableRipple]="true"
             [matTooltip]="'calendar.createNoteButton' | translate" 
             (click)="createNote()">
-      <mat-icon>note_add</mat-icon>
+      <mat-icon>add_circle_outline</mat-icon>
     </button>    
-
-    <button mat-icon-button
-            [disableRipple]="true"
-            [matTooltip]="'calendar.editCalendarButton' | translate" 
-            (click)="editCalendar()">
-      <mat-icon>edit</mat-icon>
-    </button>
-
-    <button mat-icon-button
-            [disableRipple]="true"
-            [matTooltip]="'calendar.deleteCalendarButton' | translate" 
-            (click)="deleteCalendar()">
-      <mat-icon>delete_outline</mat-icon>
-    </button>
 
   </div>
 
@@ -41,10 +27,6 @@
         <app-note></app-note>
       </div>
 
-    </div>
-
-    <div class="calendar__notes-list-title">
-      {{ 'noteList.header' | translate }}
     </div>
 
     <div class="calendar__notes-list">

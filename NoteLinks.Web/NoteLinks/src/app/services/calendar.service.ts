@@ -14,11 +14,21 @@ export class CalendarService {
 
   // Calendar
 
+  private editCalendarSubject = new Subject();
+  onEditCalendar$ = this.editCalendarSubject.asObservable();
+
   private startEditingSubject = new BehaviorSubject<Calendar>(null);
   onStartEditing$ = this.startEditingSubject.asObservable();
 
   private finishEditingSubject = new Subject<Calendar>();
   onFinishEditing$ = this.finishEditingSubject.asObservable();
+
+  private deleteCalendarSubject = new Subject();
+  onDeleteCalendar$ = this.deleteCalendarSubject.asObservable();
+
+  editCalendar(): void {
+    this.editCalendarSubject.next();
+  }
 
   startEditing(calendar: Calendar): void {
     this.startEditingSubject.next(calendar);
@@ -26,6 +36,10 @@ export class CalendarService {
 
   finishEditing(calendar: Calendar): void {
     this.finishEditingSubject.next(calendar);
+  }
+
+  deleteCalendar(): void {
+    this.deleteCalendarSubject.next();
   }
 
   // Note
