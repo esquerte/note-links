@@ -10,7 +10,7 @@ import { CalendarService } from './services/calendar.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
 
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     public translate: TranslateService,
     private calendarService: CalendarService,
   ) { 
-    cookieService.calendars.subscribe(
+    cookieService.calendars$.subscribe(
       calendars => this.calendars = calendars
     );
     translate.addLangs(['en', 'ru']);

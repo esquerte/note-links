@@ -1,20 +1,6 @@
-<!-- <div>
-    <button mat-raised-button (click)="editNote()">{{ 'note.editNoteButton' | translate }}</button>
-  </div> -->
-
 <div class="date-picker__header">
 
-  <!-- <button
-    mat-raised-button
-    mwlCalendarPreviousView
-    [(viewDate)]="viewDate"
-    [view]="view"
-    (viewDateChange)="fetchEvents()">
-  {{ 'datePicker.previousButton' | translate }}
-  </button> -->
-
-  <button 
-          mat-icon-button
+  <button mat-icon-button
           [disableRipple]="true" 
           [matTooltip]="'datePicker.previousButton' | translate"
           mwlCalendarPreviousView                    
@@ -22,15 +8,7 @@
           [view]="view"
           (viewDateChange)="viewDateChanged()">
     <mat-icon>arrow_back_ios</mat-icon>
-  </button>  
-
-  <!-- <button
-    mat-raised-button
-    mwlCalendarToday
-    [(viewDate)]="viewDate"
-    (viewDateChange)="fetchEvents()">
-  {{ 'datePicker.todayButton' | translate }}
-  </button> -->
+  </button>
 
   <mat-form-field class="date-picker__select-month">
     <mat-select [(ngModel)]="selectedMonth"
@@ -52,17 +30,7 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- <button
-    mat-raised-button
-    mwlCalendarNextView
-    [(viewDate)]="viewDate"
-    [view]="view"
-    (viewDateChange)="fetchEvents()">
-  {{ 'datePicker.nextButton' | translate }}
-  </button> -->
-
-  <button  
-          mat-icon-button
+  <button mat-icon-button
           [disableRipple]="true" 
           [matTooltip]="'datePicker.nextButton' | translate"
           mwlCalendarNextView                  
@@ -73,7 +41,6 @@
   </button> 
 
 </div>
-
 
 <ng-template #loading>
   <div class="text-center">
@@ -86,8 +53,10 @@
 <div *ngIf="events$ | async; else loading; let events">
   <mwl-calendar-month-view
     [cellTemplate]="customCellTemplate"
+    [eventTitleTemplate]="customEventTitleTemplate"
     [viewDate]="viewDate"
     [events]="events"
+    [locale]="locale"
     [activeDayIsOpen]="activeDayIsOpen"
     (dayClicked)="dayClicked($event.day)"
     (eventClicked)="eventClicked($event.event)">
@@ -96,19 +65,19 @@
 
 <ng-template
   #customCellTemplate
-  let-day="day"
-  let-openDay="openDay"
-  let-locale="locale"
-  let-tooltipPlacement="tooltipPlacement"
-  let-highlightDay="highlightDay"
-  let-unhighlightDay="unhighlightDay"
-  let-eventClicked="eventClicked"
-  let-tooltipTemplate="tooltipTemplate"
-  let-tooltipAppendToBody="tooltipAppendToBody">
+  let-day="day">
   <div class="cal-cell-top">
     <div class="cal-day-badge-wrapper">
       <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
     </div>
-    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span> 
+    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber' : locale }}</span> 
+  </div>
+</ng-template>
+
+<ng-template
+  #customEventTitleTemplate
+  let-event="event">
+  <div class="cal-event-title">
+    {{ event.title }}
   </div>
 </ng-template>

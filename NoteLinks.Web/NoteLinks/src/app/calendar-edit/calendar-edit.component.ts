@@ -13,7 +13,7 @@ import { SignalRService } from '../services/signal-r.service';
 @Component({
   selector: 'app-calendar-edit',
   templateUrl: './calendar-edit.component.html',
-  styleUrls: ['./calendar-edit.component.css']
+  styleUrls: ['./calendar-edit.component.scss']
 })
 export class CalendarEditComponent implements OnInit, OnDestroy {
 
@@ -29,22 +29,22 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
     private cookieService: CalendarCookieService,
     private location: Location,
     private signalRService: SignalRService,
-  ) {
+  ) { }
+
+  ngOnInit() {
     this.calendarService.onStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
-      calendar =>  {
+      calendar => {
         this.calendar = calendar;
         this.originalCalendar = Object.assign({}, calendar);
-    });
+      });
   }
-
-  ngOnInit() {}
 
   saveCalendar() {
     if (this.calendar.code) {
       this.updateCalendar();
     } else {
       this.createCalendar();
-    } 
+    }
   }
 
   private updateCalendar() {
@@ -53,14 +53,14 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
         this.cookieService.updateCalendarsCookie(calendar);
         this.calendarService.finishEditing(calendar);
         this.signalRService.change(calendar.code);
-    });     
+      });
   }
 
   private createCalendar() {
     this.apiService.createCalendar(this.calendar).subscribe(
-      calendar => {           
-        this.router.navigate(['/calendars', calendar.code]);      
-    });  
+      calendar => {
+        this.router.navigate(['/calendars', calendar.code]);
+      });
   }
 
   cancelEditing() {
@@ -68,7 +68,7 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
       this.calendarService.finishEditing(this.originalCalendar);
     } else {
       this.location.back();
-    }     
+    }
   }
 
   ngOnDestroy() {

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
 
 import { Calendar } from '../models/calendar';
 import { ApiService } from '../services/api.service'
@@ -9,12 +10,12 @@ import { CalendarCookieService } from '../services/calendar-cookie.service'
 import { CalendarService } from '../services/calendar.service'
 import { Note } from '../models/note';
 import { SignalRService } from '../services/signal-r.service';
-
+import { DeleteCalendarDialogComponent } from '../delete-calendar-dialog/delete-calendar-dialog.component';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+  styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, OnDestroy {
 
@@ -30,6 +31,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     private cookieService: CalendarCookieService,
     private calendarService: CalendarService,
     private signalRService: SignalRService,
+    public dialog: MatDialog
   ) {
     // https://stackoverflow.com/questions/41678356/router-navigate-does-not-call-ngoninit-when-same-page
     route.params.subscribe(() => {
@@ -80,11 +82,22 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   private deleteCalendar() {
-    this.apiService.deleteCalendar(this.calendar.code).subscribe(
-      () => {
-        this.cookieService.deleteCalendarFromCookie(this.calendar.code);
-        this.router.navigate(["/"]);
-      });
+
+    const dialogRef = this.dialog.open(DeleteCalendarDialogComponent, {
+      width: '350px',
+      data: { calendarName: this.calendar.name }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService.deleteCalendar(this.calendar.code).subscribe(
+          () => {
+            this.cookieService.deleteCalendarFromCookie(this.calendar.code);
+            this.router.navigate(["/"]);
+          });
+      }
+    });
+
   }
 
   createNote() {

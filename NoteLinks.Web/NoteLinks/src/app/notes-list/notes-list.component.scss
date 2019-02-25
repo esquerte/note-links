@@ -1,0 +1,53 @@
+@import "../common";
+
+.notes-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  &__title {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  &__table {
+    border: 1px solid rgba(0,0,0,.08);
+  }
+}
+
+.highlight {
+  background: $secondary;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-name {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.mat-column-text {
+  max-width: 300px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.mat-column-action {
+  max-width: 64px;
+}
+
+td.mat-cell {
+  padding: 0px 4px;
+  &:last-of-type {
+    padding-right: 0;
+  }
+}
+
+
+

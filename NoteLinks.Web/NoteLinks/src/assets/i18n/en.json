@@ -1,76 +1,85 @@
 {
-    "home": {
-        "selectCalendarPlaceholder": "Visited calendars",
-        "selectLanguagePlaceholder": "Select language",
-        "createCalendarButton": "Create calendar",
-        "en": "English",
-        "ru": "Russian"
+  "home": {
+    "selectCalendarPlaceholder": "Visited calendars",
+    "selectLanguagePlaceholder": "Select language",
+    "createCalendarButton": "Create calendar",
+    "en": "English",
+    "ru": "Russian"
+  },
+  "calendar": {
+    "editCalendarButton": "Edit calendar",
+    "deleteCalendarButton": "Delete calendar",
+    "createNoteButton": "Create note",
+    "info": {},
+    "edit": {
+      "editCalendarNamePlaceholder": "Name",
+      "saveCalendarButton": "Save",
+      "cancelEditingButton": "Back"
     },
-
-    "calendar": {
-        "editCalendarButton": "Edit calendar",
-        "deleteCalendarButton": "Delete calendar",
-        "createNoteButton": "Create note",
-        "info": {
-
-        },
-        "edit": {
-            "editCalendarNamePlaceholder": "Name",
-            "saveCalendarButton": "Save",
-            "cancelEditingButton": "Back"
-        }
-    },
-
-    "datePicker" : {
-        "previousButton": "Previous",
-        "todayButton": "Today",
-        "nextButton": "Next",
-        "selectMonthPlaceholder": "Select month",
-        "selectYearPlaceholder": "Select year"
-    },
-
-    "note": {
-        "editNoteButton": "Edit note",
-        "info": {
-            "noteNameLabel": "Name: ",
-            "noteFromLabel": "From: ",
-            "noteToLabel": "To: ",
-            "noteTextLabel": "Text: "
-        },
-        "edit": {
-            "noteNamePlaceholder": "Name",
-            "noteFromDatePlaceholder": "From date",
-            "noteFromTimePlaceholder": "From time",
-            "noteToDatePlaceholder": "To date",
-            "noteToTimePlaceholder": "To time",
-            "noteTextPlaceholder": "Text",
-            "noteSaveButton": "Save",
-            "cancelEditingButton": "Back"
-        }        
-    },
-
-    "noteList": {
-        "header": "All notes",
-        "noteNameHeader": " Name ",
-        "noteFromDateHeader": " From ",
-        "noteToDateHeader": " To ",
-        "noteTextHeader": " Text ",
-        "noteDeleteButton": "Delete"
-    },
-
-    "months": {
-        "1": "January",
-        "2": "February",
-        "3": "March",
-        "4": "April",
-        "5": "May",
-        "6": "June",
-        "7": "July",
-        "8": "August",
-        "9": "September",
-        "10": "October",
-        "11": "November",
-        "12": "December"
+    "deleteDialog": {
+      "title": "Delete calendar",
+      "question": "Are you realy want to delete calendar",
+      "no": "NO",
+      "yes": "YES"
     }
-    
+  },
+  "datePicker": {
+    "previousButton": "Previous",
+    "todayButton": "Today",
+    "nextButton": "Next",
+    "selectMonthPlaceholder": "Select month",
+    "selectYearPlaceholder": "Select year"
+  },
+  "note": {
+    "editNoteButton": "Edit note",
+    "info": {
+      "noteNameLabel": "Name: ",
+      "noteFromLabel": "From: ",
+      "noteToLabel": "To: ",
+      "noteTextLabel": "Text: "
+    },
+    "edit": {
+      "noteNamePlaceholder": "Name",
+      "noteFromDatePlaceholder": "From date",
+      "noteFromTimePlaceholder": "From time",
+      "noteToDatePlaceholder": "To date",
+      "noteToTimePlaceholder": "To time",
+      "noteTextPlaceholder": "Text",
+      "noteSaveButton": "Save",
+      "cancelEditingButton": "Back"
+    },
+    "deleteDialog": {
+      "title": "Delete note",
+      "question": "Are you realy want to delete note",
+      "no": "NO",
+      "yes": "YES"
+    }
+  },
+  "noteList": {
+    "header": "All notes",
+    "noteNameHeader": " Name ",
+    "noteFromDateHeader": " From ",
+    "noteToDateHeader": " To ",
+    "noteTextHeader": " Text ",
+    "noteDeleteButton": "Delete"
+  },
+  "paginator": {
+    "itemsPerPageLabel": "Items per page",
+    "nextPageLabel": "Next page",
+    "previousPageLabel": "Previous page"
+  },
+  "months": {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  }
 }

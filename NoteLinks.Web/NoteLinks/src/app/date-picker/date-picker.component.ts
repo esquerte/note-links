@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
+
 import {
-  CalendarEvent, CalendarView, DAYS_OF_WEEK, CalendarDateFormatter,
-  CalendarMomentDateFormatter, MOMENT
+  CalendarEvent, CalendarView, DAYS_OF_WEEK, CalendarDateFormatter, MOMENT
 } from 'angular-calendar';
+
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
@@ -12,6 +13,8 @@ import { ApiService } from '../services/api.service';
 import { Filter } from '../models/filter';
 import { CalendarService } from '../services/calendar.service';
 import { SignalRService } from '../services/signal-r.service';
+import { CustomDateFormatter } from './custom-date-formatter';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
 // weekStartsOn option is ignored when using moment, as it needs to be configured globally for the moment locale
 moment.updateLocale('en', {
@@ -26,13 +29,12 @@ moment.updateLocale('en', {
   templateUrl: './date-picker.component.html',
   styleUrls: [
     // '../../../node_modules/angular-calendar/css/angular-calendar.css',
-    './date-picker.component.css'
+    './date-picker.component.scss'
   ],
-  providers: [{
-    provide: MOMENT, useValue: moment
-  }, {
-    provide: CalendarDateFormatter, useClass: CalendarMomentDateFormatter
-  }]
+  providers: [
+    { provide: MOMENT, useValue: moment },
+    { provide: CalendarDateFormatter, useClass: CustomDateFormatter }
+  ]
 })
 export class DatePickerComponent implements OnInit {
 
@@ -50,6 +52,7 @@ export class DatePickerComponent implements OnInit {
   selectedYear: number = moment().year();
 
   events$: Observable<Array<CalendarEvent<{ note: Note }>>>;
+  locale: string;
 
   activeDayIsOpen: boolean = false;
 
@@ -57,9 +60,11 @@ export class DatePickerComponent implements OnInit {
     private apiService: ApiService,
     private calendarService: CalendarService,
     private signalRService: SignalRService,
+    private translate: TranslateService,
   ) {
     for (var i = 1900; i <= 2100; i++)
       this.years.push(i);
+    this.locale = this.translate.currentLang;
   }
 
   ngOnInit(): void {
@@ -73,6 +78,9 @@ export class DatePickerComponent implements OnInit {
     this.calendarService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onNoteDeleted(note)
     );
+    this.translate.onLangChange.pipe(takeUntil(this.unsubscribe)).subscribe(
+      (event: LangChangeEvent) => this.locale = event.lang
+    )
     this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
       calendaCode => {
         if (this.calendarCode == calendaCode) {
@@ -140,6 +148,7 @@ export class DatePickerComponent implements OnInit {
   }
 
   viewDateChanged() {
+    this.activeDayIsOpen = false;
     this.changeSelectedMonth()
     this.fetchEvents();
   }

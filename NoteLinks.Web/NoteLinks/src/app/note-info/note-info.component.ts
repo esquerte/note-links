@@ -6,7 +6,7 @@ import { Note } from '../models/note';
 @Component({
   selector: 'app-note-info',
   templateUrl: './note-info.component.html',
-  styleUrls: ['./note-info.component.css']
+  styleUrls: ['./note-info.component.scss']
 })
 export class NoteInfoComponent implements OnInit {
 

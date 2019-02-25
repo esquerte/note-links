@@ -15,7 +15,7 @@ export class AppDateAdapter extends MomentDateAdapter {
   }
 
   public format(date: moment.Moment, displayFormat: string): string {
-    const format = this.dateFormatService.getDateFormat();
+    const format = this.dateFormatService.getDateFormat(this.translate.currentLang);
     return date.locale(this.translate.currentLang).format(format);
   }
 }

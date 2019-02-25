@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{ 'note.deleteDialog.title' | translate }}</h1>
+<div mat-dialog-content>
+  <p>{{ 'note.deleteDialog.question' | translate }} "{{ data.noteName }}"?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>{{ 'note.deleteDialog.no' | translate }}</button>
+  <button mat-button [mat-dialog-close]="true" >{{ 'note.deleteDialog.yes' | translate }}</button>
+</div>

@@ -1,75 +1,85 @@
 {
-    "home": {
-        "selectCalendarPlaceholder": "Просмотренные календари",
-        "selectLanguagePlaceholder": "Выбрать язык",
-        "createCalendarButton": "Создать календарь",
-        "en": "Английский",
-        "ru": "Русский"
+  "home": {
+    "selectCalendarPlaceholder": "Просмотренные календари",
+    "selectLanguagePlaceholder": "Выбрать язык",
+    "createCalendarButton": "Создать календарь",
+    "en": "Английский",
+    "ru": "Русский"
+  },
+  "calendar": {
+    "editCalendarButton": "Редактировать календарь",
+    "deleteCalendarButton": "Удалить календарь",
+    "createNoteButton": "Новая заметка",
+    "info": {},
+    "edit": {
+      "editCalendarNamePlaceholder": "Название",
+      "saveCalendarButton": "Сохранить",
+      "cancelEditingButton": "Назад"
     },
-
-    "calendar": {
-        "editCalendarButton": "Редактировать календарь",
-        "deleteCalendarButton": "Удалить календарь",
-        "createNoteButton": "Новая заметка",
-        "info": {
-
-        },
-        "edit": {
-            "editCalendarNamePlaceholder": "Название",
-            "saveCalendarButton": "Сохранить",
-            "cancelEditingButton": "Назад"
-        }
-    },
-
-    "datePicker" : {
-        "previousButton": "Предыдущий",
-        "todayButton": "Сегодня",
-        "nextButton": "Следующий",
-        "selectMonthPlaceholder": "Выбрать месяц",
-        "selectYearPlaceholder": "Выбрать год"
-    },
-
-    "note": {
-        "editNoteButton": "Редактировать заметку",
-        "info": {
-            "noteNameLabel": "Название: ",
-            "noteFromLabel": "Дата начала: ",
-            "noteToLabel": "Дата окончания: ",
-            "noteTextLabel": "Текст: "
-        },
-        "edit": {
-            "noteNamePlaceholder": "Название",
-            "noteFromDatePlaceholder": "Дата начала",
-            "noteFromTimePlaceholder": "Время начала",
-            "noteToDatePlaceholder": "Дата окончания",
-            "noteToTimePlaceholder": "Время окончания",
-            "noteTextPlaceholder": "Текст",
-            "noteSaveButton": "Сохранить",
-            "cancelEditingButton": "Назад"
-        }        
-    },
-
-    "noteList": {
-        "header": "Все заметки",
-        "noteNameHeader": " Название ",
-        "noteFromDateHeader": " Дата начала ",
-        "noteToDateHeader": " Дата окончания ",
-        "noteTextHeader": " Текст ",
-        "noteDeleteButton": "Удалить"
-    },
-
-    "months": {
-        "1": "Январь",
-        "2": "Февраль",
-        "3": "Март",
-        "4": "Апрель",
-        "5": "Май",
-        "6": "Июнь",
-        "7": "Июль",
-        "8": "Август",
-        "9": "Сентябрь",
-        "10": "Октябрь",
-        "11": "Ноябрь",
-        "12": "Декабрь"
+    "deleteDialog": {
+      "title": "Удалить календарь",
+      "question": "Вы действительно хотите удалить календарь",
+      "no": "НЕТ",
+      "yes": "ДА"
     }
+  },
+  "datePicker": {
+    "previousButton": "Предыдущий",
+    "todayButton": "Сегодня",
+    "nextButton": "Следующий",
+    "selectMonthPlaceholder": "Выбрать месяц",
+    "selectYearPlaceholder": "Выбрать год"
+  },
+  "note": {
+    "editNoteButton": "Редактировать заметку",
+    "info": {
+      "noteNameLabel": "Название: ",
+      "noteFromLabel": "Дата начала: ",
+      "noteToLabel": "Дата окончания: ",
+      "noteTextLabel": "Текст: "
+    },
+    "edit": {
+      "noteNamePlaceholder": "Название",
+      "noteFromDatePlaceholder": "Дата начала",
+      "noteFromTimePlaceholder": "Время начала",
+      "noteToDatePlaceholder": "Дата окончания",
+      "noteToTimePlaceholder": "Время окончания",
+      "noteTextPlaceholder": "Текст",
+      "noteSaveButton": "Сохранить",
+      "cancelEditingButton": "Назад"
+    },
+    "deleteDialog": {
+      "title": "Удалить заметку",
+      "question": "Вы действительно хотите удалить заметку",
+      "no": "НЕТ",
+      "yes": "ДА"
+    }
+  },
+  "noteList": {
+    "header": "Все заметки",
+    "noteNameHeader": " Название ",
+    "noteFromDateHeader": " Дата начала ",
+    "noteToDateHeader": " Дата окончания ",
+    "noteTextHeader": " Текст ",
+    "noteDeleteButton": "Удалить"    
+  },
+  "paginator": {
+    "itemsPerPageLabel": "Элементов на странице",
+    "nextPageLabel": "Следующая страница",
+    "previousPageLabel": "Предыдущая страница"
+  },
+  "months": {
+    "1": "Январь",
+    "2": "Февраль",
+    "3": "Март",
+    "4": "Апрель",
+    "5": "Май",
+    "6": "Июнь",
+    "7": "Июль",
+    "8": "Август",
+    "9": "Сентябрь",
+    "10": "Октябрь",
+    "11": "Ноябрь",
+    "12": "Декабрь"
+  }
 }

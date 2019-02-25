@@ -1,0 +1,13 @@
+:host {
+  margin-right: auto;
+}
+
+.calendar-info__name {
+  font-size: 20px;
+  font-weight: 600;
+  max-width: 850px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  letter-spacing: 0.1rem;
+}

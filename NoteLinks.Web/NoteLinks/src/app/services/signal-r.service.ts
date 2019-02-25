@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';   
 import { Subject } from 'rxjs';
   
-@Injectable()  
+@Injectable({
+  providedIn: 'root'
+})  
 export class SignalRService {  
 
   private updateSubject = new Subject<string>();

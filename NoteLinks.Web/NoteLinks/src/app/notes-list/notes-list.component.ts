@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { PageEvent } from '@angular/material';
+import { PageEvent, MatPaginatorIntl, MatDialog } from '@angular/material';
 import { Sort } from '@angular/material';
 
 import { Note } from '../models/note';
@@ -11,11 +11,16 @@ import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service';
 import { MatTableDataSource } from '@angular/material'
 import { SignalRService } from '../services/signal-r.service';
+import { CustomPaginatorIntl } from './custom-paginator-intl';
+import { DeleteNoteDialogComponent } from '../delete-note-dialog/delete-note-dialog.component';
 
 @Component({
   selector: 'app-notes-list',
   templateUrl: './notes-list.component.html',
-  styleUrls: ['./notes-list.component.css']
+  styleUrls: ['./notes-list.component.scss'],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }
+  ]
 })
 export class NotesListComponent implements OnInit, OnDestroy {
 
@@ -26,7 +31,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
 
   private unsubscribe: Subject<void> = new Subject();
 
-  displayedColumns: string[] = ['Name', 'FromDate', 'ToDate', 'Text', 'Action'];
+  displayedColumns: string[] = ['name', 'fromDate', 'toDate', 'text', 'action'];
 
   pageSizeOptions: number[] = [2, 5, 10, 25];
   isLoading = true;
@@ -44,6 +49,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
     private calendarService: CalendarService,
     public translate: TranslateService,
     private signalRService: SignalRService,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -75,13 +81,24 @@ export class NotesListComponent implements OnInit, OnDestroy {
   }
 
   deleteNote(note: Note) {
-    this.apiService.deleteNote(note.id).subscribe(
-      () => {        
-        this.calendarService.deleteNote(note); 
-        this.getNotes();
-        this.signalRService.change(this.calendarCode);
+
+    const dialogRef = this.dialog.open(DeleteNoteDialogComponent, {
+      width: '350px',
+      data: { noteName: note.name }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService.deleteNote(note.id).subscribe(
+          () => {        
+            this.calendarService.deleteNote(note); 
+            this.getNotes();
+            this.signalRService.change(this.calendarCode);
+          }
+        );
       }
-    );
+    });
+    
   }
 
   private onFinishEditing() {

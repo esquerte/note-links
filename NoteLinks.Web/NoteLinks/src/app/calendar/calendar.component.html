@@ -6,11 +6,10 @@
 
     <app-calendar-info [calendar]="calendar"></app-calendar-info>
 
-    <button class="calendar__create-note-button" mat-icon-button
-            [disableRipple]="true"
+    <button class="calendar__create-note-button" mat-fab
             [matTooltip]="'calendar.createNoteButton' | translate" 
             (click)="createNote()">
-      <mat-icon>add_circle_outline</mat-icon>
+      <mat-icon>add</mat-icon>
     </button>    
 
   </div>
@@ -19,19 +18,19 @@
 
     <div class="calendar__note-block">
 
-      <div class="calendar__date-picker">
-        <app-date-picker [calendarCode]="calendar.code"></app-date-picker>
-      </div>
+      <!-- <div class="calendar__date-picker"> -->
+        <app-date-picker class="calendar__date-picker" [calendarCode]="calendar.code"></app-date-picker>
+      <!-- </div> -->
 
-      <div class="calendar__note">
-        <app-note></app-note>
-      </div>
+      <!-- <div class="calendar__note"> -->
+        <app-note class="calendar__note"></app-note>
+      <!-- </div> -->
 
     </div>
 
-    <div class="calendar__notes-list">
-      <app-notes-list [calendarCode]="calendar.code"></app-notes-list>
-    </div>
+    <!-- <div class="calendar__notes-list"> -->
+      <app-notes-list class="calendar__notes-list" [calendarCode]="calendar.code"></app-notes-list>
+    <!-- </div> -->
 
   </div>
 

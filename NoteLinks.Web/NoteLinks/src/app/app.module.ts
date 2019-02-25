@@ -35,7 +35,8 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
 import { SignalRService } from './services/signal-r.service';
 import { DatePickerComponent } from './date-picker/date-picker.component'
 import { AppDateAdapter } from './app-date-adapter';
-
+import { DeleteCalendarDialogComponent } from './delete-calendar-dialog/delete-calendar-dialog.component';
+import { DeleteNoteDialogComponent } from './delete-note-dialog/delete-note-dialog.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -56,7 +57,13 @@ export function momentAdapterFactory() {
     CalendarEditComponent,
     NoteComponent,
     CustomDatePipe,
-    DatePickerComponent
+    DatePickerComponent,
+    DeleteCalendarDialogComponent,
+    DeleteNoteDialogComponent,
+  ],
+  entryComponents: [
+    DeleteCalendarDialogComponent,
+    DeleteNoteDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,17 +80,18 @@ export function momentAdapterFactory() {
       }
     }),
     BrowserAnimationsModule,
-    CalendarModule.forRoot({
-      provide: CalendarDateAdapter,
-      useFactory: momentAdapterFactory
-    },
+    CalendarModule.forRoot(
+      {
+        provide: CalendarDateAdapter,
+        useFactory: momentAdapterFactory
+      },
       {
         dateFormatter: {
           provide: CalendarDateFormatter,
           useClass: CalendarMomentDateFormatter
         }
       }
-    )
+    ),
   ],
   providers: [
     CookieService,
@@ -94,7 +102,7 @@ export function momentAdapterFactory() {
     {
       provide: DateAdapter,
       useClass: AppDateAdapter
-    }
+    },
   ],
   bootstrap: [AppComponent]
 })

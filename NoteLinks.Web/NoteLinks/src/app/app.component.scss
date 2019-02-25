@@ -1,0 +1,49 @@
+@import "./common";
+
+$icon-size: 26px;
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: $primary;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header{
+  display: flex;
+  padding: 0 16px;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  background: $primary-dark;
+  border: 1px solid rgba(0,0,0,.03);
+  box-shadow: 0 2px 2px rgba(0,0,0,.34),0 0 2px rgba(0,0,0,.20);
+
+  &__title {
+    margin-right: auto;
+    font-size: 34px;
+    align-content: center;
+    letter-spacing: 0.15rem;
+  }
+
+  &__select-calendar{
+    width: 250px;
+    margin-right: 30px;
+  }
+  
+  &__select-language{
+    width: 100px;
+    margin-right: 50px;
+  }
+}
+
+mat-form-field {
+  font-size: 14px;
+}
+
+.mat-icon {
+  font-size: $icon-size;
+  height: $icon-size;
+  width: $icon-size;
+}

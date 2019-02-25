@@ -5,7 +5,7 @@ import { Calendar } from '../models/calendar';
 @Component({
   selector: 'app-calendar-info',
   templateUrl: './calendar-info.component.html',
-  styleUrls: ['./calendar-info.component.css']
+  styleUrls: ['./calendar-info.component.scss']
 })
 export class CalendarInfoComponent implements OnInit {
 

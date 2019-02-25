@@ -1,13 +1,13 @@
-<div *ngIf="calendar">
+<div class="calendar-edit" *ngIf="calendar">
 
   <mat-form-field>
     <input matInput #name maxlength="128" [placeholder]="'calendar.edit.editCalendarNamePlaceholder' | translate" required [(ngModel)]="calendar.name">
     <mat-hint align="end">{{name.value?.length || 0}}/128</mat-hint>
   </mat-form-field> 
 
-  <div>
-    <button mat-raised-button (click)="saveCalendar()">{{ 'calendar.edit.saveCalendarButton' | translate }}</button>
-    <button mat-raised-button (click)="cancelEditing()">{{ 'calendar.edit.cancelEditingButton' | translate }}</button>
+  <div class="calendar-edit__buttons">
+    <button class="calendar-edit__save-button" mat-raised-button (click)="saveCalendar()">{{ 'calendar.edit.saveCalendarButton' | translate }}</button>
+    <button class="calendar-edit__cancel-button" mat-raised-button (click)="cancelEditing()">{{ 'calendar.edit.cancelEditingButton' | translate }}</button>
   </div>
 
 </div>

@@ -14,7 +14,7 @@ export class CalendarCookieService {
   path: string = "/";
 
   private calendarsSubject = new BehaviorSubject<Calendar[]>(this.getCalendarsFromCookie());
-  calendars = this.calendarsSubject.asObservable();
+  calendars$ = this.calendarsSubject.asObservable();
 
   constructor(private cookieService: CookieService) { }
 

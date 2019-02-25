@@ -1,0 +1,153 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import "./app/common";
+
+
+$badge-size: 23px;
+
+body {
+  font-family: $default-font-family;
+  margin: 0px;
+  background-color: $primary;
+  color: $primary-text-color;
+}
+
+.mat-raised-button {
+  background-color: $secondary;
+}
+
+.mat-calendar-body-selected {
+  background-color: $secondary;
+}
+
+.timepicker__header {
+  background-color: $secondary;
+}
+
+/* Customizing mwl-calendar-month-view */
+
+.cal-month-view {
+
+  .cal-day-cell {
+    border-radius: 50%;
+    min-height: 0;
+    width: $day-cell-size;
+    height: $day-cell-size;
+    max-width: $day-cell-size;
+
+    &:not(:last-child) {
+      border-right: none;
+    }
+
+    &.cal-today {
+      background-color: $secondary-light;
+      .cal-day-number {
+        font-size: 1.0em;
+      }
+    }
+
+    &.cal-weekend .cal-day-number {
+      color: inherit;
+    }
+  }
+  
+  .cal-cell-row {
+    &:hover {
+      background-color: inherit; 
+    }
+
+    .cal-cell:hover {
+      background-color: $secondary;
+    }
+
+    .cal-out-month:hover {
+      background-color: $primary;
+    }
+  }
+
+  .cal-header .cal-cell {
+    max-width: $day-cell-size;
+
+    &:hover {
+      background-color: inherit;
+    } 
+  }
+
+  .cal-days {
+    border: none;
+    
+    .cal-cell-row {
+      border-bottom: none;
+    }
+  }
+  
+  .cal-cell.cal-has-events.cal-open {
+    background-color: $primary;
+  }
+  
+  .cal-cell-top {
+    min-height: $day-cell-size;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cal-day-number {
+    font-size: 1.1em;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+
+  .cal-day-badge {
+    margin-top: 0;
+    margin-left: 0;
+    padding: 0;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    width: $badge-size;
+    height: $badge-size;
+    min-width: 0;
+    border-radius: 50%;
+    
+    font-size: 0.7em;
+    color: white;
+    background-color: $secondary-dark;
+  }
+  
+  .cal-event {
+    visibility: hidden;
+    margin: 0;
+    display: none;
+  }
+
+  .cal-open-day-events {
+    background-color: $primary-dark; 
+    box-shadow: none;
+    margin: 5px 0;
+    border-radius: 2px;
+    color: $primary-text-color;
+  }
+
+  .cal-day-badge-wrapper{
+    margin-left: auto;
+    width: $badge-size;
+    height: $badge-size;
+  }
+  
+  .cal-event-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 460px;
+  }
+
+}
+
+
+
+

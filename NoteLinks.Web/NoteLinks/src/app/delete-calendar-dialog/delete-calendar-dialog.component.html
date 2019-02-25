@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{ 'calendar.deleteDialog.title' | translate }}</h1>
+<div mat-dialog-content>
+  <p>{{ 'calendar.deleteDialog.question' | translate }} "{{ data.calendarName }}"?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>{{ 'calendar.deleteDialog.no' | translate }}</button>
+  <button mat-button [mat-dialog-close]="true" >{{ 'calendar.deleteDialog.yes' | translate }}</button>
+</div>
+

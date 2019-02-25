@@ -10,6 +10,7 @@ import { Note } from '../models/note';
 import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service'
 import { SignalRService } from '../services/signal-r.service';
+import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 
 interface TimeRange {
   fromDate: moment.Moment;
@@ -21,7 +22,7 @@ interface TimeRange {
 @Component({
   selector: 'app-note-edit',
   templateUrl: './note-edit.component.html',
-  styleUrls: ['./note-edit.component.css']
+  styleUrls: ['./note-edit.component.scss']
 })
 export class NoteEditComponent implements OnInit, OnDestroy {
 
@@ -42,6 +43,19 @@ export class NoteEditComponent implements OnInit, OnDestroy {
       default: return "hh:mm a"
     }
   }
+
+  blueTheme: NgxMaterialTimepickerTheme = {
+    container: {
+        bodyBackgroundColor: '#ffffff',
+        buttonColor: '#81d4fa'
+    },
+    dial: {
+        dialBackgroundColor: '#81d4fa',
+    },
+    clockFace: {
+        clockHandColor: '#81d4fa',
+    }
+  };
 
   constructor(
     private apiService: ApiService,
@@ -103,8 +117,10 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     this.note = note;
     this.originalNote = Object.assign({}, note);
     this.calendarCode = calendarCode;
-    if (note.id)
+    if (note.id) {
       this.setTimeRange();
+      this.toTimeMinValue = this.getToTimeMinValue();
+    }
   }
 
   private makeDates() {
@@ -131,7 +147,7 @@ export class NoteEditComponent implements OnInit, OnDestroy {
   }
 
   private getToTimeMinValue(): moment.Moment {
-    if (moment(this.timeRange.fromDate).isSame(this.timeRange.toDate)) {
+    if (this.timeRange.fromDate && moment(this.timeRange.fromDate).isSame(this.timeRange.toDate)) {
       return moment(this.timeRange.fromTime, this.timeFormat);
     } else {
       return moment().hour(0).minute(0);
