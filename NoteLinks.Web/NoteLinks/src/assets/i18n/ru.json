@@ -14,7 +14,11 @@
     "edit": {
       "editCalendarNamePlaceholder": "Название",
       "saveCalendarButton": "Сохранить",
-      "cancelEditingButton": "Назад"
+      "cancelEditingButton": "Назад",
+      "errors": {
+        "nameIsRequired": "Название должно быть заполнено.",
+        "nameMaxLength": "Название должно содержать не более 60 символов."
+      }
     },
     "deleteDialog": {
       "title": "Удалить календарь",
@@ -46,7 +50,13 @@
       "noteToTimePlaceholder": "Время окончания",
       "noteTextPlaceholder": "Текст",
       "noteSaveButton": "Сохранить",
-      "cancelEditingButton": "Назад"
+      "cancelEditingButton": "Назад",
+      "errors": {
+        "nameIsRequired": "Название должно быть заполнено.",
+        "nameMaxLength": "Название должно содержать не более 60 символов.",
+        "fromDateIsRequired": "Дата начала должна быть заполнена.",
+        "wrongDatesOrder": "Дата окончания должна быть больше даты начала."
+      }
     },
     "deleteDialog": {
       "title": "Удалить заметку",

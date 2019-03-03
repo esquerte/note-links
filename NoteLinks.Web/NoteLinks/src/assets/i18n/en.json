@@ -14,7 +14,11 @@
     "edit": {
       "editCalendarNamePlaceholder": "Name",
       "saveCalendarButton": "Save",
-      "cancelEditingButton": "Back"
+      "cancelEditingButton": "Back",
+      "errors": {
+        "nameIsRequired": "Name is required.",
+        "nameMaxLength": "Name must be less than 60 characters long."
+      }
     },
     "deleteDialog": {
       "title": "Delete calendar",
@@ -46,7 +50,13 @@
       "noteToTimePlaceholder": "To time",
       "noteTextPlaceholder": "Text",
       "noteSaveButton": "Save",
-      "cancelEditingButton": "Back"
+      "cancelEditingButton": "Back",
+      "errors": {
+        "nameIsRequired": "Name is required.",
+        "nameMaxLength": "Name must be less than 60 characters long.",
+        "fromDateIsRequired": "From date is required.",
+        "wrongDatesOrder": "To date must be greater than from date."
+      }
     },
     "deleteDialog": {
       "title": "Delete note",

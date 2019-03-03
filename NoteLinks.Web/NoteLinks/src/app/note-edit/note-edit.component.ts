@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Directive, Input } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as moment from 'moment';
@@ -180,8 +180,13 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     if (this.timeRange.fromTime)
       this.timeRange.fromTime = moment(this.timeRange.fromTime, oldFormat).format(this.timeFormat);
 
-    if (this.timeRange.toTime)
+    if (this.timeRange.toTime) {
+
+      // if minValue is greater than value of toTime, toTime doesn't change format
+      this.toTimeMinValue = moment().hour(0).minute(0);
+
       this.timeRange.toTime = moment(this.timeRange.toTime, oldFormat).format(this.timeFormat);
+    }
 
   }
 

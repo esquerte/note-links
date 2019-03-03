@@ -25,6 +25,12 @@ body {
   background-color: $secondary;
 }
 
+.form-error-alert {
+  color: $form-error-color;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
 /* Customizing mwl-calendar-month-view */
 
 .cal-month-view {

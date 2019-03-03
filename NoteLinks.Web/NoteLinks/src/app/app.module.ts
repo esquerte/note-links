@@ -37,6 +37,7 @@ import { DatePickerComponent } from './date-picker/date-picker.component'
 import { AppDateAdapter } from './app-date-adapter';
 import { DeleteCalendarDialogComponent } from './delete-calendar-dialog/delete-calendar-dialog.component';
 import { DeleteNoteDialogComponent } from './delete-note-dialog/delete-note-dialog.component';
+import { DatesValidatorDirective } from './note-edit/dates-validator.directive';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -60,6 +61,7 @@ export function momentAdapterFactory() {
     DatePickerComponent,
     DeleteCalendarDialogComponent,
     DeleteNoteDialogComponent,
+    DatesValidatorDirective,
   ],
   entryComponents: [
     DeleteCalendarDialogComponent,
