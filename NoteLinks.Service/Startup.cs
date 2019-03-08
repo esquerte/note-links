@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,7 @@ using NoteLinks.Data.Repository.Implementations;
 using NoteLinks.Data.Repository.Interfaces;
 using NoteLinks.Service.Extensions;
 using NSwag.AspNetCore;
+using System;
 
 namespace NoteLinks.Service
 {
@@ -27,6 +30,8 @@ namespace NoteLinks.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+
             services.AddMvc()
                 .AddJsonOptions(
                     options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -47,8 +52,25 @@ namespace NoteLinks.Service
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IAntiforgery antiforgery)
         {
+            app.Use(async (context, next) =>
+            {
+                string path = context.Request.Path.Value;
+                if (path != null)
+                {
+                    // XSRF-TOKEN used by angular in the $http if provided
+                    var tokens = antiforgery.GetAndStoreTokens(context);
+                    context.Response.Cookies.Append("XSRF-TOKEN",
+                      tokens.RequestToken, new CookieOptions {
+                          HttpOnly = false,
+                          Expires = DateTimeOffset.Now.AddMinutes(10),
+                          Path = "/"
+                      });
+                } 
+                await next();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,7 +84,8 @@ namespace NoteLinks.Service
 
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200", "http://localhost:64467")
                 .AllowAnyHeader()
-                .AllowAnyMethod());
+                .AllowAnyMethod()
+                .AllowCredentials());
 
             app.UseSwaggerUi3WithApiExplorer(settings =>
             {

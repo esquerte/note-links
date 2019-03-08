@@ -61,6 +61,7 @@ namespace NoteLinks.Service.Controllers
         }
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Post([FromBody] CreateNoteModel model)
         {
             if (model is null)
@@ -92,6 +93,7 @@ namespace NoteLinks.Service.Controllers
         }
 
         [HttpPut]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Put([FromBody] NoteModel model)
         {
             if (model is null)
