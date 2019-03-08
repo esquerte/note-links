@@ -18,7 +18,7 @@ $content-padding: 30px;
   min-width: $day-cell-size * 7 + $note-width + $content-padding * 2 + 40px;
   margin: 20px auto;
   border: 1px solid rgba(0,0,0,.03);
-  box-shadow: 0 2px 2px rgba(0,0,0,.24),0 0 2px rgba(0,0,0,.12);
+  box-shadow: 0 6px 6px rgba(0,0,0,.24), 0 0 6px rgba(0,0,0,.12);
 
   &__header{
     display: flex;

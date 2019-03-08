@@ -45,7 +45,6 @@ export class DatePickerComponent implements OnInit {
   view: CalendarView = CalendarView.Month;
   viewDate: moment.Moment = moment();
   events: CalendarEvent[] = [];
-  fromDate: moment.Moment;
 
   years: Array<number> = new Array<number>();
   selectedMonth: number = moment().month() + 1;
@@ -160,13 +159,9 @@ export class DatePickerComponent implements OnInit {
     date: moment.Moment;
     events: Array<CalendarEvent<{ note: Note }>>;
   }): void {
-    if (this.fromDate && date > this.fromDate) {
-      this.calendarService.selectToDate(date);
-    } else {
-      this.fromDate = date;
-      this.calendarService.selectFromDate(date);
-      this.calendarService.selectToDate(null);
-    }
+
+    this.calendarService.selectDate(date);
+
     if (
       (moment(this.viewDate).isSame(date) && this.activeDayIsOpen === true) ||
       events.length === 0
@@ -176,6 +171,7 @@ export class DatePickerComponent implements OnInit {
       this.activeDayIsOpen = true;
       this.viewDate = date;
     }
+    
   }
 
   eventClicked(event: CalendarEvent<{ note: Note }>): void {

@@ -11,6 +11,7 @@ import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service'
 import { SignalRService } from '../services/signal-r.service';
 import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
+import { DateFormatService } from '../services/date-format.service';
 
 interface TimeRange {
   fromDate: moment.Moment;
@@ -46,14 +47,14 @@ export class NoteEditComponent implements OnInit, OnDestroy {
 
   blueTheme: NgxMaterialTimepickerTheme = {
     container: {
-        bodyBackgroundColor: '#ffffff',
-        buttonColor: '#81d4fa'
+      bodyBackgroundColor: '#ffffff',
+      buttonColor: '#81d4fa'
     },
     dial: {
-        dialBackgroundColor: '#81d4fa',
+      dialBackgroundColor: '#81d4fa',
     },
     clockFace: {
-        clockHandColor: '#81d4fa',
+      clockHandColor: '#81d4fa',
     }
   };
 
@@ -71,11 +72,8 @@ export class NoteEditComponent implements OnInit, OnDestroy {
         this.setLocalization();
         this.onStartEditing([calendarCode, note]);
       });
-    this.calendarService.onFromDateSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
-      fromDate => this.timeRange.fromDate = moment(fromDate)
-    );
-    this.calendarService.onToDateSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
-      toDate => this.timeRange.toDate = moment(toDate)
+    this.calendarService.onCalendarDateSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      date => this.onCalendarDateChanged(date)
     );
     this.translate.onLangChange.pipe(takeUntil(this.unsubscribe)).subscribe(
       (event: LangChangeEvent) => {
@@ -101,7 +99,9 @@ export class NoteEditComponent implements OnInit, OnDestroy {
       note => {
         this.calendarService.noteFinishEditing(note);
         this.signalRService.change(this.calendarCode);
-      });
+      },
+      error => this.calendarService.handleError(error)
+    );
   }
 
   private createNote() {
@@ -110,7 +110,9 @@ export class NoteEditComponent implements OnInit, OnDestroy {
       note => {
         this.calendarService.noteFinishEditing(note);
         this.signalRService.change(this.calendarCode);
-      });
+      },
+      error => this.calendarService.handleError(error)
+    );
   }
 
   private onStartEditing([calendarCode, note]: [string, Note]) {
@@ -120,6 +122,8 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     if (note.id) {
       this.setTimeRange();
       this.toTimeMinValue = this.getToTimeMinValue();
+    } else {
+      this.timeRange = {} as TimeRange;
     }
   }
 
@@ -162,6 +166,15 @@ export class NoteEditComponent implements OnInit, OnDestroy {
       let toDate = moment(this.note.toDate);
       this.timeRange.toDate = moment([toDate.year(), toDate.month(), toDate.date()]);
       this.timeRange.toTime = toDate.format(this.timeFormat);
+    }
+  }
+
+  private onCalendarDateChanged(date: moment.Moment) {
+    if (this.timeRange.fromDate && moment(date).isSameOrAfter(this.timeRange.fromDate)) {
+      this.timeRange.toDate = moment(date);
+    } else {
+      this.timeRange.fromDate = moment(date);
+      this.timeRange.toDate = null;
     }
   }
 

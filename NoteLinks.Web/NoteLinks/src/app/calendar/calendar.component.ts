@@ -94,7 +94,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
           () => {
             this.cookieService.deleteCalendarFromCookie(this.calendar.code);
             this.router.navigate(["/"]);
-          });
+          },
+          error => this.calendarService.handleError(error)
+        );
       }
     });
 

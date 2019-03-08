@@ -60,9 +60,9 @@ export class NotesListComponent implements OnInit, OnDestroy {
     this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
       calendaCode => {
         if (this.calendarCode == calendaCode) {
-          this.getNotes();           
+          this.getNotes();
         }
-    });
+      });
   }
 
   getNotes() {
@@ -71,8 +71,10 @@ export class NotesListComponent implements OnInit, OnDestroy {
       result => {
         this.notes.data = result.notes;
         this.pageInfo.totalCount = result.totalCount;
-        this.isLoading = false;                
-    });    
+        this.isLoading = false;
+      },
+      error => this.calendarService.handleError(error)
+    );
   }
 
   selectNote(note: Note) {
@@ -90,15 +92,16 @@ export class NotesListComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.apiService.deleteNote(note.id).subscribe(
-          () => {        
-            this.calendarService.deleteNote(note); 
+          () => {
+            this.calendarService.deleteNote(note);
             this.getNotes();
             this.signalRService.change(this.calendarCode);
-          }
+          },
+          error => this.calendarService.handleError(error)
         );
       }
     });
-    
+
   }
 
   private onFinishEditing() {

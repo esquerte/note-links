@@ -2,6 +2,11 @@
 
   <form #calendarEditForm="ngForm">
 
+    <div class="form-error-alert" *ngIf="errorOccured">
+        Возникла ошибка при сохнанении
+        <!-- {{ 'calendar.edit.errors.nameIsRequired' | translate }} -->
+    </div>
+
     <mat-form-field>
       <input matInput 
               name="calendarName"

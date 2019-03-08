@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { MaterialModule } from './app-material.module';
@@ -71,6 +71,7 @@ export function momentAdapterFactory() {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    HttpClientXsrfModule,
     FormsModule,
     MaterialModule,
     NgxMaterialTimepickerModule.forRoot(),

@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 @import "./app/common";
 
@@ -17,18 +16,15 @@ body {
   background-color: $secondary;
 }
 
-.mat-calendar-body-selected {
-  background-color: $secondary;
-}
-
-.timepicker__header {
-  background-color: $secondary;
-}
-
 .form-error-alert {
-  color: $form-error-color;
+  color: $error-color;
   font-size: 12px;
   margin-bottom: 10px;
+}
+
+.error-snack-bar {
+  background-color: $primary-dark;
+  color: $error-color;
 }
 
 /* Customizing mwl-calendar-month-view */
@@ -38,9 +34,10 @@ body {
   .cal-day-cell {
     border-radius: 50%;
     min-height: 0;
-    width: $day-cell-size;
-    height: $day-cell-size;
-    max-width: $day-cell-size;
+    width: $day-cell-size - $day-cell-margin * 2;
+    height: $day-cell-size - $day-cell-margin * 2;
+    max-width: $day-cell-size - $day-cell-margin * 2;
+    margin: $day-cell-margin;
 
     &:not(:last-child) {
       border-right: none;
@@ -64,7 +61,7 @@ body {
     }
 
     .cal-cell:hover {
-      background-color: $secondary;
+      background-color: $primary-dark;
     }
 
     .cal-out-month:hover {
@@ -89,7 +86,7 @@ body {
   }
   
   .cal-cell.cal-has-events.cal-open {
-    background-color: $primary;
+    background-color: $secondary;
   }
   
   .cal-cell-top {
