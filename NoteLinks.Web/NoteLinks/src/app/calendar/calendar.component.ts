@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { Calendar } from '../models/calendar';
 import { ApiService } from '../services/api.service'
@@ -11,6 +11,7 @@ import { CalendarService } from '../services/calendar.service'
 import { Note } from '../models/note';
 import { SignalRService } from '../services/signal-r.service';
 import { DeleteCalendarDialogComponent } from '../delete-calendar-dialog/delete-calendar-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-calendar',
@@ -31,7 +32,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
     private cookieService: CalendarCookieService,
     private calendarService: CalendarService,
     private signalRService: SignalRService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    public translate: TranslateService,
   ) {
     // https://stackoverflow.com/questions/41678356/router-navigate-does-not-call-ngoninit-when-same-page
     route.params.subscribe(() => {
@@ -45,6 +48,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       calendaCode => {
         if (this.calendar.code == calendaCode) {
           this.getCalendar();
+          this.showUpdateMessage();
         }
       });
     this.calendarService.onEditCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
@@ -104,6 +108,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   createNote() {
     this.calendarService.selectNote(this.calendar.code, new Note());
+  }
+
+  showUpdateMessage() {    
+    this.snackBar.open(this.translate.instant("calendar.updatedByAnotherUserMessage"), "", {
+      duration: 5000,
+      panelClass: ['update-snack-bar']
+    });
   }
 
   ngOnDestroy() {

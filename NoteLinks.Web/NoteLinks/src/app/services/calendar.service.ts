@@ -12,6 +12,8 @@ export class CalendarService {
 
   constructor() { }
 
+  private noteIsOnEditing: boolean;
+
   // Calendar
 
   private editCalendarSubject = new Subject();
@@ -67,6 +69,9 @@ export class CalendarService {
   private noteFinishEditingSubject = new Subject<Note>();
   onNoteFinishEditing$ = this.noteFinishEditingSubject.asObservable();
 
+  private noteCancelEditingSubject = new Subject<Note>();
+  onNoteCancelEditing$ = this.noteCancelEditingSubject.asObservable();
+
   private noteDeletedSubject = new Subject<Note>();
   onNoteDeleted$ = this.noteDeletedSubject.asObservable();
 
@@ -75,15 +80,26 @@ export class CalendarService {
   }
 
   noteStartEditing(calendarCode: string, note: Note): void {
-    this.noteStartEditingSubject.next([calendarCode, note]);
+    this.noteIsOnEditing = true;
+    this.noteStartEditingSubject.next([calendarCode, note]);    
   }
 
   noteFinishEditing(note: Note): void {
-    this.noteFinishEditingSubject.next(note);
+    this.noteIsOnEditing = false;
+    this.noteFinishEditingSubject.next(note);    
+  }
+  
+  noteCancelEditing(note: Note): void {
+    this.noteIsOnEditing = false;
+    this.noteCancelEditingSubject.next(note);    
   }
 
   deleteNote(note: Note): void {
     this.noteDeletedSubject.next(note);
   }
+
+  isNoteOnEditing(): boolean {
+    return this.noteIsOnEditing;
+  };
 
 }

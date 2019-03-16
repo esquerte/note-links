@@ -1,22 +1,16 @@
 
 <div class="note__edit-button">
-  <button *ngIf="note && !noteIsOnEditing" 
+  <button *ngIf="note && note.id && !calendarService.isNoteOnEditing()" 
           mat-raised-button (click)="editNote()">
     {{ 'note.editNoteButton' | translate }}
   </button>
-  <!-- <button *ngIf="note && !noteIsOnEditing" mat-icon-button
-          [disableRipple]="true"
-          [matTooltip]="'note.editNoteButton' | translate" 
-          (click)="editNote()">
-    <mat-icon>edit</mat-icon>
-  </button> -->
 </div>
 
-<div class="note__edit-container" *ngIf="noteIsOnEditing">
+<div class="note__edit-container" *ngIf="calendarService.isNoteOnEditing()">
   <app-note-edit></app-note-edit>
 </div>
 
-<div class="note__info-container" *ngIf="note && !noteIsOnEditing">
+<div class="note__info-container" *ngIf="note && !calendarService.isNoteOnEditing()">
   <app-note-info [note]="note"></app-note-info>
 </div>
 

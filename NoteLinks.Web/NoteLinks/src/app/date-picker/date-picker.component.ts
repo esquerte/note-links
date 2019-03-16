@@ -5,7 +5,7 @@ import {
 } from 'angular-calendar';
 
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, find, filter } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { Note } from '../models/note';
@@ -40,17 +40,18 @@ export class DatePickerComponent implements OnInit {
 
   @Input() calendarCode: string;
 
+  private selectedNoteId: number;
+
   private unsubscribe: Subject<void> = new Subject();
 
   view: CalendarView = CalendarView.Month;
   viewDate: moment.Moment = moment();
-  events: CalendarEvent[] = [];
 
   years: Array<number> = new Array<number>();
   selectedMonth: number = moment().month() + 1;
   selectedYear: number = moment().year();
 
-  events$: Observable<Array<CalendarEvent<{ note: Note }>>>;
+  events$: Observable<CalendarEvent<{ note: Note }>[]>;
   locale: string;
 
   activeDayIsOpen: boolean = false;
@@ -67,7 +68,9 @@ export class DatePickerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.fetchEvents();
+
     this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onNoteFinishEditing()
     );
@@ -115,7 +118,6 @@ export class DatePickerComponent implements OnInit {
           })
         })
       );
-
   }
 
   private onNoteFinishEditing() {
@@ -157,7 +159,7 @@ export class DatePickerComponent implements OnInit {
     events
   }: {
     date: moment.Moment;
-    events: Array<CalendarEvent<{ note: Note }>>;
+    events: CalendarEvent<{ note: Note }>[];
   }): void {
 
     this.calendarService.selectDate(date);
@@ -171,11 +173,12 @@ export class DatePickerComponent implements OnInit {
       this.activeDayIsOpen = true;
       this.viewDate = date;
     }
-    
+
   }
 
   eventClicked(event: CalendarEvent<{ note: Note }>): void {
     this.calendarService.selectNote(this.calendarCode, event.meta.note);
+    this.selectedNoteId = event.meta.note.id;
   }
 
   ngOnDestroy() {

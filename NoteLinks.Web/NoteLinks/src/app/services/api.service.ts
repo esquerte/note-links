@@ -85,7 +85,7 @@ export class ApiService {
       toDate: note.toDate
     };
     return this.http.post(url, createModel, httpOptions).pipe(
-      // retry(1),
+      retry(3),
       catchError(this.handleError)
     );
   }

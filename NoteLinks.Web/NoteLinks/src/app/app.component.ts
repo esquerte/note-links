@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
 
   showErrorMessage(error: any) {
     this.snackBar.open(error, "", {
-      duration: 3000,
+      duration: 5000,
       panelClass: ['error-snack-bar']
     });
   }

@@ -25,7 +25,8 @@
       "question": "Are you realy want to delete calendar",
       "no": "NO",
       "yes": "YES"
-    }
+    },
+    "updatedByAnotherUserMessage": "Calendar has just been updated by another user."
   },
   "datePicker": {
     "previousButton": "Previous",

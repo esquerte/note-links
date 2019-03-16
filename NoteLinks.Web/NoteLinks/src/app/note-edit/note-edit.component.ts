@@ -28,7 +28,7 @@ interface TimeRange {
 export class NoteEditComponent implements OnInit, OnDestroy {
 
   note: Note;
-  private originalNote: Note;
+  // private originalNote: Note;
   private calendarCode: string;
 
   timeRange: TimeRange = {} as TimeRange;
@@ -90,7 +90,7 @@ export class NoteEditComponent implements OnInit, OnDestroy {
   }
 
   cancelEditing() {
-    this.calendarService.noteFinishEditing(this.originalNote);
+    this.calendarService.noteCancelEditing(this.note);
   }
 
   private updateNote() {
@@ -117,7 +117,7 @@ export class NoteEditComponent implements OnInit, OnDestroy {
 
   private onStartEditing([calendarCode, note]: [string, Note]) {
     this.note = note;
-    this.originalNote = Object.assign({}, note);
+    // this.originalNote = Object.assign({}, note);
     this.calendarCode = calendarCode;
     if (note.id) {
       this.setTimeRange();

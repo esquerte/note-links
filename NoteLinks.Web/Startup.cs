@@ -56,10 +56,6 @@ namespace NoteLinks.Web
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            //app.UseCors(builder => builder.WithOrigins("http://localhost:4200")
-            //    .AllowAnyHeader()
-            //    .AllowAnyMethod());
-
             app.UseSignalR(routes =>
             {
                 routes.MapHub<CalendarHub>("/calendarhub");

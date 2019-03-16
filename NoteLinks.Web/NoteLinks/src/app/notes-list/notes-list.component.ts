@@ -13,6 +13,7 @@ import { MatTableDataSource } from '@angular/material'
 import { SignalRService } from '../services/signal-r.service';
 import { CustomPaginatorIntl } from './custom-paginator-intl';
 import { DeleteNoteDialogComponent } from '../delete-note-dialog/delete-note-dialog.component';
+import { Filter } from '../models/filter';
 
 @Component({
   selector: 'app-notes-list',
@@ -57,6 +58,9 @@ export class NotesListComponent implements OnInit, OnDestroy {
     this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onFinishEditing()
     );
+    // this.calendarService.onNoteCancelEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    //   note => this.onCancelEditing(note)
+    // );
     this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
       calendaCode => {
         if (this.calendarCode == calendaCode) {
@@ -78,7 +82,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
   }
 
   selectNote(note: Note) {
-    this.calendarService.selectNote(this.calendarCode, note);
+    this.calendarService.selectNote(this.calendarCode, Object.assign({}, note));
     this.selectedNoteId = note.id;
   }
 
@@ -107,6 +111,11 @@ export class NotesListComponent implements OnInit, OnDestroy {
   private onFinishEditing() {
     this.getNotes();
   }
+
+  // private onCancelEditing(note: Note) {
+  //   if (this.notes.data.find(x => x.id == note.id))
+  //     this.getNotes();
+  // }
 
   pageChanged(pageEvent: PageEvent) {
     this.pageInfo.pageIndex = pageEvent.pageIndex + 1;
