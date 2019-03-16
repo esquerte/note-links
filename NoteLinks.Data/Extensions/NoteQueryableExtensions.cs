@@ -17,6 +17,17 @@ namespace NoteLinks.Data.Extensions
                 {
                     switch (filter.Field)
                     {
+                        case "Id":
+
+                            switch (filter.Operator)
+                            {
+                                case "eq":
+                                    query = query.Where(x => x.Id == Convert.ToInt32(filter.Value));
+                                    break;
+                            }
+
+                            break;
+
                         case "Name":
 
                             switch (filter.Operator)
@@ -114,19 +125,29 @@ namespace NoteLinks.Data.Extensions
                 switch (pageInfo.OrderBy)
                 {
                     case "Name":
-                        query = pageInfo.Desc.Value ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name);
+                        query = pageInfo.Desc.HasValue && pageInfo.Desc.Value 
+                            ? query.OrderByDescending(x => x.Name) 
+                            : query.OrderBy(x => x.Name);
                         break;
                     case "FromDate":
-                        query = pageInfo.Desc.Value ? query.OrderByDescending(x => x.FromDate) : query.OrderBy(x => x.FromDate);
+                        query = pageInfo.Desc.HasValue && pageInfo.Desc.Value 
+                            ? query.OrderByDescending(x => x.FromDate) 
+                            : query.OrderBy(x => x.FromDate);
                         break;
                     case "ToDate":
-                        query = pageInfo.Desc.Value ? query.OrderByDescending(x => x.ToDate) : query.OrderBy(x => x.ToDate);
+                        query = pageInfo.Desc.HasValue && pageInfo.Desc.Value 
+                            ? query.OrderByDescending(x => x.ToDate) 
+                            : query.OrderBy(x => x.ToDate);
                         break;
                     case "Text":
-                        query = pageInfo.Desc.Value ? query.OrderByDescending(x => x.Text) : query.OrderBy(x => x.Text);
+                        query = pageInfo.Desc.HasValue && pageInfo.Desc.Value 
+                            ? query.OrderByDescending(x => x.Text) 
+                            : query.OrderBy(x => x.Text);
                         break;
                     default:
-                        query = pageInfo.Desc.Value ? query.OrderByDescending(x => x.FromDate) : query.OrderBy(x => x.FromDate);
+                        query = pageInfo.Desc.HasValue && pageInfo.Desc.Value 
+                            ? query.OrderByDescending(x => x.FromDate) 
+                            : query.OrderBy(x => x.FromDate);
                         break;
                 }
 

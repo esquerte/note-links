@@ -50,6 +50,42 @@ namespace NoteLinks.Data.Test
         }
 
         [Fact]
+        public void FilterNotesShouldReturnNotesFilteredByIdEqual()
+        {
+            // arrange
+            var query = _context.Notes.Where(x => x.CalendarId == 2);
+            var filters = new Filter[] {
+                new Filter() { Field = "Id", Operator = "eq", Value = "7" }
+            };
+
+            // act
+            query = query.Filter(filters);
+            var result = query.ToList();
+
+            // assert
+            Assert.Single(result);
+            Assert.Equal("Min", result[0].Name);
+        }
+
+
+        [Fact]
+        public void FilterNotesShouldReturnEmptyIfIdDoesNotExists()
+        {
+            // arrange
+            var query = _context.Notes.Where(x => x.CalendarId == 2);
+            var filters = new Filter[] {
+                new Filter() { Field = "Id", Operator = "eq", Value = "8" }
+            };
+
+            // act
+            query = query.Filter(filters);
+            var result = query.ToList();
+
+            // assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
         public void FilterNotesShouldReturnNotesFilteredByNameEqual()
         {
             // arrange
