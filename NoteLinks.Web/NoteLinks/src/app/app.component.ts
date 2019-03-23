@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 
 import { Calendar } from './models/calendar';
 import { CalendarCookieService } from './services/calendar-cookie.service'
-import { CalendarService } from './services/calendar.service';
+import { InteractionService } from './services/interaction.service';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private cookieService: CalendarCookieService,
     public translate: TranslateService,
-    private calendarService: CalendarService,
+    private interactionService: InteractionService,
     private snackBar: MatSnackBar,
   ) {
     cookieService.calendars$.subscribe(
@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.calendarService.onErrorOccured$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onErrorOccured$.pipe(takeUntil(this.unsubscribe)).subscribe(
       error => this.showErrorMessage(error)
     );
   }
@@ -54,11 +54,11 @@ export class AppComponent implements OnInit {
   }
 
   editCalendar() {
-    this.calendarService.editCalendar();
+    this.interactionService.editCalendar();
   }
 
   deleteCalendar() {
-    this.calendarService.deleteCalendar();
+    this.interactionService.deleteCalendar();
   }
 
   showErrorMessage(error: any) {

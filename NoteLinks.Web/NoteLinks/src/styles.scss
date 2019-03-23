@@ -25,6 +25,7 @@ body {
 .error-snack-bar {
   background-color: $primary-dark;
   color: $error-color;
+  white-space: pre-wrap;
 }
 
 .update-snack-bar {

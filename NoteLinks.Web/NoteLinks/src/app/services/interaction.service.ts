@@ -8,7 +8,7 @@ import * as moment from 'moment';
 @Injectable({
   providedIn: 'root'
 })
-export class CalendarService {
+export class InteractionService {
 
   constructor() { }
 

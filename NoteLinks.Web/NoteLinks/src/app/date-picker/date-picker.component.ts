@@ -11,7 +11,7 @@ import * as moment from 'moment';
 import { Note } from '../models/note';
 import { ApiService } from '../services/api.service';
 import { Filter } from '../models/filter';
-import { CalendarService } from '../services/calendar.service';
+import { InteractionService } from '../services/interaction.service';
 import { SignalRService } from '../services/signal-r.service';
 import { CustomDateFormatter } from './custom-date-formatter';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
@@ -58,7 +58,7 @@ export class DatePickerComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private calendarService: CalendarService,
+    private interactionService: InteractionService,
     private signalRService: SignalRService,
     private translate: TranslateService,
   ) {
@@ -71,13 +71,13 @@ export class DatePickerComponent implements OnInit {
 
     this.fetchEvents();
 
-    this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onNoteFinishEditing()
     );
-    this.calendarService.onNoteSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
       ([calendarCode, note]) => this.onNoteSelected(note)
     );
-    this.calendarService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onNoteDeleted(note)
     );
     this.translate.onLangChange.pipe(takeUntil(this.unsubscribe)).subscribe(
@@ -162,7 +162,7 @@ export class DatePickerComponent implements OnInit {
     events: CalendarEvent<{ note: Note }>[];
   }): void {
 
-    this.calendarService.selectDate(date);
+    this.interactionService.selectDate(date);
 
     if (
       (moment(this.viewDate).isSame(date) && this.activeDayIsOpen === true) ||
@@ -177,7 +177,7 @@ export class DatePickerComponent implements OnInit {
   }
 
   eventClicked(event: CalendarEvent<{ note: Note }>): void {
-    this.calendarService.selectNote(this.calendarCode, event.meta.note);
+    this.interactionService.selectNote(this.calendarCode, event.meta.note);
     this.selectedNoteId = event.meta.note.id;
   }
 

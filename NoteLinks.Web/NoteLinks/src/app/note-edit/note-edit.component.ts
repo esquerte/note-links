@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { Note } from '../models/note';
 import { ApiService } from '../services/api.service';
-import { CalendarService } from '../services/calendar.service'
+import { InteractionService } from '../services/interaction.service'
 import { SignalRService } from '../services/signal-r.service';
 import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 import { DateFormatService } from '../services/date-format.service';
@@ -28,7 +28,6 @@ interface TimeRange {
 export class NoteEditComponent implements OnInit, OnDestroy {
 
   note: Note;
-  // private originalNote: Note;
   private calendarCode: string;
 
   timeRange: TimeRange = {} as TimeRange;
@@ -60,19 +59,19 @@ export class NoteEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-    private calendarService: CalendarService,
+    private interactionService: InteractionService,
     private translate: TranslateService,
     private dateAdapter: DateAdapter<any>,
     private signalRService: SignalRService,
   ) { }
 
   ngOnInit() {
-    this.calendarService.onNoteStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       ([calendarCode, note]) => {
         this.setLocalization();
         this.onStartEditing([calendarCode, note]);
       });
-    this.calendarService.onCalendarDateSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onCalendarDateSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
       date => this.onCalendarDateChanged(date)
     );
     this.translate.onLangChange.pipe(takeUntil(this.unsubscribe)).subscribe(
@@ -90,17 +89,17 @@ export class NoteEditComponent implements OnInit, OnDestroy {
   }
 
   cancelEditing() {
-    this.calendarService.noteCancelEditing(this.note);
+    this.interactionService.noteCancelEditing(this.note);
   }
 
   private updateNote() {
     this.makeDates();
     this.apiService.updateNote(this.note).subscribe(
       note => {
-        this.calendarService.noteFinishEditing(note);
+        this.interactionService.noteFinishEditing(note);
         this.signalRService.change(this.calendarCode);
       },
-      error => this.calendarService.handleError(error)
+      error => this.interactionService.handleError(error)
     );
   }
 
@@ -108,16 +107,15 @@ export class NoteEditComponent implements OnInit, OnDestroy {
     this.makeDates();
     this.apiService.createNote(this.calendarCode, this.note).subscribe(
       note => {
-        this.calendarService.noteFinishEditing(note);
+        this.interactionService.noteFinishEditing(note);
         this.signalRService.change(this.calendarCode);
       },
-      error => this.calendarService.handleError(error)
+      error => this.interactionService.handleError(error)
     );
   }
 
   private onStartEditing([calendarCode, note]: [string, Note]) {
     this.note = note;
-    // this.originalNote = Object.assign({}, note);
     this.calendarCode = calendarCode;
     if (note.id) {
       this.setTimeRange();

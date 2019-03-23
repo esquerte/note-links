@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { Calendar } from '../models/calendar';
 import { ApiService } from '../services/api.service';
-import { CalendarService } from '../services/calendar.service'
+import { InteractionService } from '../services/interaction.service'
 import { CalendarCookieService } from '../services/calendar-cookie.service'
 import { SignalRService } from '../services/signal-r.service';
 
@@ -26,14 +26,14 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private apiService: ApiService,
-    private calendarService: CalendarService,
+    private interactionService: InteractionService,
     private cookieService: CalendarCookieService,
     private location: Location,
     private signalRService: SignalRService,
   ) { }
 
   ngOnInit() {
-    this.calendarService.onStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onStartEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       calendar => {
         this.calendar = calendar;
         this.originalCalendar = Object.assign({}, calendar);
@@ -52,10 +52,10 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
     this.apiService.updateCalendar(this.calendar).subscribe(
       calendar => {
         this.cookieService.updateCalendarsCookie(calendar);
-        this.calendarService.finishEditing(calendar);
+        this.interactionService.finishEditing(calendar);
         this.signalRService.change(calendar.code);
       },
-      error => this.calendarService.handleError(error)
+      error => this.interactionService.handleError(error)
     );
   }
 
@@ -64,13 +64,13 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
       calendar => {
         this.router.navigate(['/calendars', calendar.code]);
       },
-      error => this.calendarService.handleError(error)
+      error => this.interactionService.handleError(error)
     );
   }
 
   cancelEditing() {
     if (this.calendar.code) {
-      this.calendarService.finishEditing(this.originalCalendar);
+      this.interactionService.finishEditing(this.originalCalendar);
     } else {
       this.location.back();
     }

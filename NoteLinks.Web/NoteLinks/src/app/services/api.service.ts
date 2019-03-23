@@ -8,6 +8,7 @@ import { Calendar } from '../models/calendar';
 import { Note } from '../models/note';
 import { PageInfo } from '../models/page-info';
 import { Filter } from '../models/filter';
+import { ApiError } from '../models/api-error';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -124,13 +125,22 @@ export class ApiService {
 
   private handleError(error: HttpErrorResponse) {
 
+    let apiError: ApiError = error.error;
+    let errors: string = "";
     let message: string;
 
     if (error.error instanceof ErrorEvent) {
       message = "A client-side or network error occurred."
-      console.error('An error occurred:', error.error.message);
+      console.error(message, error.error.message);
     } else {
-      message = `A backend error occured with status code ${error.status}.`;
+      
+      message = `Error ${error.status}. ${apiError.message} \n`;
+
+      if (!!environment.production) {
+        Object.keys(apiError.errors).forEach(key => errors += `${key}: ${apiError.errors[key]} \n`);
+        message += errors;
+      }
+
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);

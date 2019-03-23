@@ -7,7 +7,7 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 import { Calendar } from '../models/calendar';
 import { ApiService } from '../services/api.service'
 import { CalendarCookieService } from '../services/calendar-cookie.service'
-import { CalendarService } from '../services/calendar.service'
+import { InteractionService } from '../services/interaction.service'
 import { Note } from '../models/note';
 import { SignalRService } from '../services/signal-r.service';
 import { DeleteCalendarDialogComponent } from '../delete-calendar-dialog/delete-calendar-dialog.component';
@@ -30,7 +30,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     private router: Router,
     private apiService: ApiService,
     private cookieService: CalendarCookieService,
-    private calendarService: CalendarService,
+    private interactionService: InteractionService,
     private signalRService: SignalRService,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -51,15 +51,15 @@ export class CalendarComponent implements OnInit, OnDestroy {
           this.showUpdateMessage();
         }
       });
-    this.calendarService.onEditCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onEditCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
       () => this.editCalendar()
     );
-    this.calendarService.onFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       (calendar: Calendar) => {
         Object.assign(this.calendar, calendar);
         this.calendarIsOnEditing = false;
       });
-    this.calendarService.onDeleteCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onDeleteCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
       () => this.deleteCalendar()
     );
   }
@@ -81,7 +81,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   private editCalendar() {
-    this.calendarService.startEditing(this.calendar);
+    this.interactionService.startEditing(this.calendar);
     this.calendarIsOnEditing = true;
   }
 
@@ -99,7 +99,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
             this.cookieService.deleteCalendarFromCookie(this.calendar.code);
             this.router.navigate(["/"]);
           },
-          error => this.calendarService.handleError(error)
+          error => this.interactionService.handleError(error)
         );
       }
     });
@@ -107,7 +107,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   createNote() {
-    this.calendarService.selectNote(this.calendar.code, new Note());
+    this.interactionService.selectNote(this.calendar.code, new Note());
   }
 
   showUpdateMessage() {    

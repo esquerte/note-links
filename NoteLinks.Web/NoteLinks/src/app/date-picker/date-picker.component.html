@@ -12,7 +12,7 @@
 
   <mat-form-field class="date-picker__select-month">
     <mat-select [(ngModel)]="selectedMonth"
-                (selectionChange)="monthSelected($event.value)"
+                (selectionChange)="monthSelected()"
                 [matTooltip]="'datePicker.selectMonthPlaceholder' | translate">
       <mat-option *ngFor="let month of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="month">
         {{ 'months.' + month | translate }}
@@ -22,7 +22,7 @@
 
   <mat-form-field class="date-picker__select-year">
     <mat-select [(ngModel)]="selectedYear"
-                (selectionChange)="monthSelected($event.value)"
+                (selectionChange)="monthSelected()"
                 [matTooltip]="'datePicker.selectYearPlaceholder' | translate">
       <mat-option *ngFor="let year of years" [value]="year">
         {{year}}

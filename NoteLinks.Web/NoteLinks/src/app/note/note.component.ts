@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Note } from '../models/note';
-import { CalendarService } from '../services/calendar.service'
+import { InteractionService } from '../services/interaction.service'
 import { SignalRService } from '../services/signal-r.service';
 import { Filter } from '../models/filter';
 import { ApiService } from '../services/api.service';
@@ -21,22 +21,22 @@ export class NoteComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject();
 
   constructor(
-    public calendarService: CalendarService,
+    public interactionService: InteractionService,
     private signalRService: SignalRService,
     private apiService: ApiService,
   ) { }
 
   ngOnInit() {
-    this.calendarService.onNoteSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
       ([calendarCode, note]) => this.onSelected([calendarCode, note])
     );
-    this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onFinishEditing(note)
     );
-    this.calendarService.onNoteCancelEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteCancelEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onCancelEditing(note)
     );
-    this.calendarService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteDeleted$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onDeleted(note)
     );
     this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
@@ -48,7 +48,7 @@ export class NoteComponent implements OnInit, OnDestroy {
   }
 
   editNote(): void {
-    this.calendarService.noteStartEditing(this.calendarCode, this.note);
+    this.interactionService.noteStartEditing(this.calendarCode, this.note);
   }
 
   private onSelected([calendarCode, note]): void {
@@ -73,7 +73,7 @@ export class NoteComponent implements OnInit, OnDestroy {
 
   private updateNote() {
 
-    if (this.note && this.note.id && !this.calendarService.isNoteOnEditing()) {
+    if (this.note && this.note.id && !this.interactionService.isNoteOnEditing()) {
 
       let filters: Filter[] = [
         { field: "Id", operator: "eq", value: this.note.id.toString() }

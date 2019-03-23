@@ -8,7 +8,7 @@ import { Sort } from '@angular/material';
 import { Note } from '../models/note';
 import { PageInfo } from '../models/page-info';
 import { ApiService } from '../services/api.service';
-import { CalendarService } from '../services/calendar.service';
+import { InteractionService } from '../services/interaction.service';
 import { MatTableDataSource } from '@angular/material'
 import { SignalRService } from '../services/signal-r.service';
 import { CustomPaginatorIntl } from './custom-paginator-intl';
@@ -47,7 +47,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-    private calendarService: CalendarService,
+    private interactionService: InteractionService,
     public translate: TranslateService,
     private signalRService: SignalRService,
     public dialog: MatDialog,
@@ -55,10 +55,10 @@ export class NotesListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getNotes();
-    this.calendarService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    this.interactionService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onFinishEditing()
     );
-    // this.calendarService.onNoteCancelEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+    // this.interactionService.onNoteCancelEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
     //   note => this.onCancelEditing(note)
     // );
     this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
@@ -77,12 +77,12 @@ export class NotesListComponent implements OnInit, OnDestroy {
         this.pageInfo.totalCount = result.totalCount;
         this.isLoading = false;
       },
-      error => this.calendarService.handleError(error)
+      error => this.interactionService.handleError(error)
     );
   }
 
   selectNote(note: Note) {
-    this.calendarService.selectNote(this.calendarCode, Object.assign({}, note));
+    this.interactionService.selectNote(this.calendarCode, Object.assign({}, note));
     this.selectedNoteId = note.id;
   }
 
@@ -97,11 +97,11 @@ export class NotesListComponent implements OnInit, OnDestroy {
       if (result) {
         this.apiService.deleteNote(note.id).subscribe(
           () => {
-            this.calendarService.deleteNote(note);
+            this.interactionService.deleteNote(note);
             this.getNotes();
             this.signalRService.change(this.calendarCode);
           },
-          error => this.calendarService.handleError(error)
+          error => this.interactionService.handleError(error)
         );
       }
     });
