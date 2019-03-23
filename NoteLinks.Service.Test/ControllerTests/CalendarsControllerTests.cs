@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using NoteLinks.Service.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using NoteLinks.Service.ExceptionFilter;
 
 namespace NoteLinks.Service.Test
 {
@@ -65,7 +66,7 @@ namespace NoteLinks.Service.Test
         }
 
         [Fact]
-        public async void GetShouldReturnNotFoundResultIfNotExistingCalendarCodePassed()
+        public async void GetShouldReturnApiExceptionIfNotExistingCalendarCodePassed()
         {
             // arrange
 
@@ -83,12 +84,12 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Get(calendarCode);
+            Func<Task> result = () => controller.Get(calendarCode);
 
             // assert
 
             Assert.DoesNotContain(_calendarList, x => x.Code == "uiop");
-            Assert.IsType<NotFoundResult>(result);
+            await Assert.ThrowsAsync<ApiException>(result);
         }
 
         [Fact]
@@ -165,7 +166,7 @@ namespace NoteLinks.Service.Test
         }
 
         [Fact]
-        public async void PutShouldReturnNotFoundResultIfThereIsNoCalendarForUpdate()
+        public async void PutShouldReturnApiExceptionIfThereIsNoCalendarForUpdate()
         {
             // arrange
 
@@ -187,12 +188,12 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Put(calendarModel);
+            Func<Task> result = () => controller.Put(calendarModel);
 
             // assert
 
             Assert.DoesNotContain(_calendarList, x => x.Code == "uiop");
-            Assert.IsType<NotFoundResult>(result);
+            await Assert.ThrowsAsync<ApiException>(result);
         }
 
         [Fact]
@@ -222,7 +223,7 @@ namespace NoteLinks.Service.Test
         }
 
         [Fact]
-        public async void DeleteShouldReturnNotFoundResultIfNotExistingCalendarCodePassed()
+        public async void DeleteShouldReturnApiExceptionIfNotExistingCalendarCodePassed()
         {
             // arrange
 
@@ -240,12 +241,12 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Delete(calendarCode);
+            Func<Task> result = () => controller.Delete(calendarCode);
 
             // assert
 
             Assert.DoesNotContain(_calendarList, x => x.Code == "uiop");
-            Assert.IsType<NotFoundResult>(result);
+            await Assert.ThrowsAsync<ApiException>(result);
         }
 
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +13,11 @@ using NJsonSchema;
 using NoteLinks.Data.Context;
 using NoteLinks.Data.Repository.Implementations;
 using NoteLinks.Data.Repository.Interfaces;
+using NoteLinks.Service.ExceptionFilter;
 using NoteLinks.Service.Extensions;
 using NSwag.AspNetCore;
 using System;
+using System.Collections.Generic;
 
 namespace NoteLinks.Service
 {
@@ -33,13 +36,25 @@ namespace NoteLinks.Service
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
 
             services.AddMvc()
-                .AddJsonOptions(
-                    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                ).AddFluentValidation(options =>
+                .AddJsonOptions(options => 
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                )
+                .AddFluentValidation(options =>
                 {
                     options.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    options.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                     options.LocalizationEnabled = false;
                 });
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    var apiError = new ApiError(actionContext.ModelState);
+                    apiError.Message = "Invalid model state.";
+                    return new BadRequestObjectResult(apiError);
+                };
+            });
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<MainContext>(options => options.UseSqlServer(connection));
@@ -62,25 +77,26 @@ namespace NoteLinks.Service
                     // XSRF-TOKEN used by angular in the $http if provided
                     var tokens = antiforgery.GetAndStoreTokens(context);
                     context.Response.Cookies.Append("XSRF-TOKEN",
-                      tokens.RequestToken, new CookieOptions {
+                      tokens.RequestToken, new CookieOptions
+                      {
                           HttpOnly = false,
                           Expires = DateTimeOffset.Now.AddMinutes(10),
                           Path = "/"
                       });
-                } 
+                }
                 await next();
             });
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                loggerFactory.AddFileLogger(configure => configure.LogLevel = LogLevel.Warning);
             }
             else
             {
                 app.UseHsts();
+                loggerFactory.AddFileLogger(configure => configure.LogLevel = LogLevel.Error);
             }
-
-            loggerFactory.AddFileLogger();
 
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200", "http://localhost:64467")
                 .AllowAnyHeader()

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using NoteLinks.Service.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using NoteLinks.Service.ExceptionFilter;
 
 namespace NoteLinks.Service.Test
 {
@@ -71,7 +72,7 @@ namespace NoteLinks.Service.Test
         }
 
         [Fact]
-        public async void GetShouldReturnNotFoundResultIfEmptyCalendarCodePassed()
+        public async void GetShouldReturnApiExceptionIfEmptyCalendarCodePassed()
         {
             // arrange
 
@@ -92,11 +93,11 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Get("", filters, pageInfo);
+            Func<Task> result = () => controller.Get("", filters, pageInfo);
 
             // assert
 
-            Assert.IsType<NotFoundResult>(result);
+            await Assert.ThrowsAsync<ApiException>(result);
         }
 
         [Fact]
@@ -145,7 +146,7 @@ namespace NoteLinks.Service.Test
         }
 
         [Fact]
-        public async void PostShouldReturnNotFoundResultIfCalendarIsNotFoundByPassedCalendarCode()
+        public async void PostShouldReturnApiExceptionIfCalendarIsNotFoundByPassedCalendarCode()
         {
             // arrange
 
@@ -172,11 +173,11 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Post(createNoteModel);
+            Func<Task> result = () => controller.Post(createNoteModel);
 
             // assert
 
-            Assert.IsType<NotFoundResult>(result);
+            await Assert.ThrowsAsync<ApiException>(result);
         }
 
         [Fact]
@@ -267,7 +268,7 @@ namespace NoteLinks.Service.Test
         }
 
         [Fact]
-        public async void PutShouldReturnNotFoundResultIfThereIsNoNoteForUpdate()
+        public async void PutShouldReturnApiExceptionIfThereIsNoNoteForUpdate()
         {
             // arrange
 
@@ -289,12 +290,12 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Put(noteModel);
+            Func<Task> result = () => controller.Put(noteModel);
 
             // assert
 
             Assert.DoesNotContain(_noteList, x => x.Id == 8);
-            Assert.IsType<NotFoundResult>(result);
+            await Assert.ThrowsAsync<ApiException>(result);
         }
 
         [Fact]
@@ -324,7 +325,7 @@ namespace NoteLinks.Service.Test
         }
 
         [Fact]
-        public async void DeleteShouldReturnNotFoundResultIfNotExistingNoteIdPassed()
+        public async void DeleteShouldReturnApiExceptionIfNotExistingNoteIdPassed()
         {
             // arrange
 
@@ -342,12 +343,12 @@ namespace NoteLinks.Service.Test
 
             // act
 
-            var result = await controller.Delete(noteId);
+            Func<Task> result = () => controller.Delete(noteId);
 
             // assert
 
             Assert.DoesNotContain(_noteList, x => x.Id == 8);
-            Assert.IsType<NotFoundResult>(result);
+            await Assert.ThrowsAsync<ApiException>(result);
         }
 
     }

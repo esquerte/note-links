@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NoteLinks.Data.Entities;
 using NoteLinks.Data.Repository.Interfaces;
+using NoteLinks.Service.ExceptionFilter;
 using NoteLinks.Service.Helpers;
 using NoteLinks.Service.Logging;
 using NoteLinks.Service.ViewModels;
@@ -15,6 +16,7 @@ namespace NoteLinks.Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(ApiExceptionFilter))]
     public class CalendarsController : ControllerBase
     {
         private IUnitOfWork _unitOfWork;
@@ -32,102 +34,61 @@ namespace NoteLinks.Service.Controllers
 
         [HttpGet("{code}")]
         public async Task<IActionResult> Get(string code)
-        {
-            try
-            {                
-                var entity = await _repository.SingleOrDefaultAsync(x => x.Code == code);
+        {          
+            var entity = await _repository.SingleOrDefaultAsync(x => x.Code == code);
 
-                if (entity is null)
-                {
-                    _logger.LogWarning(LoggingEvents.GetItemNotFound, $"Get({code}) NOT FOUND");
-                    return NotFound();
-                }
+            if (entity is null)
+                throw new ApiException("Calendar doesn't exist.", StatusCodes.Status404NotFound);
 
-                return new ObjectResult(_mapper.Map<Calendar, CalendarModel>(entity));
-            }
-            catch(Exception exception)
-            {
-                _logger.LogError(LoggingEvents.GetItemError, exception, $"Get({code})");
-                return StatusCode(500, "Internal server error");
-            }
+            return new ObjectResult(_mapper.Map<Calendar, CalendarModel>(entity));
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateCalendarModel model)
         {
             if (model is null)
-                return BadRequest();
+                throw new ApiException("Model is null.", StatusCodes.Status400BadRequest);
 
-            try
-            {
-                var entity = _mapper.Map<CreateCalendarModel, Calendar>(model);
-                entity.Code = CodeHelper.GetCode();
+            var entity = _mapper.Map<CreateCalendarModel, Calendar>(model);
+            entity.Code = CodeHelper.GetCode();
 
-                _repository.Add(entity);
-                await _unitOfWork.CompleteAsync();
+            _repository.Add(entity);
+            await _unitOfWork.CompleteAsync();
 
-                return Ok(_mapper.Map<Calendar, CalendarModel>(entity));
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(LoggingEvents.InsertItemError, exception, $"Post({JsonConvert.SerializeObject(model)})");
-                return StatusCode(500, "Internal server error");
-            }
+            return Ok(_mapper.Map<Calendar, CalendarModel>(entity));
         }
 
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] CalendarModel model)
         {
             if (model is null)
-                return BadRequest();
+                throw new ApiException("Model is null.", StatusCodes.Status400BadRequest);
 
-            try
-            {
-                var entity = await _repository.SingleOrDefaultAsync(x => x.Code == model.Code);
+            var entity = await _repository.SingleOrDefaultAsync(x => x.Code == model.Code);
 
-                if (entity is null)
-                {
-                    _logger.LogWarning(LoggingEvents.UpdateItemNotFound, $"Put({JsonConvert.SerializeObject(model)}) NOT FOUND");
-                    return NotFound();
-                }
+            if (entity is null)
+                throw new ApiException("Calendar doesn't exist.", StatusCodes.Status404NotFound);
 
-                _mapper.Map(model, entity);
+            _mapper.Map(model, entity);
 
-                _repository.Update(entity);
-                await _unitOfWork.CompleteAsync();
+            _repository.Update(entity);
+            await _unitOfWork.CompleteAsync();
 
-                return Ok(_mapper.Map<Calendar, CalendarModel>(entity));
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(LoggingEvents.UpdateItemError, exception, $"Put({JsonConvert.SerializeObject(model)})");
-                return StatusCode(500, "Internal server error");
-            }
+            return Ok(_mapper.Map<Calendar, CalendarModel>(entity));
         }
 
         [HttpDelete("{code}")]
         public async Task<IActionResult> Delete(string code)
         {
-            try
-            {
-                var entity = await _repository.SingleOrDefaultAsync(x => x.Code == code);
+            var entity = await _repository.SingleOrDefaultAsync(x => x.Code == code);
 
-                if (entity is null)
-                {
-                    _logger.LogWarning(LoggingEvents.DeleteItemNotFound, $"Delete({code}) NOT FOUND");
-                    return NotFound();
-                }
+            if (entity is null)
+                throw new ApiException("Calendar doesn't exist.", StatusCodes.Status404NotFound);
 
-                _repository.Remove(entity);
-                await _unitOfWork.CompleteAsync();
+            _repository.Remove(entity);
+            await _unitOfWork.CompleteAsync();
 
-                return Ok();
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(LoggingEvents.DeleteItemError, exception, $"Delete({code})");
-                return StatusCode(500, "Internal server error");
-            }
+            return Ok();
         }
     }
 }

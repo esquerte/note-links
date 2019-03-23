@@ -45,8 +45,7 @@ namespace NoteLinks.Service.Logging.FileLogger
                         logLevel = logLevel.ToString(),
                         eventId = eventId.Id,
                         name = _name,
-                        message = formatter(state, exception),
-                        exception
+                        message = formatter(state, exception)              
                     });
 
                     File.AppendAllText(_config.FilePath, jsonLine + Environment.NewLine);

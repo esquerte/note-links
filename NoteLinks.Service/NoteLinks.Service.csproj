@@ -9,6 +9,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>09560f4b-bd77-4203-8b31-b2791062f011</UserSecretsId>
     <NoWin32Manifest>true</NoWin32Manifest>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +43,10 @@
     <TypeScriptSourceMap>True</TypeScriptSourceMap>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP2_2;RELEASE;NETCOREAPP;NETCOREAPP2_2</DefineConstants>
   </PropertyGroup>
 
 </Project>
