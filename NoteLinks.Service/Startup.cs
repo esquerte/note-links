@@ -15,9 +15,10 @@ using NoteLinks.Data.Repository.Implementations;
 using NoteLinks.Data.Repository.Interfaces;
 using NoteLinks.Service.ExceptionFilter;
 using NoteLinks.Service.Extensions;
+using NoteLinks.Service.Logging.Service;
 using NSwag.AspNetCore;
 using System;
-using System.Collections.Generic;
+using Hosting = Microsoft.Extensions.Hosting;
 
 namespace NoteLinks.Service
 {
@@ -46,13 +47,13 @@ namespace NoteLinks.Service
                     options.LocalizationEnabled = false;
                 });
 
+            services.AddSingleton<Hosting.IHostedService, LoggingService>();
+
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = actionContext =>
                 {
-                    var apiError = new ApiError(actionContext.ModelState);
-                    apiError.Message = "Invalid model state.";
-                    return new BadRequestObjectResult(apiError);
+                    throw new ApiException("Invalid model state.", StatusCodes.Status400BadRequest);
                 };
             });
 
@@ -60,7 +61,7 @@ namespace NoteLinks.Service
             services.AddDbContext<MainContext>(options => options.UseSqlServer(connection));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            
             services.AddAutoMapper();            
             services.AddCors();
             services.AddSwagger();
@@ -95,7 +96,7 @@ namespace NoteLinks.Service
             else
             {
                 app.UseHsts();
-                loggerFactory.AddFileLogger(configure => configure.LogLevel = LogLevel.Error);
+                loggerFactory.AddFileLogger(configure => configure.LogLevel = LogLevel.Warning);
             }
 
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200", "http://localhost:64467")

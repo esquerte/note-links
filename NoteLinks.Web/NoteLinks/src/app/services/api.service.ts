@@ -124,19 +124,21 @@ export class ApiService {
   }
 
   private handleError(error: HttpErrorResponse) {
-
-    let apiError: ApiError = error.error;
-    let errors: string = "";
+      
     let message: string;
 
     if (error.error instanceof ErrorEvent) {
+
       message = "A client-side or network error occurred."
       console.error(message, error.error.message);
+
     } else {
-      
+
+      let apiError: ApiError = error.error;        
       message = `Error ${error.status}. ${apiError.message} \n`;
 
-      if (!!environment.production) {
+      if (!environment.production) {
+        let errors: string = "";
         Object.keys(apiError.errors).forEach(key => errors += `${key}: ${apiError.errors[key]} \n`);
         message += errors;
       }
@@ -144,6 +146,7 @@ export class ApiService {
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);
+        
     }
 
     return throwError(message);

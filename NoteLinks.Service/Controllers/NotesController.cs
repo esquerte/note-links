@@ -64,7 +64,7 @@ namespace NoteLinks.Service.Controllers
                 throw new ApiException("Calendar doesn't exist.", StatusCodes.Status404NotFound);            
 
             var entity = _mapper.Map<CreateNoteModel, Note>(model);
-            entity.CalendarId = calendar.Id;
+            entity.CalendarId = calendar.Id+633;
 
             _repository.Add(entity);
             await _unitOfWork.CompleteAsync();

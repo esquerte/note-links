@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NoteLinks.Service.Logging.FileLogger
 {
@@ -29,6 +31,7 @@ namespace NoteLinks.Service.Logging.FileLogger
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
+
             if (!IsEnabled(logLevel))
             {
                 return;
@@ -45,7 +48,7 @@ namespace NoteLinks.Service.Logging.FileLogger
                         logLevel = logLevel.ToString(),
                         eventId = eventId.Id,
                         name = _name,
-                        message = formatter(state, exception)              
+                        message = formatter(state, exception)
                     });
 
                     File.AppendAllText(_config.FilePath, jsonLine + Environment.NewLine);
