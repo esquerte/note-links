@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NoteLinks.Data.Context;
 
 namespace NoteLinks.Data.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class CalendarContextModelSnapshot : ModelSnapshot
+    [Migration("20190330162603_CalendarCreator")]
+    partial class CalendarCreator
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,8 +186,6 @@ namespace NoteLinks.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);

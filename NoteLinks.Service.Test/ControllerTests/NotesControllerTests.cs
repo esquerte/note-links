@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using NoteLinks.Service.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using NoteLinks.Service.ExceptionFilter;
+using NoteLinks.Service.ExceptionHandling;
 
-namespace NoteLinks.Service.Test
+namespace NoteLinks.Service.Test.ControllerTests
 {
     public class NotesControllerTests
     {
@@ -67,8 +67,9 @@ namespace NoteLinks.Service.Test
 
             // assert
 
-            Assert.IsType<ResultNoteModel>(result.Value);
-            Assert.Equal(7, (result.Value as ResultNoteModel).Notes.Count);
+            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<NoteResultModel>(result.Value);
+            Assert.Equal(7, (result.Value as NoteResultModel).Notes.Count);
         }
 
         [Fact]

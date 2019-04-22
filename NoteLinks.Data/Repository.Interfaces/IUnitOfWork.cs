@@ -10,6 +10,7 @@ namespace NoteLinks.Data.Repository.Interfaces
     {
         ICalendarRepository Calendars { get; }
         INoteRepository Notes { get; }
+        IUserRepository Users { get; }
         Task<int> CompleteAsync();
     }
 }

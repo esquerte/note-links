@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,11 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using NJsonSchema;
 using NoteLinks.Data.Context;
+using NoteLinks.Data.Entities;
 using NoteLinks.Data.Repository.Implementations;
 using NoteLinks.Data.Repository.Interfaces;
-using NoteLinks.Service.ExceptionFilter;
+using NoteLinks.Service.Authentication;
+using NoteLinks.Service.ExceptionHandling;
 using NoteLinks.Service.Extensions;
 using NoteLinks.Service.Logging.Service;
 using NSwag.AspNetCore;
@@ -36,6 +40,56 @@ namespace NoteLinks.Service
         {
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
 
+            services.AddIdentityCore<User>(options => {
+                    options.User.RequireUniqueEmail = true;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequiredUniqueChars = 1;
+                })
+                .AddEntityFrameworkStores<MainContext>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = AuthOptions.ISSUER,
+
+                        ValidateAudience = true,
+                        ValidAudience = AuthOptions.AUDIENCE,
+
+                        ValidateLifetime = true,
+
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+
+                        ClockSkew = TimeSpan.FromSeconds(5)
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnChallenge = context =>
+                        {                          
+                            // Skip the default logic.
+                            context.HandleResponse();
+
+                            string message = String.IsNullOrEmpty(context.Error)
+                                ? "Unauthorized access"
+                                : $"{context.Error}";
+
+                            message += String.IsNullOrEmpty(context.ErrorDescription)
+                                ? "."
+                                : $": {context.ErrorDescription}.";
+
+                            throw new ApiException(message, StatusCodes.Status401Unauthorized);
+                        }
+                    };
+                });
+
             services.AddMvc()
                 .AddJsonOptions(options => 
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -51,7 +105,7 @@ namespace NoteLinks.Service
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
-                options.InvalidModelStateResponseFactory = actionContext =>
+                options.InvalidModelStateResponseFactory = context =>
                 {
                     throw new ApiException("Invalid model state.", StatusCodes.Status400BadRequest);
                 };
@@ -70,6 +124,8 @@ namespace NoteLinks.Service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IAntiforgery antiforgery)
         {
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+
             app.Use(async (context, next) =>
             {
                 string path = context.Request.Path.Value;
@@ -90,7 +146,7 @@ namespace NoteLinks.Service
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 loggerFactory.AddFileLogger(configure => configure.LogLevel = LogLevel.Warning);
             }
             else
@@ -130,7 +186,8 @@ namespace NoteLinks.Service
 
             });
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection();            
+            app.UseAuthentication();            
             app.UseMvc();
             
         }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NoteLinks.Data.Context;
 
 namespace NoteLinks.Data.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class CalendarContextModelSnapshot : ModelSnapshot
+    [Migration("20190407160303_AddUserDisplayName")]
+    partial class AddUserDisplayName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

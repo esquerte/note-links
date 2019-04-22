@@ -1,11 +1,5 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using NoteLinks.Service.ExceptionFilter;
 using NoteLinks.Service.ViewModels;
-using System.Linq;
 
 namespace NoteLinks.Service.Validators
 {

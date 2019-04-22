@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using NoteLinks.Data.Entities;
 using NoteLinks.Data.Models;
 using NoteLinks.Data.Repository.Interfaces;
-using NoteLinks.Service.ExceptionFilter;
+using NoteLinks.Service.ExceptionHandling;
 using NoteLinks.Service.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -42,9 +41,9 @@ namespace NoteLinks.Service.Controllers
             pageInfo = pageInfo.PageIndex is null ? null : pageInfo;
 
             var totalCount = await _repository.GetNotesCountAsync(x => x.Calendar.Code == calendarCode, filters);
-            var list = await _repository.GetNotesAsync(x => x.Calendar.Code == calendarCode, filters, pageInfo);
+            List<Note> list = await _repository.GetNotesAsync(x => x.Calendar.Code == calendarCode, filters, pageInfo);
 
-            return new ObjectResult(new ResultNoteModel()
+            return Ok(new NoteResultModel()
             {                    
                 Notes = _mapper.Map<List<Note>, List<NoteModel>>(list),
                 TotalCount = totalCount
@@ -64,7 +63,7 @@ namespace NoteLinks.Service.Controllers
                 throw new ApiException("Calendar doesn't exist.", StatusCodes.Status404NotFound);            
 
             var entity = _mapper.Map<CreateNoteModel, Note>(model);
-            entity.CalendarId = calendar.Id+633;
+            entity.CalendarId = calendar.Id;
 
             _repository.Add(entity);
             await _unitOfWork.CompleteAsync();

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NoteLinks.Data.Context;
 
 namespace NoteLinks.Data.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class CalendarContextModelSnapshot : ModelSnapshot
+    [Migration("20190330160059_UserCalendars")]
+    partial class UserCalendars
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,15 +139,11 @@ namespace NoteLinks.Data.Migrations
 
                     b.Property<string>("Code");
 
-                    b.Property<string>("CreatorId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Calendars");
                 });
@@ -184,8 +182,6 @@ namespace NoteLinks.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -284,13 +280,6 @@ namespace NoteLinks.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("NoteLinks.Data.Entities.Calendar", b =>
-                {
-                    b.HasOne("NoteLinks.Data.Entities.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("NoteLinks.Data.Entities.Note", b =>

@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿//using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using NoteLinks.Service.Logging.Service;
-using Hosting = Microsoft.Extensions.Hosting;
+using System;
+//using Hosting = Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
 
-namespace NoteLinks.Service.ExceptionFilter
+namespace NoteLinks.Service.ExceptionHandling
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
         IHostingEnvironment _environment;
-
         LoggingService _loggingService;
 
-        public ApiExceptionFilter(Hosting.IHostedService loggingService, IHostingEnvironment environment)
+        public ApiExceptionFilter(IHostingEnvironment environment, IHostedService loggingService)
         {
             _environment = environment;
             _loggingService = loggingService as LoggingService;
@@ -22,20 +24,21 @@ namespace NoteLinks.Service.ExceptionFilter
         public override void OnException(ExceptionContext context)
         {
             ApiError apiError = null;
+            string message = "";
 
             if (context.Exception is ApiException)
             {         
                 var exception = context.Exception as ApiException;
                 context.Exception = null;
 
+                message = exception.Message;
+
                 apiError = new ApiError(context.ModelState);
-                apiError.Message = exception.Message;
+                apiError.Message = message;
 
                 context.HttpContext.Response.StatusCode = exception.StatusCode;
 
                 // logging
-
-                string message = exception.Message;
 
                 if (apiError.Errors != null)
                 {
@@ -48,9 +51,18 @@ namespace NoteLinks.Service.ExceptionFilter
                 // Add data in a queue for logging
                 _loggingService.Log(LogLevel.Warning, $"{context.ActionDescriptor.DisplayName}. {message}");
             }
+            else if (context.Exception is UnauthorizedAccessException)
+            {
+                message = "Unauthorized access.";
+
+                apiError = new ApiError(message);
+                context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+                _loggingService.Log(LogLevel.Warning, $"{context.ActionDescriptor.DisplayName}. {message}");
+            }
             else
             {
-                string message, stack;
+                string stack;
 
                 if (_environment.IsDevelopment())
                 {
@@ -66,7 +78,7 @@ namespace NoteLinks.Service.ExceptionFilter
                 apiError = new ApiError(message);
                 apiError.Detail = stack;
 
-                context.HttpContext.Response.StatusCode = 500;
+                context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
                 // logging
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿ using Microsoft.EntityFrameworkCore;
 using NoteLinks.Data.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,8 +15,8 @@ namespace NoteLinks.Data.Repository.Implementations
 
         public Repository(DbContext context)
         {
-            this.Context = context;
-            _entity = this.Context.Set<TEntity>();
+            Context = context;
+            _entity = Context.Set<TEntity>();
         }
 
         public Task<TEntity> GetAsync(int id)

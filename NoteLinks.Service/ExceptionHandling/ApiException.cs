@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NoteLinks.Service.ExceptionFilter
+namespace NoteLinks.Service.ExceptionHandling
 {
     public class ApiException : Exception
     {

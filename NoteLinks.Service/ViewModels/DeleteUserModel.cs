@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace NoteLinks.Service.ViewModels
 {
-    public class ResultNoteModel
+    public class DeleteUserModel
     {
-        public List<NoteModel> Notes { get; set; }
-        public int TotalCount { get; set; }
+        public string Password { get; set; }
+        public bool DeleteCalendars { get; set; }
     }
 }

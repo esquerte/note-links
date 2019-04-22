@@ -22,7 +22,9 @@ namespace NoteLinks.Data.Repository.Implementations
 
         public Task<List<Note>> GetNotesAsync(Expression<Func<Note, bool>> predicate, Filter[] filters, PageInfo pageInfo)
         {
-            var query = db.Notes.Where(predicate)
+            var query = db.Notes
+                .AsNoTracking()
+                .Where(predicate)
                 .Filter(filters)
                 .Paginate(pageInfo);
 
@@ -31,7 +33,9 @@ namespace NoteLinks.Data.Repository.Implementations
 
         public Task<int> GetNotesCountAsync(Expression<Func<Note, bool>> predicate, Filter[] filters)
         {
-            return db.Notes.Where(predicate)
+            return db.Notes
+                .AsNoTracking()
+                .Where(predicate)
                 .Filter(filters)
                 .CountAsync();
         }

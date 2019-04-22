@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190330120802_UserCalendarsAndCalendarCreator.cs" />
+    <Compile Remove="Migrations\20190330120802_UserCalendarsAndCalendarCreator.Designer.cs" />
+    <Compile Remove="Migrations\20190330123330_Test.cs" />
+    <Compile Remove="Migrations\20190330123330_Test.Designer.cs" />
+    <Compile Remove="Migrations\20190330123958_Test.cs" />
+    <Compile Remove="Migrations\20190330123958_Test.Designer.cs" />
+    <Compile Remove="Migrations\20190330124200_UserCalendars.cs" />
+    <Compile Remove="Migrations\20190330124200_UserCalendars.Designer.cs" />
+    <Compile Remove="Migrations\20190330124314_CalendarCreator.cs" />
+    <Compile Remove="Migrations\20190330124314_CalendarCreator.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

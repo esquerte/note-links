@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NoteLinks.Data.Context;
 
 namespace NoteLinks.Data.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class CalendarContextModelSnapshot : ModelSnapshot
+    [Migration("20190326175100_AddIdentity")]
+    partial class AddIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,15 +139,11 @@ namespace NoteLinks.Data.Migrations
 
                     b.Property<string>("Code");
 
-                    b.Property<string>("CreatorId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Calendars");
                 });
@@ -175,7 +173,7 @@ namespace NoteLinks.Data.Migrations
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("NoteLinks.Data.Entities.User", b =>
+            modelBuilder.Entity("NoteLinks.Data.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -184,8 +182,6 @@ namespace NoteLinks.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -228,19 +224,6 @@ namespace NoteLinks.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("NoteLinks.Data.Entities.UserCalendar", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<int>("CalendarId");
-
-                    b.HasKey("UserId", "CalendarId");
-
-                    b.HasIndex("CalendarId");
-
-                    b.ToTable("UserCalendar");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -251,7 +234,7 @@ namespace NoteLinks.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("NoteLinks.Data.Entities.User")
+                    b.HasOne("NoteLinks.Data.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -259,7 +242,7 @@ namespace NoteLinks.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("NoteLinks.Data.Entities.User")
+                    b.HasOne("NoteLinks.Data.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -272,7 +255,7 @@ namespace NoteLinks.Data.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("NoteLinks.Data.Entities.User")
+                    b.HasOne("NoteLinks.Data.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -280,17 +263,10 @@ namespace NoteLinks.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("NoteLinks.Data.Entities.User")
+                    b.HasOne("NoteLinks.Data.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("NoteLinks.Data.Entities.Calendar", b =>
-                {
-                    b.HasOne("NoteLinks.Data.Entities.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("NoteLinks.Data.Entities.Note", b =>
@@ -298,19 +274,6 @@ namespace NoteLinks.Data.Migrations
                     b.HasOne("NoteLinks.Data.Entities.Calendar", "Calendar")
                         .WithMany("Notes")
                         .HasForeignKey("CalendarId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("NoteLinks.Data.Entities.UserCalendar", b =>
-                {
-                    b.HasOne("NoteLinks.Data.Entities.Calendar", "Calendar")
-                        .WithMany("UserCalendars")
-                        .HasForeignKey("CalendarId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("NoteLinks.Data.Entities.User", "User")
-                        .WithMany("UserCalendars")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

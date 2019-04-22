@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace NoteLinks.Data.Repository.Interfaces
 {
     public interface ICalendarRepository : IRepository<Calendar>
     {
-        //Author GetAuthorWithCourses(int id);
+        Task<Calendar> GetCalendarWithCreator(Expression<Func<Calendar, bool>> predicate);
     }
 }
