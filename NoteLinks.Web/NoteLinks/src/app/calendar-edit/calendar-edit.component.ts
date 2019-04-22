@@ -19,7 +19,6 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
 
   calendar: Calendar;
   private originalCalendar: Calendar;
-  errorOccured: boolean;
 
   private unsubscribe: Subject<void> = new Subject();
 
@@ -50,7 +49,7 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
 
   private updateCalendar() {
     this.apiService.updateCalendar(this.calendar).subscribe(
-      calendar => {
+      calendar => {        
         this.cookieService.updateCalendarsCookie(calendar);
         this.interactionService.finishEditing(calendar);
         this.signalRService.change(calendar.code);
@@ -62,7 +61,7 @@ export class CalendarEditComponent implements OnInit, OnDestroy {
   private createCalendar() {
     this.apiService.createCalendar(this.calendar).subscribe(
       calendar => {
-        this.router.navigate(['/calendars', calendar.code]);
+        this.router.navigate(['/calendars', calendar.code]);        
       },
       error => this.interactionService.handleError(error)
     );

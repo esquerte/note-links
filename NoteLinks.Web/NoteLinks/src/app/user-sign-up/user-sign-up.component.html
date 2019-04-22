@@ -1,0 +1,100 @@
+<div class="user-sign-up">
+
+  <div class="form-title">
+      {{ 'user.signUp.title' | translate }}
+  </div>
+
+  <form #userSignUpForm="ngForm">
+
+    <mat-form-field>
+      <input matInput 
+              name="email"
+              #email="ngModel"
+              required                             
+              type="email"
+              email
+              [placeholder]="'user.signUp.emailPlaceholder' | translate"
+              [(ngModel)]="createModel.email">              
+    </mat-form-field> 
+
+    <div class="form-error-alert" *ngIf="email.invalid && (email.dirty || email.touched)">
+      <div *ngIf="email.errors.required">
+        {{ 'user.signUp.errors.emailIsRequired' | translate }}
+      </div>
+      <div *ngIf="email.errors.email">
+        {{ 'user.signUp.errors.notValidEmail' | translate }}
+      </div>
+    </div>
+
+    <mat-form-field>
+      <input matInput 
+              name="name"
+              #name="ngModel"
+              required 
+              [placeholder]="'user.signUp.namePlaceholder' | translate"
+              [(ngModel)]="createModel.displayName">              
+        <mat-hint align="end">{{name.value?.length || 0}}/60</mat-hint>
+    </mat-form-field> 
+
+    <div class="form-error-alert" *ngIf="name.invalid && (name.dirty || name.touched)">
+      <div *ngIf="name.errors.required">
+        {{ 'user.signUp.errors.nameIsRequired' | translate }}
+      </div>
+    </div>
+
+    <mat-form-field>
+      <input matInput 
+              name="password"
+              #password="ngModel"
+              required 
+              type="password"
+              minlength="8" 
+              [placeholder]="'user.signUp.passwordPlaceholder' | translate"
+              [(ngModel)]="createModel.password">              
+    </mat-form-field> 
+
+    <div class="form-error-alert" *ngIf="password.invalid && (password.dirty || password.touched)">
+      <div *ngIf="password.errors.required">
+        {{ 'user.signUp.errors.passwordIsRequired' | translate }}
+      </div>
+      <div *ngIf="password.errors.minlength">
+        {{ 'user.signUp.errors.passwordMinLength' | translate }}
+      </div>
+    </div>
+
+    <mat-form-field>
+      <input matInput 
+              name="confirmPassword"
+              #confirmPassword="ngModel"
+              required 
+              type="password"                          
+              [placeholder]="'user.signUp.confirmPasswordPlaceholder' | translate"
+              [(ngModel)]="createModel.confirmPassword" >
+    </mat-form-field> 
+
+    <div class="form-error-alert" *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)">
+      <div *ngIf="confirmPassword.errors.required">
+        {{ 'user.signUp.errors.confirmPasswordIsRequired' | translate }}
+      </div>
+    </div>
+
+    <div class="form-error-alert"
+      *ngIf="!confirmPassword.errors?.required && createModel.password != createModel.confirmPassword">
+        {{ 'user.signUp.errors.passwordsAreNotTheSame' | translate }}      
+    </div>
+
+    <div class="user-sign-up__buttons">
+      <button class="user-sign-up__save-button" 
+              [disabled]="userSignUpForm.invalid || createModel.password != createModel.confirmPassword"
+              mat-raised-button (click)="create()">
+        {{ 'user.signUp.createUserButton' | translate }}
+      </button>
+      <button class="user-sign-up__cancel-button" 
+              mat-raised-button (click)="cancel()">
+        {{ 'user.signUp.cancelButton' | translate }}
+      </button>
+    </div>
+
+  </form>
+
+</div>

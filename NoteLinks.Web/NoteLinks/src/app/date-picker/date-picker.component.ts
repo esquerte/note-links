@@ -135,6 +135,7 @@ export class DatePickerComponent implements OnInit {
   private onNoteDeleted(note: Note) {
     if (moment(this.viewDate).isSame(note.fromDate, 'month')) {
       this.fetchEvents();
+      this.activeDayIsOpen = false;
     }
   }
 

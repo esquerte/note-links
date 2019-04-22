@@ -58,9 +58,6 @@ export class NotesListComponent implements OnInit, OnDestroy {
     this.interactionService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onFinishEditing()
     );
-    // this.interactionService.onNoteCancelEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
-    //   note => this.onCancelEditing(note)
-    // );
     this.signalRService.onUpdate$.pipe(takeUntil(this.unsubscribe)).subscribe(
       calendaCode => {
         if (this.calendarCode == calendaCode) {
@@ -111,11 +108,6 @@ export class NotesListComponent implements OnInit, OnDestroy {
   private onFinishEditing() {
     this.getNotes();
   }
-
-  // private onCancelEditing(note: Note) {
-  //   if (this.notes.data.find(x => x.id == note.id))
-  //     this.getNotes();
-  // }
 
   pageChanged(pageEvent: PageEvent) {
     this.pageInfo.pageIndex = pageEvent.pageIndex + 1;

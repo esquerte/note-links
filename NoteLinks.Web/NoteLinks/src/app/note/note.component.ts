@@ -16,6 +16,8 @@ import { ApiService } from '../services/api.service';
 export class NoteComponent implements OnInit, OnDestroy {
 
   note: Note;
+  noteIsOnEditing: boolean;
+
   private calendarCode: string;
 
   private unsubscribe: Subject<void> = new Subject();
@@ -29,6 +31,9 @@ export class NoteComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.interactionService.onNoteSelected$.pipe(takeUntil(this.unsubscribe)).subscribe(
       ([calendarCode, note]) => this.onSelected([calendarCode, note])
+    );
+    this.interactionService.noteIsOnEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      noteIsOnEditing => this.noteIsOnEditing = noteIsOnEditing
     );
     this.interactionService.onNoteFinishEditing$.pipe(takeUntil(this.unsubscribe)).subscribe(
       note => this.onFinishEditing(note)
@@ -68,12 +73,13 @@ export class NoteComponent implements OnInit, OnDestroy {
   }
 
   private onCancelEditing(note: Note) {
+    this.note = null;
     this.updateNote();
   }
 
   private updateNote() {
 
-    if (this.note && this.note.id && !this.interactionService.isNoteOnEditing()) {
+    if (this.note && this.note.id && !this.noteIsOnEditing) {
 
       let filters: Filter[] = [
         { field: "Id", operator: "eq", value: this.note.id.toString() }
@@ -90,6 +96,7 @@ export class NoteComponent implements OnInit, OnDestroy {
   private onDeleted(note: Note): void {
     if (note.id == this.note.id) {
       this.note = null;
+      this.noteIsOnEditing = false;
     }
   }
 

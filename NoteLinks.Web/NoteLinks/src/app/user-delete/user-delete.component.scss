@@ -1,0 +1,40 @@
+@import "../common";
+
+.user-delete {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 400px;
+  margin: auto;
+  margin-top: 20px;
+  padding: 30px;
+  background-color: $primary-light;
+  border: 1px solid rgba(0,0,0,.03);
+  box-shadow: 0 2px 2px rgba(0,0,0,.24),0 0 2px rgba(0,0,0,.12);
+
+  &__buttons{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    margin-top: 20px;
+  }
+  
+  &__save-button{
+    flex: 1 50%;
+  }
+  
+  &__cancel-button{
+    flex: 1 50%;
+    margin-left: 20px;
+  }
+}
+
+mat-form-field {
+  display: block;
+}
+
+.mat-raised-button {
+  background-color: $secondary;
+}
+
+

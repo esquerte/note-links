@@ -1,0 +1,63 @@
+<div class="user-log-in">
+
+    <div class="form-title">
+        {{ 'user.logIn.title' | translate }}
+    </div>
+  
+    <form #userLogInForm="ngForm">
+  
+      <mat-form-field>
+        <input matInput 
+                name="email"
+                #email="ngModel"
+                required                             
+                type="email"
+                email
+                [placeholder]="'user.logIn.emailPlaceholder' | translate"
+                [(ngModel)]="authModel.email">              
+      </mat-form-field> 
+  
+      <div class="form-error-alert" *ngIf="email.invalid && (email.dirty || email.touched)">
+        <div *ngIf="email.errors.required">
+          {{ 'user.logIn.errors.emailIsRequired' | translate }}
+        </div>
+        <div *ngIf="email.errors.email">
+          {{ 'user.logIn.errors.notValidEmail' | translate }}
+        </div>
+      </div>
+  
+      <mat-form-field>
+        <input matInput 
+                name="password"
+                #password="ngModel"
+                required 
+                type="password"
+                minlength="8" 
+                [placeholder]="'user.logIn.passwordPlaceholder' | translate"
+                [(ngModel)]="authModel.password">              
+      </mat-form-field> 
+  
+      <div class="form-error-alert" *ngIf="password.invalid && (password.dirty || password.touched)">
+        <div *ngIf="password.errors.required">
+          {{ 'user.logIn.errors.passwordIsRequired' | translate }}
+        </div>
+        <div *ngIf="password.errors.minlength">
+          {{ 'user.logIn.errors.passwordMinLength' | translate }}
+        </div>
+      </div>
+  
+      <div class="user-log-in__buttons">
+        <button class="user-log-in__save-button" 
+                [disabled]="userLogInForm.invalid"
+                mat-raised-button (click)="authenticate()">
+          {{ 'user.logIn.authenticateUserButton' | translate }}
+        </button>
+        <button class="user-log-in__cancel-button" 
+                mat-raised-button (click)="cancel()">
+          {{ 'user.logIn.cancelButton' | translate }}
+        </button>
+      </div>
+  
+    </form>
+  
+  </div>

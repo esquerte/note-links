@@ -2,10 +2,6 @@
 
   <form #calendarEditForm="ngForm">
 
-    <div class="form-error-alert" *ngIf="errorOccured">
-      {{ 'calendar.edit.errors.nameIsRequired' | translate }}
-    </div>
-
     <mat-form-field>
       <input matInput 
               name="calendarName"
@@ -13,7 +9,7 @@
               required 
               maxlength="60" 
               [placeholder]="'calendar.edit.editCalendarNamePlaceholder' | translate"             
-              [ngModel]="calendar.name">
+              [(ngModel)]="calendar.name">
       <mat-hint align="end">{{name.value?.length || 0}}/60</mat-hint>
     </mat-form-field> 
 

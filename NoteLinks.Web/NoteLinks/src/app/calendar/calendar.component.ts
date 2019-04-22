@@ -12,6 +12,7 @@ import { Note } from '../models/note';
 import { SignalRService } from '../services/signal-r.service';
 import { DeleteCalendarDialogComponent } from '../delete-calendar-dialog/delete-calendar-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-calendar',
@@ -35,6 +36,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     public translate: TranslateService,
+    private userService: UserService,
   ) {
     // https://stackoverflow.com/questions/41678356/router-navigate-does-not-call-ngoninit-when-same-page
     route.params.subscribe(() => {
@@ -62,6 +64,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.interactionService.onDeleteCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
       () => this.deleteCalendar()
     );
+    this.userService.onFollowCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      () => this.followCalendar()
+    );
+    this.userService.onUnfollowCalendar$.pipe(takeUntil(this.unsubscribe)).subscribe(
+      () => this.unfollowCalendar()
+    );
   }
 
   getCalendar(): void {
@@ -69,13 +77,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
     if (code) {
       this.apiService.getCalendar(code).subscribe(
         calendar => {
-          this.cookieService.updateCalendarsCookie(calendar);
+          this.cookieService.updateCalendarsCookie(calendar);          
+          this.interactionService.calendarChanged(calendar);
           this.calendar = calendar;
         },
-        () => this.router.navigate(["/"])
+        () => {
+          this.cookieService.deleteCalendarFromCookie(code);
+          this.interactionService.calendarChanged(null);
+          this.router.navigate(["/"]);
+        }
       );
     } else {
       this.calendar = new Calendar();
+      this.interactionService.calendarChanged(this.calendar);
       this.editCalendar();
     }
   }
@@ -110,7 +124,21 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.interactionService.selectNote(this.calendar.code, new Note());
   }
 
-  showUpdateMessage() {    
+  private followCalendar() {
+    this.apiService.followCalendar(this.calendar.code).subscribe(
+      () => this.userService.calendarFollowed(),
+      error => this.interactionService.handleError(error)
+    );
+  }
+
+  private unfollowCalendar() {
+    this.apiService.unfollowCalendar(this.calendar.code).subscribe(
+      () => this.userService.calendarUnfollowed(),
+      error => this.interactionService.handleError(error)
+    );
+  }
+
+  showUpdateMessage() {
     this.snackBar.open(this.translate.instant("calendar.updatedByAnotherUserMessage"), "", {
       duration: 5000,
       panelClass: ['update-snack-bar']
@@ -118,6 +146,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+
+    this.interactionService.calendarChanged(null);
+
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }

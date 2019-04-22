@@ -1,16 +1,16 @@
 
 <div class="note__edit-button">
-  <button *ngIf="note && note.id && !interactionService.isNoteOnEditing()" 
+  <button *ngIf="note && note.id && !noteIsOnEditing" 
           mat-raised-button (click)="editNote()">
     {{ 'note.editNoteButton' | translate }}
   </button>
 </div>
 
-<div class="note__edit-container" *ngIf="interactionService.isNoteOnEditing()">
+<div class="note__edit-container" *ngIf="noteIsOnEditing">
   <app-note-edit></app-note-edit>
 </div>
 
-<div class="note__info-container" *ngIf="note && !interactionService.isNoteOnEditing()">
+<div class="note__info-container" *ngIf="note && !noteIsOnEditing">
   <app-note-info [note]="note"></app-note-info>
 </div>
 

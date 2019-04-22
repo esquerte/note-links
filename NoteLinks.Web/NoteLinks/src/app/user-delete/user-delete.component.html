@@ -1,0 +1,47 @@
+<div class="user-delete">
+
+    <div class="form-title">
+        {{ 'user.delete.title' | translate }}
+    </div>
+  
+    <form #userDeleteForm="ngForm">
+  
+      <mat-form-field>
+        <input matInput 
+                name="password"
+                #password="ngModel"
+                required 
+                type="password"
+                minlength="8" 
+                [placeholder]="'user.delete.passwordPlaceholder' | translate"
+                [(ngModel)]="deleteModel.password">              
+      </mat-form-field> 
+  
+      <div class="form-error-alert" *ngIf="password.invalid && (password.dirty || password.touched)">
+        <div *ngIf="password.errors.required">
+          {{ 'user.delete.errors.passwordIsRequired' | translate }}
+        </div>
+        <div *ngIf="password.errors.minlength">
+          {{ 'user.delete.errors.passwordMinLength' | translate }}
+        </div>
+      </div>
+
+      <mat-checkbox name="deleteCalendars" [(ngModel)]="deleteModel.deleteCalendars">
+        {{ 'user.delete.deleteCalendars' | translate }}
+      </mat-checkbox>
+  
+      <div class="user-delete__buttons">
+        <button class="user-delete__save-button" 
+                [disabled]="userDeleteForm.invalid"
+                mat-raised-button (click)="delete()">
+          {{ 'user.delete.deleteUserButton' | translate }}
+        </button>
+        <button class="user-delete__cancel-button" 
+                mat-raised-button (click)="cancel()">
+          {{ 'user.delete.cancelButton' | translate }}
+        </button>
+      </div>
+  
+    </form>
+  
+  </div>

@@ -12,9 +12,10 @@ export class InteractionService {
 
   constructor() { }
 
-  private noteIsOnEditing: boolean;
-
   // Calendar
+
+  private switchCalendarSubject = new Subject<Calendar>();
+  onSwitchCalendar$ = this.switchCalendarSubject.asObservable();
 
   private editCalendarSubject = new Subject();
   onEditCalendar$ = this.editCalendarSubject.asObservable();
@@ -33,6 +34,10 @@ export class InteractionService {
 
   private calendarDateSelectedSubject = new Subject<moment.Moment>();
   onCalendarDateSelected$ = this.calendarDateSelectedSubject.asObservable();
+
+  calendarChanged(calendar: Calendar): void {
+    this.switchCalendarSubject.next(calendar);
+  }
 
   editCalendar(): void {
     this.editCalendarSubject.next();
@@ -60,6 +65,9 @@ export class InteractionService {
 
   // Note
 
+  private noteIsOnEditingSubject = new Subject<boolean>();
+  noteIsOnEditing$ = this.noteIsOnEditingSubject.asObservable();
+
   private noteSelectedSubject = new Subject<[string, Note]>();
   onNoteSelected$ = this.noteSelectedSubject.asObservable();
 
@@ -80,26 +88,25 @@ export class InteractionService {
   }
 
   noteStartEditing(calendarCode: string, note: Note): void {
-    this.noteIsOnEditing = true;
-    this.noteStartEditingSubject.next([calendarCode, note]);    
+    this.noteIsOnEditingSubject.next(true);
+    this.noteStartEditingSubject.next([calendarCode, note]);
   }
 
   noteFinishEditing(note: Note): void {
-    this.noteIsOnEditing = false;
-    this.noteFinishEditingSubject.next(note);    
+    this.noteIsOnEditingSubject.next(false);
+    this.noteFinishEditingSubject.next(note);
   }
-  
+
   noteCancelEditing(note: Note): void {
-    this.noteIsOnEditing = false;
-    this.noteCancelEditingSubject.next(note);    
+    this.noteIsOnEditingSubject.next(false);
+    this.noteCancelEditingSubject.next(note);
   }
 
   deleteNote(note: Note): void {
     this.noteDeletedSubject.next(note);
   }
 
-  isNoteOnEditing(): boolean {
-    return this.noteIsOnEditing;
-  };
+
+
 
 }

@@ -39,12 +39,15 @@ export function datesValidator(timeFormat: string): ValidatorFn {
   providers: [{ provide: NG_VALIDATORS, useExisting: DatesValidatorDirective, multi: true }]
 })
 export class DatesValidatorDirective implements Validator {
+
   constructor(
     private translate: TranslateService,
     private dateFormatService: DateFormatService,
   ){}
+
   validate(control: AbstractControl): ValidationErrors {
     let timeFormat = this.dateFormatService.getTimeFormat(this.translate.currentLang);
     return datesValidator(timeFormat)(control);
   }
+  
 }

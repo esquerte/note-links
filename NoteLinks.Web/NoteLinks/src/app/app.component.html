@@ -1,50 +1,99 @@
 <!-- <div > -->
 
-  <div class="header">
-   
-    <span class="header__title">NoteLinks</span>
-    
-    <mat-form-field class="header__select-calendar" *ngIf="calendars.length > 0">
-      <mat-select (selectionChange)="selectCalendar($event.value)" 
-                  [matTooltip]="'home.selectCalendarPlaceholder' | translate">
-        <mat-option *ngFor="let calendar of calendars" [value]="calendar.code">
+<div class="header">
+
+  <span class="header__title">NoteLinks</span>
+
+  <div class="header__user" *ngIf="!loggedIn">
+    <a mat-button routerLink="users/login">{{ 'home.user.login' | translate }}</a>
+    <a mat-button routerLink="users/signup">{{ 'home.user.signup' | translate }}</a>
+  </div>
+
+  <div class="header__user" *ngIf="loggedIn">
+    <span class="header__displayName">{{displayName}}</span>
+    <a mat-button (click)="logout()">{{ 'home.user.logout' | translate }}</a>
+  </div>
+
+  <mat-form-field class="header__select-calendar" 
+                  *ngIf="(cookieCalendars && cookieCalendars.length > 0) || 
+                         (followedCalendars && followedCalendars.length > 0) || 
+                         (createdCalendars && createdCalendars.length > 0)">
+    <mat-select (selectionChange)="selectCalendar($event.value)"
+      [matTooltip]="'home.selectCalendar.placeholder' | translate">
+
+      <mat-optgroup *ngIf="cookieCalendars && cookieCalendars.length > 0" 
+                    [label]="'home.selectCalendar.cookie' | translate">
+        <mat-option *ngFor="let calendar of cookieCalendars" [value]="calendar.code">
           {{calendar.name}}
         </mat-option>
-      </mat-select>
-    </mat-form-field>
+      </mat-optgroup>
 
-    <mat-form-field class="header__select-language">
-      <mat-select [value]="translate.currentLang" 
-                  (selectionChange)="translate.use($event.value)"
-                  [matTooltip]="'home.selectLanguagePlaceholder' | translate">
-        <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
-          {{ 'home.' + lang | translate }}
+      <mat-optgroup *ngIf="followedCalendars && followedCalendars.length > 0" 
+                    [label]="'home.selectCalendar.followed' | translate">
+        <mat-option *ngFor="let calendar of followedCalendars" [value]="calendar.code">
+          {{calendar.name}}
         </mat-option>
-      </mat-select>
-    </mat-form-field>
+      </mat-optgroup>
 
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>more_vert</mat-icon>
+      <mat-optgroup *ngIf="createdCalendars && createdCalendars.length > 0" 
+                    [label]="'home.selectCalendar.created' | translate">
+        <mat-option *ngFor="let calendar of createdCalendars" [value]="calendar.code">
+          {{calendar.name}}
+        </mat-option>
+      </mat-optgroup>
+
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="header__select-language">
+    <mat-select [value]="translate.currentLang" (selectionChange)="translate.use($event.value)"
+      [matTooltip]="'home.selectLanguage.placeholder' | translate">
+      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+        {{ 'home.selectLanguage.' + lang | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="createCalendar()">
+      <mat-icon>calendar_today</mat-icon>
+      <span>{{ 'home.calendar.create' | translate }}</span>
     </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="createCalendar()">
-        <mat-icon>calendar_today</mat-icon>
-        <span>{{ 'home.createCalendarButton' | translate }}</span>
-      </button>
+
+    <div *ngIf="calendar?.code">
+
       <button mat-menu-item (click)="editCalendar()">
         <mat-icon>edit</mat-icon>
-        <span>{{ 'calendar.editCalendarButton' | translate }}</span>
+        <span>{{ 'home.calendar.edit' | translate }}</span>
       </button>
       <button mat-menu-item (click)="deleteCalendar()">
         <mat-icon>delete_outline</mat-icon>
-        <span>{{ 'calendar.deleteCalendarButton' | translate }}</span>
+        <span>{{ 'home.calendar.delete' | translate }}</span>
       </button>
-    </mat-menu>
 
+    </div>
 
-  </div>
+    <div *ngIf="loggedIn && calendar?.code">
+
+      <button mat-menu-item *ngIf="canBeFollowed()" (click)="followCalendar()">
+        <mat-icon>star_border</mat-icon>
+        <span>{{ 'home.calendar.follow' | translate }}</span>
+      </button>
+
+      <button mat-menu-item *ngIf="canBeUnfollowed()" (click)="unfollowCalendar()">
+        <mat-icon>star</mat-icon>
+        <span>{{ 'home.calendar.unfollow' | translate }}</span>
+      </button>
+
+    </div>
+
+  </mat-menu>
+
+</div>
 
 <!-- </div> -->
 
 <router-outlet></router-outlet>
-

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HttpClient, HttpClientXsrfModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { MaterialModule } from './app-material.module';
@@ -38,6 +38,10 @@ import { AppDateAdapter } from './app-date-adapter';
 import { DeleteCalendarDialogComponent } from './delete-calendar-dialog/delete-calendar-dialog.component';
 import { DeleteNoteDialogComponent } from './delete-note-dialog/delete-note-dialog.component';
 import { DatesValidatorDirective } from './note-edit/dates-validator.directive';
+import { UserLogInComponent } from './user-log-in/user-log-in.component';
+import { UserSignUpComponent } from './user-sign-up/user-sign-up.component';
+import { UserDeleteComponent } from './user-delete/user-delete.component';
+import { TokenInterceptor } from './token-interceptor';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,6 +66,9 @@ export function momentAdapterFactory() {
     DeleteCalendarDialogComponent,
     DeleteNoteDialogComponent,
     DatesValidatorDirective,
+    UserLogInComponent,
+    UserSignUpComponent,
+    UserDeleteComponent,
   ],
   entryComponents: [
     DeleteCalendarDialogComponent,
@@ -106,6 +113,11 @@ export function momentAdapterFactory() {
       provide: DateAdapter,
       useClass: AppDateAdapter
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

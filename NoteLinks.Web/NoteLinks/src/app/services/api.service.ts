@@ -9,6 +9,9 @@ import { Note } from '../models/note';
 import { PageInfo } from '../models/page-info';
 import { Filter } from '../models/filter';
 import { ApiError } from '../models/api-error';
+import { CreateUserModel } from '../models/create-user-model';
+import { AuthenticationModel } from '../models/authentication-model';
+import { DeleteUserModel } from '../models/delete-user-model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -27,7 +30,7 @@ export class ApiService {
   getCalendar(code: string): Observable<Calendar> {
     const url = `${this.serviceUrl}/calendars/${code}`;
     return this.http.get<Calendar>(url, { withCredentials: true }).pipe(
-      retry(3),
+      retry(2),
       catchError(this.handleError)
     );
   }
@@ -35,7 +38,6 @@ export class ApiService {
   updateCalendar(calendar: Calendar): Observable<any> {
     const url = `${this.serviceUrl}/calendars`;
     return this.http.put<Calendar>(url, calendar, httpOptions).pipe(
-      retry(3),
       catchError(this.handleError)
     );
   }
@@ -46,7 +48,6 @@ export class ApiService {
       name: calendar.name
     };
     return this.http.post(url, createModel, httpOptions).pipe(
-      retry(3),
       catchError(this.handleError)
     );
   }
@@ -54,7 +55,6 @@ export class ApiService {
   deleteCalendar(code: string): Observable<any> {
     const url = `${this.serviceUrl}/calendars/${code}`;
     return this.http.delete(url, httpOptions).pipe(
-      retry(3),
       catchError(this.handleError)
     );
   }
@@ -63,7 +63,7 @@ export class ApiService {
     const url = `${this.serviceUrl}/notes/${calendarCode}`;
     let httpParams = this.buildParamsForGetNotes(filters, pageInfo);
     return this.http.get(url, { params: httpParams }).pipe(
-      retry(3),
+      retry(1),
       catchError(this.handleError)
     );
   }
@@ -71,7 +71,6 @@ export class ApiService {
   updateNote(note: Note): Observable<any> {
     const url = `${this.serviceUrl}/notes`;
     return this.http.put<Note>(url, note, httpOptions).pipe(
-      retry(3),
       catchError(this.handleError)
     );
   }
@@ -86,7 +85,6 @@ export class ApiService {
       toDate: note.toDate
     };
     return this.http.post(url, createModel, httpOptions).pipe(
-      retry(3),
       catchError(this.handleError)
     );
   }
@@ -94,7 +92,48 @@ export class ApiService {
   deleteNote(id: number): Observable<any> {
     const url = `${this.serviceUrl}/notes/${id}`;
     return this.http.delete(url, httpOptions).pipe(
-      retry(3),
+      catchError(this.handleError)
+    );
+  }
+
+  createUser(createModel: CreateUserModel): Observable<any> {
+    const url = `${this.serviceUrl}/users`;
+    return this.http.post(url, createModel, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getAuthenticationToken(authModel: AuthenticationModel): Observable<any> {
+    const url = `${this.serviceUrl}/users/authenticate`;
+    return this.http.post(url, authModel, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteUser(deleteModel: DeleteUserModel): Observable<any> {
+    const url = `${this.serviceUrl}/users/delete`;
+    return this.http.post(url, deleteModel, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getUserCalendars(): Observable<any> {
+    const url = `${this.serviceUrl}/users/calendars`;
+    return this.http.get(url, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  followCalendar(code: string): Observable<any> {
+    const url = `${this.serviceUrl}/users/calendars`;
+    return this.http.post(url, { code: code }, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  unfollowCalendar(code: string): Observable<any> {
+    const url = `${this.serviceUrl}/users/calendars/${code}`;
+    return this.http.delete(url, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
@@ -137,7 +176,7 @@ export class ApiService {
       let apiError: ApiError = error.error;        
       message = `Error ${error.status}. ${apiError.message} \n`;
 
-      if (!environment.production) {
+      if (!environment.production && apiError.errors) {
         let errors: string = "";
         Object.keys(apiError.errors).forEach(key => errors += `${key}: ${apiError.errors[key]} \n`);
         message += errors;
@@ -145,8 +184,7 @@ export class ApiService {
 
       console.error(
         `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-        
+        `body was: ${error.error}`);        
     }
 
     return throwError(message);

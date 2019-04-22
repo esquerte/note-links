@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service'
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 import { Calendar } from '../models/calendar';
 
@@ -13,8 +13,9 @@ export class CalendarCookieService {
   numberOfDays: number = 1825;
   path: string = "/";
 
-  private calendarsSubject = new BehaviorSubject<Calendar[]>(this.getCalendarsFromCookie());
-  calendars$ = this.calendarsSubject.asObservable();
+  // private calendarsChangedSubject = new BehaviorSubject<Calendar[]>(this.getCalendarsFromCookie());
+  private calendarsChangedSubject = new Subject();
+  onCalendarsChanged$ = this.calendarsChangedSubject.asObservable();
 
   constructor(private cookieService: CookieService) { }
 
@@ -33,7 +34,7 @@ export class CalendarCookieService {
     } else {
       this.cookieService.delete(this.cookieName, this.path);
     }
-    this.calendarsSubject.next(calendars);
+    this.calendarsChangedSubject.next();
   }
 
   updateCalendarsCookie(calendar: Calendar): void {
@@ -43,7 +44,7 @@ export class CalendarCookieService {
       calendars = calendars.filter(x => x.code != calendar.code);
       calendars.splice(0, 0, calendar);
       this.cookieService.set(this.cookieName, JSON.stringify(calendars), this.numberOfDays, this.path); 
-      this.calendarsSubject.next(calendars);     
+      this.calendarsChangedSubject.next();     
     }
   }
 
