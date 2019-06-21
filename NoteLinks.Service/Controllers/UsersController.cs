@@ -126,7 +126,8 @@ namespace NoteLinks.Service.Controllers
         [Authorize]
         public async Task<IActionResult> Get()
         {
-            // Claim with type ClaimTypes.NameIdentifier should exists in claims
+            // Claim with type ClaimTypes.NameIdentifier should exists in claims,
+            // otherwise GetUserAsync will return null
             User user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (user is null)
